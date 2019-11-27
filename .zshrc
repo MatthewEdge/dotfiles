@@ -5,8 +5,8 @@ export ZSH=/Users/medge/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="robbyrussell"
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+DISABLE_UPDATE_PROMPT="true"
+export UPDATE_ZSH_DAYS=7
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -48,12 +48,20 @@ alias pip="/usr/local/bin/pip3"
 # Homebrew Tricks
 alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
 
+# Git
+alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
+
+gitclean() {
+    git fetch -p
+    git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
+}
+
 # VIM
 alias vimrc="$EDITOR ~/.vimrc"
 
 # Kubernetes
-kgp="kubectl get pods"
-kgs="kubectl get svc"
+alias kgp="kubectl get pods"
+alias kgs="kubectl get svc"
 
 # Raspberry Pi
 alias rpisshfile="touch /Volumes/boot/ssh"
@@ -104,3 +112,9 @@ alias cdmygo="cd $GOPATH/src/github.com/MatthewEdge"
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
 export PATH=$PATH:$SCALA_HOME/bin
+
+# Sass
+findUnusedSass() {
+  VAR_NAME_CHARS='A-Za-z0-9_-'
+  find "$1" -type f -name "*.scss" -exec grep -o "\$[$VAR_NAME_CHARS]*" {} ';' | sort | uniq -u
+}
