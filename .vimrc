@@ -8,7 +8,10 @@ set fileencoding=utf-8
 set nocompatible
 syntax enable
 filetype plugin on
-set shiftwidth=4
+
+" Indentation
+set autoindent
+set expandtab
 
 " Allow backspace to delete indentation and inserted text
 " i.e. how it works in most programs
