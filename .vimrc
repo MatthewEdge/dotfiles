@@ -1,17 +1,20 @@
-" Switching Buffers
-noremap <leader>[ :bp<return>
-noremap <leader>] :bn<return>
-
-set encoding=utf-8
-set fileencoding=utf-8
-
 set nocompatible
 syntax enable
 filetype plugin on
 
+set encoding=utf-8
+set fileencoding=utf-8
+
+" Switching Buffers
+noremap <leader>[ :bp<return>
+noremap <leader>] :bn<return>
+
 " Indentation
 set autoindent
 set expandtab
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 
 " Allow backspace to delete indentation and inserted text
 " i.e. how it works in most programs
