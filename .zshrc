@@ -107,7 +107,6 @@ alias mvnGenArchetype="mvn archetype:generate -DarchetypeArtifactId=maven-archet
 
 # Golang
 export GOPATH=/Users/medge/code/go
-alias cdmygo="cd $GOPATH/src/github.com/MatthewEdge"
 
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
