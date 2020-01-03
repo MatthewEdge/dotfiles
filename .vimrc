@@ -39,6 +39,12 @@ let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_list_hide.=',\|\s\s\)\zs\.\S\+' " ??
 let g:netrw_localrmdir='rm -r'
 
+" Markdown
+augroup Markdown
+  autocmd!
+  autocmd FileType markdown set wrap linebreak
+augroup END
+
 " Go
 autocmd Filetype go setlocal tabstop=4 shiftwidth=4 softtabstop=4
 
