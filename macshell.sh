@@ -7,6 +7,9 @@ xcode-select —-install
 
 # Homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew tap AdoptOpenJDK/openjdk
+
+# Commonly used casks
 brew cask install iterm2 flux spectacle
 brew install jq
 
@@ -20,3 +23,9 @@ cp ./.zshrc ~/.zshrc
 brew install vim
 cp ./.vimrc ~/.vimrc
 ./vim-plugins.sh
+
+# Homebrew-managed Java install
+brew cask install adoptopenjdk11
+sudo ln -nsf $(/usr/libexec/java_home -v 11) $JAVA_HOME
+java -version
+
