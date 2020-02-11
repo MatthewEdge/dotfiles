@@ -2,9 +2,6 @@
 
 # Setup preferred shell environment on Mac
 
-# XCode
-xcode-select —-install
-
 # Homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew tap AdoptOpenJDK/openjdk
@@ -19,9 +16,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 zsh --version
 cp ./.zshrc ~/.zshrc
 
-# Vim
-brew install vim
+# Vim / tmux
+brew install vim tmux
 cp ./.vimrc ~/.vimrc
+cp ./.tmux.conf ~/.tmux.conf
 ./vim-plugins.sh
 
 # Homebrew-managed Java install
