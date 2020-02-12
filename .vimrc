@@ -16,6 +16,9 @@ set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 
+" Rainbow brackets
+let g:rainbow_active = 1
+
 " Allow backspace to delete indentation and inserted text
 " i.e. how it works in most programs
 set backspace=indent,eol,start
@@ -47,3 +50,7 @@ augroup Markdown
   autocmd!
   autocmd FileType markdown set wrap linebreak
 augroup END
+
+" NerdCommenter
+let g:NERDSpaceDelims=1
+let g:NERDTrimTrailingWhitespace=1
