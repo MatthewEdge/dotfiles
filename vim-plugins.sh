@@ -15,5 +15,5 @@ githubInstall fatih/vim-go
 githubInstall vim-airline/vim-airline
 githubInstall tpope/vim-fugitive
 githubInstall christoomey/vim-tmux-navigator
-githubInstall frazrepo/vim-rainbow
+githubInstall jaredgorski/SpaceCamp
 githubInstall preservim/nerdcommenter

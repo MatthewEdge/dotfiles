@@ -1,5 +1,8 @@
 set nocompatible
-syntax enable
+syntax on
+
+let &t_Co=256
+colorscheme spacecamp_lite
 filetype plugin on
 
 set encoding=utf-8
@@ -15,9 +18,6 @@ set expandtab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
-
-" Rainbow brackets
-let g:rainbow_active = 1
 
 " Allow backspace to delete indentation and inserted text
 " i.e. how it works in most programs
