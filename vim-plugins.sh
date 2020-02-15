@@ -5,8 +5,17 @@ githubInstall() {
   REPO=$1
   NAME=$(echo $REPO | sed 's/\(.*\)\/\(.*\)/\2/g')
 
-  echo "Installing $REPO to ~/.vim/pack/dist/start/$NAME"
 
+  if [ -d "$HOME/.vim/pack/dist/start/$NAME" ]; then
+    echo "$REPO already exists. Updating..."
+    local DIR=$(pwd)
+    cd ~/.vim/pack/dist/start/$NAME
+    git pull origin master
+    cd $DIR
+    return
+  fi
+
+  echo "Installing $REPO to ~/.vim/pack/dist/start/$NAME"
   git clone https://github.com/$REPO.git ~/.vim/pack/dist/start/$NAME
 }
 
@@ -17,3 +26,4 @@ githubInstall tpope/vim-fugitive
 githubInstall christoomey/vim-tmux-navigator
 githubInstall jaredgorski/SpaceCamp
 githubInstall preservim/nerdcommenter
+githubInstall MaxMEllon/vim-jsx-pretty
