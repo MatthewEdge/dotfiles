@@ -59,6 +59,13 @@ gitclean() {
 # VIM
 alias vimrc="$EDITOR ~/.vimrc"
 
+# Note Taking
+NOTES_DIR="$HOME/notes"
+mkdir -p $NOTES_DIR
+touch $NOTES_DIR/$(date '+%Y-%m-%d').txt
+alias note="vim $NOTES_DIR/$(date '+%Y-%m-%d').txt"
+alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').txt"
+
 # Kubernetes
 alias kgp="kubectl get pods"
 alias kgs="kubectl get svc"
