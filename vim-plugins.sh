@@ -23,7 +23,6 @@ githubInstall() {
 githubInstall fatih/vim-go
 githubInstall vim-airline/vim-airline
 githubInstall tpope/vim-fugitive
-githubInstall christoomey/vim-tmux-navigator
 githubInstall jaredgorski/SpaceCamp
 githubInstall preservim/nerdcommenter
 githubInstall MaxMEllon/vim-jsx-pretty
