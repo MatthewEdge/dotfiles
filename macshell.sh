@@ -19,11 +19,12 @@ cp ./.zshrc ~/.zshrc
 # Vim / tmux
 brew install vim tmux
 cp ./.vimrc ~/.vimrc
-cp ./.tmux.conf ~/.tmux.conf
 ./vim-plugins.sh
+
+# Notes Repo
+git clone git@github.com:MatthewEdge/notes.git ~/notes
 
 # Homebrew-managed Java install
 brew cask install adoptopenjdk11
-sudo ln -nsf $(/usr/libexec/java_home -v 11) $JAVA_HOME
 java -version
 
