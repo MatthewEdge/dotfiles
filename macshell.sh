@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # Setup preferred shell environment on Mac
 
 # Homebrew
@@ -15,7 +14,7 @@ cp ./.zshrc ~/.zshrc
 # Vim / tmux
 brew install vim
 cp ./.vimrc ~/.vimrc
-./vim-plugins.sh
+vim +PlugInstall +qall!
 
 # Notes Repo
 git clone git@github.com:MatthewEdge/notes.git ~/notes
