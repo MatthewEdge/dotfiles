@@ -65,6 +65,7 @@ NOTES_DIR="$HOME/notes"
 mkdir -p $NOTES_DIR
 touch $NOTES_DIR/$(date '+%Y-%m-%d').txt
 alias note="vim $NOTES_DIR/$(date '+%Y-%m-%d').txt"
+alias catnote="cat $NOTES_DIR/$(date '+%Y-%m-%d').txt"
 alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').txt"
 
 # Kubernetes
