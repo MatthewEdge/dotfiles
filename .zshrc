@@ -60,6 +60,10 @@ gitclean() {
 # VIM
 alias vimrc="$EDITOR ~/.vimrc"
 
+# tmux
+alias tmuxrc="$EDITOR ~/.tmux.conf"
+alias t3p='tmux new-session \; split-window -v \; split-window -h \;'
+
 # Note Taking
 NOTES_DIR="$HOME/notes"
 mkdir -p $NOTES_DIR
