@@ -7,7 +7,10 @@ brew tap AdoptOpenJDK/openjdk
 
 # Commonly used casks
 brew cask install iterm2 flux spectacle
-brew install jq
+brew install jq 
+
+# Github CLI
+brew install hub
 
 cp ./.zshrc ~/.zshrc
 
