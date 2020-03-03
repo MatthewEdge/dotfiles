@@ -1,9 +1,15 @@
 set nocompatible
 syntax enable
 filetype plugin indent on
-
+set number
 set encoding=utf-8
 set fileencoding=utf-8
+
+" Vim splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " Indentation
 set autoindent
@@ -45,10 +51,21 @@ Plug 'tpope/vim-fugitive'
 Plug 'jaredgorski/spacecamp'
 Plug 'preservim/nerdcommenter'
 
+" tmux and Vim
+" Plug 'benmills/vimux'
+Plug 'christoomey/vim-tmux-navigator'
+
+" LSP Integration for languages that support it
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'sheerun/vim-polyglot'
+
 " Scala
 Plug 'derekwyatt/vim-scala', {'for': ['scala']}
-Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['scala']}
-Plug 'scalameta/coc-metals', {'do': 'yarn install --frozen-lockfile', 'for': ['scala']}
+" Plug 'scalameta/coc-metals', {'do': 'yarn install --frozen-lockfile', 'for': ['scala']}
+au BufRead,BufNewFile *.sbt set filetype=scala
+
+" Java
+Plug 'artur-shaik/vim-javacomplete2'
 
 " JS/JSX
 Plug 'MaxMEllon/vim-jsx-pretty'
@@ -72,3 +89,14 @@ let g:netrw_winsize = 75
 " NerdCommenter
 let g:NERDSpaceDelims=1
 let g:NERDTrimTrailingWhitespace=1
+
+" vim-tmux-nav
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <c-/> :TmuxNavigatePrevious<cr>
+
+command! -nargs=0 Prettier :CocCommand prettier.formatFile

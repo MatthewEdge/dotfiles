@@ -1,5 +1,3 @@
 # Dotfiles
 
-## Key Maps
-
-<C-h/j/k/l> - navigate tmux / vim splits
+Run `macshell.sh` first. Then run any language-specific shell scripts

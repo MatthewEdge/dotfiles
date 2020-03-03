@@ -8,3 +8,5 @@ brew install node yarn
 # Vim Scala settings
 mkdir -p ~/.vim/ftplugin
 cp ./scala.vim ~/.vim/ftplugin/scala.vim
+
+vim +CocInstall coc-metals +qall!
