@@ -1,5 +1,6 @@
 #!/bin/sh
 # Setup preferred shell environment on Mac
+# Run this first!
 
 # Homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
