@@ -1,6 +1,3 @@
-" Scala Settings
-au BufRead,BufNewFile *.sbt set filetype=scala
-
 " coc-metals for Scala
 set updatetime=300
 set shortmess+=c

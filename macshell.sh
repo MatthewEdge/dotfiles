@@ -12,10 +12,9 @@ brew install jq
 
 cp ./.zshrc ~/.zshrc
 
-# Vim / tmux
-brew install vim tmux
+# Vim
+brew install vim
 cp ./.vimrc ~/.vimrc
-cp ./.tmux.conf ~/.tmux.conf
 vim +PlugInstall +qall!
 
 # Notes Repo
