@@ -8,6 +8,7 @@ set fileencoding=utf-8
 set ttyfast
 set autochdir
 set fileformats=unix
+set noswapfile
 set incsearch
 set ruler
 
@@ -62,28 +63,27 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " QoL
+Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
 Plug 'jaredgorski/spacecamp'
 Plug 'preservim/nerdcommenter'
+Plug 'christoomey/vim-tmux-navigator'
 
 " LSP Integration for languages that support it
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 
 " Go
-Plug 'fatih/vim-go', {'do': ':GoInstallBinaries'}
+Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries', 'for': ['go']}
+let g:go_def_mapping_enabled = 0 " Let coc manage nav
 
 " Scala
 Plug 'derekwyatt/vim-scala', {'for': ['scala']}
-" Plug 'scalameta/coc-metals', {'do': 'yarn install --frozen-lockfile', 'for': ['scala']}
 au BufRead,BufNewFile *.sbt set filetype=scala
 
-" Java
-Plug 'artur-shaik/vim-javacomplete2', {'for': ['java']}
-
 " JS/JSX
-Plug 'jelera/vim-javascript-syntax', {'for': ['js']}
+Plug 'jelera/vim-javascript-syntax', {'for': ['js', 'ts']}
 let g:javascript_enable_domhtmlcss = 1
 
 Plug 'leafgarland/typescript-vim', {'for': ['ts']}
@@ -102,20 +102,31 @@ Plug 'ap/vim-css-color', {'for': ['css']}
 
 call plug#end()
 
+" tmux
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <c-/> :TmuxNavigatePrevious<cr>
+
 " Colorscheme
 let &t_Co=256
 colorscheme spacecamp_lite
 
+" NERDTree
+let g:NERDTreeMinimalUI=1
+let g:NERDTreeMapOpenVSplit='s'
+nnoremap <leader>p :NERDTreeToggle<CR>
+
 " FileBrowser w/ Netrw
-let g:netrw_banner=0
-let g:netrw_browse_split=4
-let g:netrw_altv=1
-let g:netrw_liststyle=3
-let g:netrw_list_hide=netrw_gitignore#Hide()
-let g:netrw_list_hide.=',\|\s\s\)\zs\.\S\+' " ??
-let g:netrw_localrmdir='rm -r'
-let g:netrw_winsize = 75 " with 25 for netrw split
-nnoremap <Leader>pt :Vex<CR>
+" let g:netrw_banner=0
+" let g:netrw_browse_split=4
+" let g:netrw_altv=1
+" let g:netrw_liststyle=3
+" let g:netrw_list_hide=netrw_gitignore#Hide()
+" let g:netrw_list_hide.=',\|\s\s\)\zs\.\S\+' " ??
+" let g:netrw_localrmdir='rm -r'
+" let g:netrw_winsize = 75 " with 25 for netrw split
 
 " Vim splits
 nmap <Leader>h :wincmd h<CR>
@@ -166,14 +177,22 @@ function! s:build_go_files()
   endif
 endfunction
 
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
+let g:go_metalinter_autosave = 1
+let g:go_auto_type_info = 1
+
 " let g:go_fmt_fail_silently = 1
-" let g:go_highlight_types = 1
+let g:go_highlight_types = 1
 " let g:go_highlight_fields = 1
 " let g:go_highlight_functions = 1
 " let g:go_highlight_methods = 1
-" let g:go_highlight_operators = 1
+let g:go_highlight_operators = 1
 " let g:go_highlight_build_constraints = 1
 " let g:go_highlight_structs = 1
 " let g:go_highlight_generate_tags = 1
@@ -229,6 +248,26 @@ endfunction
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 
+" Remap for format selected region
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 " Fix autofix problem of current line
 nmap <leader>qf <Plug>(coc-fix-current)
 
@@ -237,18 +276,6 @@ command! -nargs=0 Format :call CocAction('format')
 nnoremap <Leader>f :Format<CR>
 command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 nnoremap <Leader>i :OR<CR>
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 
 " Prettier integration
 command! -nargs=0 Prettier :CocCommand prettier.formatFile

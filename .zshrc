@@ -35,6 +35,12 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 export EDITOR='vim'
+export TERM='xterm-256color'
+
+# Start tmux automatically
+# if [ -z "$TMUX" ]; then
+    # tmux attach -t default || tmux new -s default
+# fi
 
 #############################
 #  USER FUNCTION HELPERS
@@ -58,11 +64,13 @@ gitclean() {
 }
 
 # VIM
+export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 
 # tmux
 alias tmuxrc="$EDITOR ~/.tmux.conf"
 alias t3p='tmux new-session \; split-window -v \; split-window -h \;'
+alias t2p='tmux new-session \; split-window -v \;'
 
 # Note Taking
 NOTES_DIR="$HOME/notes"
@@ -75,9 +83,6 @@ alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').txt"
 # Kubernetes
 alias kgp="kubectl get pods"
 alias kgs="kubectl get svc"
-
-# Raspberry Pi
-alias rpisshfile="touch /Volumes/boot/ssh"
 
 # Docker
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
@@ -124,9 +129,3 @@ export GOPATH=/Users/$(whoami)/code/go
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
 export PATH=$PATH:$SCALA_HOME/bin
-
-# Sass
-findUnusedSass() {
-  VAR_NAME_CHARS='A-Za-z0-9_-'
-  find "$1" -type f -name "*.scss" -exec grep -o "\$[$VAR_NAME_CHARS]*" {} ';' | sort | uniq -u
-}
