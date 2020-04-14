@@ -46,7 +46,7 @@ export TERM='xterm-256color'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
-alias ll="ls -asl"
+alias ll="ls -alh"
 
 # Default to Python3
 alias python="/usr/local/bin/python3"
