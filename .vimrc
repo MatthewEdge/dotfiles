@@ -1,57 +1,34 @@
 set nocompatible
-syntax enable
+syntax on
 filetype plugin indent on
-set splitbelow
-set number
+
+let mapleader=' '
+
+set noerrorbells
+set number " line numbers
 set encoding=utf-8
 set fileencoding=utf-8
 set ttyfast
-set autochdir
-set fileformats=unix
 set noswapfile
+set nobackup
 set incsearch
-set ruler
-
-let mapleader=','
-
-" Indentation
 set autoindent
 set expandtab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
+set wrap
+set linebreak
 set formatoptions+=j " Delete comment character when joining commented lines
 autocmd BufWritePre * %s/\s\+$//e " trim trailing whitespace pre-save
-
-" Allow backspace to delete indentation and inserted text
-set backspace=indent,eol,start
+set backspace=indent,eol,start " Allow backspace to delete indentation and inserted text
 
 " Maintain undo history between sessions
-set history=1000
 set undofile
 set undodir=~/.vim/undodir
 
 " Find Files - search subfolders and provide tab completion
-set path+=**
-
-" Display all matching files for tab complete in :find
-set wildmenu
-
-" Fix common mistypings
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev Qall! qall!
-cnoreabbrev Wq wq
-cnoreabbrev Wa wa
-cnoreabbrev wQ wq
-cnoreabbrev WQ wq
-cnoreabbrev W w
-cnoreabbrev Q q
-cnoreabbrev Qall qal
-
-" terminal emulation
-nnoremap <silent> <Leader>sh :terminal<CR>
-set termwinsize=10x0
+" set path+=**
 
 " vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -63,15 +40,15 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " QoL
-Plug 'preservim/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'tpope/vim-fugitive'
-Plug 'jaredgorski/spacecamp'
 Plug 'preservim/nerdcommenter'
+" Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-fugitive'
+Plug 'morhetz/gruvbox'
+Plug 'ap/vim-css-color'
+" Plug 'git@github.com:kien/ctrlp.vim.git'
+
 Plug 'christoomey/vim-tmux-navigator'
 
-" LSP Integration for languages that support it
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 
 " Go
@@ -79,28 +56,16 @@ Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries', 'for': ['go']}
 let g:go_def_mapping_enabled = 0 " Let coc manage nav
 
 " Scala
-Plug 'derekwyatt/vim-scala', {'for': ['scala']}
-au BufRead,BufNewFile *.sbt set filetype=scala
+Plug 'derekwyatt/vim-scala'
 
-" JS/JSX
-Plug 'jelera/vim-javascript-syntax', {'for': ['js', 'ts']}
-let g:javascript_enable_domhtmlcss = 1
-
-Plug 'leafgarland/typescript-vim', {'for': ['ts']}
-Plug 'HerringtonDarkholme/yats.vim', {'for': ['ts']}
-Plug 'MaxMEllon/vim-jsx-pretty'
-
-" vuejs
-Plug 'posva/vim-vue', {'for': ['vue']}
-Plug 'leafOfTree/vim-vue-plugin', {'for': ['vue']}
-let g:vue_disable_pre_processors=1
-let g:vim_vue_plugin_load_full_syntax = 1
-
-" HTML/CSS
-Plug 'hail2u/vim-css3-syntax', {'for': ['css']}
-Plug 'ap/vim-css-color', {'for': ['css']}
+" Autocomplete
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 call plug#end()
+
+" Fix for languages that don't seem to work with polyglot
+let g:polyglot_disabled = ['scala', 'go']
 
 " tmux
 nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
@@ -111,125 +76,75 @@ nnoremap <silent> <c-/> :TmuxNavigatePrevious<cr>
 
 " Colorscheme
 let &t_Co=256
-colorscheme spacecamp_lite
-
-" NERDTree
-let g:NERDTreeMinimalUI=1
-let g:NERDTreeMapOpenVSplit='s'
-nnoremap <leader>p :NERDTreeToggle<CR>
+colorscheme gruvbox
+set background=dark
 
 " FileBrowser w/ Netrw
-" let g:netrw_banner=0
-" let g:netrw_browse_split=4
-" let g:netrw_altv=1
-" let g:netrw_liststyle=3
-" let g:netrw_list_hide=netrw_gitignore#Hide()
-" let g:netrw_list_hide.=',\|\s\s\)\zs\.\S\+' " ??
-" let g:netrw_localrmdir='rm -r'
-" let g:netrw_winsize = 75 " with 25 for netrw split
+let g:netrw_banner=0
+let g:netrw_browse_split=4
+let g:netrw_altv=1
+let g:netrw_liststyle=3
+let g:netrw_winsize = 75 " with 25 for netrw split
+let g:netrw_list_hide=netrw_gitignore#Hide()
 
 " Vim splits
-nmap <Leader>h :wincmd h<CR>
-nmap <Leader>j :wincmd j<CR>
-nmap <Leader>k :wincmd k<CR>
-nmap <Leader>l :wincmd l<CR>
-noremap <Leader>\ :<C-u>split<CR>
-noremap <Leader>- :<C-u>vsplit<CR>
+nnoremap <Leader>h :wincmd h<CR>
+nnoremap <Leader>j :wincmd j<CR>
+nnoremap <Leader>k :wincmd k<CR>
+nnoremap <Leader>l :wincmd l<CR>
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <silent> <leader>+ :vertical resize +5<CR>
+nnoremap <silent> <leader>- :vertical resize -5<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-map - <C-W>-
-map + <C-W>+
-vmap <Leader>= <C-W><C-=>
 
 " NerdCommenter
 let g:NERDSpaceDelims=1
 let g:NERDTrimTrailingWhitespace=1
 
-"" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
-" augroup vimrc-sync-fromstart
-  " autocmd!
-  " autocmd BufEnter * :syntax sync maxlines=200
-" augroup END
-
-"" Remember cursor position
+" Remember cursor position
 augroup vimrc-remember-cursor-position
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
 
-"" make/cmake
+" make/cmake
 augroup vimrc-make-cmake
   autocmd!
   autocmd FileType make setlocal noexpandtab
   autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
 augroup END
 
-" vim-go
-" run :GoBuild or :GoTestCompile based on the go file
-function! s:build_go_files()
-  let l:file = expand('%')
-  if l:file =~# '^\f\+_test\.go$'
-    call go#test#Test(0, 1)
-  elseif l:file =~# '^\f\+\.go$'
-    call go#cmd#Build(0)
-  endif
-endfunction
+" Scala
+au BufRead,BufNewFile *.sbt set filetype=scala
 
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
-
-let g:go_list_type = "quickfix"
-let g:go_fmt_command = "goimports"
-let g:go_metalinter_autosave = 1
-let g:go_auto_type_info = 1
-
-" let g:go_fmt_fail_silently = 1
-let g:go_highlight_types = 1
-" let g:go_highlight_fields = 1
-" let g:go_highlight_functions = 1
-" let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-" let g:go_highlight_build_constraints = 1
-" let g:go_highlight_structs = 1
-" let g:go_highlight_generate_tags = 1
-" let g:go_highlight_space_tab_error = 0
-" let g:go_highlight_array_whitespace_error = 0
-" let g:go_highlight_trailing_whitespace_error = 0
-" let g:go_highlight_extra_types = 1
-
+" Go
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
-" coc config
+"CoC config
 set updatetime=300
 set shortmess+=c
-set nobackup
-set nowritebackup
-set cmdheight=2
+" set cmdheight=2
+set signcolumn=yes
+set statusline=""
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-" inoremap <silent><expr> <TAB>
-      " \ pumvisible() ? "\<C-n>" :
-      " \ <SID>check_back_space() ? "\<TAB>" :
-      " \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-" function! s:check_back_space() abort
-  " let col = col('.') - 1
-  " return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
 
-" Remap keys for gotos
+" keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -253,20 +168,18 @@ vmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+augroup cocformatter
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType scala setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
 " Fix autofix problem of current line
 nmap <leader>qf <Plug>(coc-fix-current)
@@ -279,3 +192,16 @@ nnoremap <Leader>i :OR<CR>
 
 " Prettier integration
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+" Fix common mistypings
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qal
+
