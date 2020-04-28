@@ -2,13 +2,15 @@ set nocompatible
 syntax on
 filetype plugin indent on
 
+" Will this get rid of text artifacts?
+" au BufWritePost * :silent! :syntax sync fromstart<cr>:redraw!<cr>
+
 let mapleader=' '
 
 set noerrorbells
 set number " line numbers
 set encoding=utf-8
 set fileencoding=utf-8
-set ttyfast
 set noswapfile
 set nobackup
 set incsearch
@@ -23,12 +25,16 @@ set formatoptions+=j " Delete comment character when joining commented lines
 autocmd BufWritePre * %s/\s\+$//e " trim trailing whitespace pre-save
 set backspace=indent,eol,start " Allow backspace to delete indentation and inserted text
 
+" Remember cursor position
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+
+
 " Maintain undo history between sessions
 set undofile
 set undodir=~/.vim/undodir
-
-" Find Files - search subfolders and provide tab completion
-" set path+=**
 
 " vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -41,11 +47,11 @@ call plug#begin('~/.vim/plugged')
 
 " QoL
 Plug 'preservim/nerdcommenter'
-" Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-fugitive'
+Plug 'vim-airline/vim-airline'
+
+Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
 Plug 'ap/vim-css-color'
-" Plug 'git@github.com:kien/ctrlp.vim.git'
 
 Plug 'christoomey/vim-tmux-navigator'
 
@@ -104,18 +110,8 @@ nnoremap <C-H> <C-W><C-H>
 let g:NERDSpaceDelims=1
 let g:NERDTrimTrailingWhitespace=1
 
-" Remember cursor position
-augroup vimrc-remember-cursor-position
-  autocmd!
-  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-augroup END
-
 " make/cmake
-augroup vimrc-make-cmake
-  autocmd!
-  autocmd FileType make setlocal noexpandtab
-  autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
-augroup END
+au FileType make setlocal noexpandtab
 
 " Scala
 au BufRead,BufNewFile *.sbt set filetype=scala
@@ -124,11 +120,10 @@ au BufRead,BufNewFile *.sbt set filetype=scala
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 "CoC config
+set hidden
 set updatetime=300
 set shortmess+=c
-" set cmdheight=2
 set signcolumn=yes
-set statusline=""
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -147,8 +142,8 @@ nmap <silent> gr <Plug>(coc-references)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Use K to either doHover or show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -193,15 +188,19 @@ nnoremap <Leader>i :OR<CR>
 " Prettier integration
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
-" Fix common mistypings
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev Qall! qall!
-cnoreabbrev Wq wq
-cnoreabbrev Wa wa
-cnoreabbrev wQ wq
-cnoreabbrev WQ wq
-cnoreabbrev W w
-cnoreabbrev Q q
-cnoreabbrev Qall qal
+" Statusline
+" set laststatus=2
+" set statusline=
+" set statusline+=%{coc#status()}             " coc
+" set statusline+=%=%*                        " separator
+" set statusline+=%{GitLine()}                " Current git branch
+" set statusline+=%#Number#%y%*               " file type
+" set statusline+=%#Identifier#%5l%*          " current line
+" set statusline+=%#SpecialKey#/%L%*          " total lines
+" set statusline+=\ %F                      " file path
+
+" function! GitLine()
+  " let l:branchname = system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+  " return strlen(l:branchname) > 0?' '.l:branchname.' ':''
+" endfunction
 

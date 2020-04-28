@@ -55,6 +55,8 @@ alias pip="/usr/local/bin/pip3"
 # Homebrew Tricks
 alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
 
+function killport() { lsof -i TCP:$1 | grep LISTEN | awk '{print $2}' | xargs kill -9 }
+
 # Git
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
@@ -66,6 +68,7 @@ gitclean() {
 # VIM
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
+alias cocrc="$EDITOR ~/.vim/coc-settings.json"
 
 # tmux
 alias tmuxrc="$EDITOR ~/.tmux.conf"
