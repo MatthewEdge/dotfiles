@@ -2,12 +2,9 @@ set nocompatible
 syntax on
 filetype plugin indent on
 
-" Will this get rid of text artifacts?
-" au BufWritePost * :silent! :syntax sync fromstart<cr>:redraw!<cr>
-
 let mapleader=' '
 
-set noerrorbells
+set noerrorbells novisualbell
 set number " line numbers
 set encoding=utf-8
 set fileencoding=utf-8
@@ -22,8 +19,16 @@ set shiftwidth=2
 set wrap
 set linebreak
 set formatoptions+=j " Delete comment character when joining commented lines
-autocmd BufWritePre * %s/\s\+$//e " trim trailing whitespace pre-save
 set backspace=indent,eol,start " Allow backspace to delete indentation and inserted text
+
+" trim trailing whitespace pre-save
+autocmd BufWritePre * %s/\s\+$//e
+
+" Enable cross-app copy/paste after vim yank/paste
+set clipboard+=unnamedplus
+
+" Do not show mode on command line since vim-airline can show it
+set noshowmode
 
 " Remember cursor position
 augroup vimrc-remember-cursor-position
@@ -36,6 +41,58 @@ augroup END
 set undofile
 set undodir=~/.vim/undodir
 
+" statusline
+let g:currentmode={
+       \ 'n'  : 'NORMAL ',
+       \ 'v'  : 'VISUAL ',
+       \ 'V'  : 'V·Line ',
+       \ ''   : 'V·Block ',
+       \ 'i'  : 'INSERT ',
+       \ 'R'  : 'R ',
+       \ 'Rv' : 'V·Replace ',
+       \ 'c'  : 'Command ',
+       \}
+
+set statusline=
+set statusline+=%1*
+
+" Show current mode
+set statusline+=\ %{toupper(g:currentmode[mode()])}
+set statusline+=%{&spell?'[SPELL]':''}
+
+set statusline+=%#Warnings#
+set statusline+=%{&paste?'[PASTE]':''}
+
+set statusline+=%2*
+" File path, as typed or relative to current directory
+set statusline+=\ %F
+
+set statusline+=%{&modified?'\ [+]':''}
+set statusline+=%{&readonly?'\ []':''}
+
+" Truncate line here
+set statusline+=%<
+
+" Separation point between left and right aligned items.
+set statusline+=%=
+
+set statusline+=%{&filetype!=#''?&filetype.'\ ':'none\ '}
+
+" Encoding & Fileformat
+set statusline+=%#Warnings#
+set statusline+=%{&fileencoding!='utf-8'?'['.&fileencoding.']':''}
+
+set statusline+=%2*
+set statusline+=%-7([%{&fileformat}]%)
+
+" Warning about byte order
+set statusline+=%#Warnings#
+set statusline+=%{&bomb?'[BOM]':''}
+
+set statusline+=%1*
+" Location of cursor line
+set statusline+=[%l/%L]
+
 " vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -47,9 +104,9 @@ call plug#begin('~/.vim/plugged')
 
 " QoL
 Plug 'preservim/nerdcommenter'
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
 
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
 Plug 'ap/vim-css-color'
 
@@ -63,6 +120,7 @@ let g:go_def_mapping_enabled = 0 " Let coc manage nav
 
 " Scala
 Plug 'derekwyatt/vim-scala'
+au BufRead,BufNewFile *.sbt set filetype=scala
 
 " Autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -71,7 +129,7 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 call plug#end()
 
 " Fix for languages that don't seem to work with polyglot
-let g:polyglot_disabled = ['scala', 'go']
+" let g:polyglot_disabled = ['scala', 'go']
 
 " tmux
 nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
@@ -94,13 +152,13 @@ let g:netrw_winsize = 75 " with 25 for netrw split
 let g:netrw_list_hide=netrw_gitignore#Hide()
 
 " Vim splits
-nnoremap <Leader>h :wincmd h<CR>
-nnoremap <Leader>j :wincmd j<CR>
-nnoremap <Leader>k :wincmd k<CR>
-nnoremap <Leader>l :wincmd l<CR>
-nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-nnoremap <silent> <leader>+ :vertical resize +5<CR>
-nnoremap <silent> <leader>- :vertical resize -5<CR>
+" nnoremap <Leader>h :wincmd h<CR>
+" nnoremap <Leader>j :wincmd j<CR>
+" nnoremap <Leader>k :wincmd k<CR>
+" nnoremap <Leader>l :wincmd l<CR>
+" nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+" nnoremap <silent> <leader>+ :vertical resize +5<CR>
+" nnoremap <silent> <leader>- :vertical resize -5<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -109,12 +167,6 @@ nnoremap <C-H> <C-W><C-H>
 " NerdCommenter
 let g:NERDSpaceDelims=1
 let g:NERDTrimTrailingWhitespace=1
-
-" make/cmake
-au FileType make setlocal noexpandtab
-
-" Scala
-au BufRead,BufNewFile *.sbt set filetype=scala
 
 " Go
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
@@ -127,7 +179,7 @@ set signcolumn=yes
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
@@ -140,10 +192,6 @@ nmap <silent> gr <Plug>(coc-references)
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" navigate diagnostics
-" nmap <silent> [g <Plug>(coc-diagnostic-prev)
-" nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Use K to either doHover or show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -158,9 +206,6 @@ endfunction
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 
-" Remap for format selected region
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Find symbol of current document
@@ -173,11 +218,8 @@ augroup cocformatter
   " Setup formatexpr specified filetype(s).
   autocmd FileType scala setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+  " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
-
-" Fix autofix problem of current line
-nmap <leader>qf <Plug>(coc-fix-current)
 
 " Format and organize imports
 command! -nargs=0 Format :call CocAction('format')
@@ -187,20 +229,3 @@ nnoremap <Leader>i :OR<CR>
 
 " Prettier integration
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
-
-" Statusline
-" set laststatus=2
-" set statusline=
-" set statusline+=%{coc#status()}             " coc
-" set statusline+=%=%*                        " separator
-" set statusline+=%{GitLine()}                " Current git branch
-" set statusline+=%#Number#%y%*               " file type
-" set statusline+=%#Identifier#%5l%*          " current line
-" set statusline+=%#SpecialKey#/%L%*          " total lines
-" set statusline+=\ %F                      " file path
-
-" function! GitLine()
-  " let l:branchname = system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-  " return strlen(l:branchname) > 0?' '.l:branchname.' ':''
-" endfunction
-
