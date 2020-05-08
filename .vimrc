@@ -4,28 +4,26 @@ filetype plugin indent on
 
 let mapleader=' '
 
+set spell spelllang=en_us
 set noerrorbells novisualbell
 set number " line numbers
-set encoding=utf-8
-set fileencoding=utf-8
-set noswapfile
-set nobackup
-set incsearch
-set autoindent
-set expandtab
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set wrap
-set linebreak
+set encoding=utf-8 fileencoding=utf-8
+set noswapfile nobackup nowritebackup
+set incsearch ignorecase smartcase hlsearch
+set autoindent expandtab tabstop=2 softtabstop=2 shiftwidth=2
+set wrap linebreak
 set formatoptions+=j " Delete comment character when joining commented lines
 set backspace=indent,eol,start " Allow backspace to delete indentation and inserted text
+
+" Maintain undo history between sessions
+set undofile
+set undodir=~/.vim/undodir
 
 " trim trailing whitespace pre-save
 autocmd BufWritePre * %s/\s\+$//e
 
 " Enable cross-app copy/paste after vim yank/paste
-set clipboard+=unnamedplus
+set clipboard^=unnamed,unnamedplus
 
 " Do not show mode on command line since vim-airline can show it
 set noshowmode
@@ -37,61 +35,6 @@ augroup vimrc-remember-cursor-position
 augroup END
 
 
-" Maintain undo history between sessions
-set undofile
-set undodir=~/.vim/undodir
-
-" statusline
-let g:currentmode={
-       \ 'n'  : 'NORMAL ',
-       \ 'v'  : 'VISUAL ',
-       \ 'V'  : 'V·Line ',
-       \ ''   : 'V·Block ',
-       \ 'i'  : 'INSERT ',
-       \ 'R'  : 'R ',
-       \ 'Rv' : 'V·Replace ',
-       \ 'c'  : 'Command ',
-       \}
-
-set statusline=
-set statusline+=%1*
-
-" Show current mode
-set statusline+=\ %{toupper(g:currentmode[mode()])}
-set statusline+=%{&spell?'[SPELL]':''}
-
-set statusline+=%#Warnings#
-set statusline+=%{&paste?'[PASTE]':''}
-
-set statusline+=%2*
-" File path, as typed or relative to current directory
-set statusline+=\ %F
-
-set statusline+=%{&modified?'\ [+]':''}
-set statusline+=%{&readonly?'\ []':''}
-
-" Truncate line here
-set statusline+=%<
-
-" Separation point between left and right aligned items.
-set statusline+=%=
-
-set statusline+=%{&filetype!=#''?&filetype.'\ ':'none\ '}
-
-" Encoding & Fileformat
-set statusline+=%#Warnings#
-set statusline+=%{&fileencoding!='utf-8'?'['.&fileencoding.']':''}
-
-set statusline+=%2*
-set statusline+=%-7([%{&fileformat}]%)
-
-" Warning about byte order
-set statusline+=%#Warnings#
-set statusline+=%{&bomb?'[BOM]':''}
-
-set statusline+=%1*
-" Location of cursor line
-set statusline+=[%l/%L]
 
 " vim-plug
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -104,7 +47,7 @@ call plug#begin('~/.vim/plugged')
 
 " QoL
 Plug 'preservim/nerdcommenter'
-" Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline'
 
 " Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
