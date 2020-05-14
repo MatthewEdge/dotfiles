@@ -93,7 +93,10 @@ nnoremap <C-p> :GFiles<CR> " GFiles for git?
 nnoremap <Leader>pf :Files<CR>
 nnoremap <Leader>+ :vertical resize +5<CR>
 nnoremap <Leader>- :vertical resize -5<CR>
-vnoremap X "_d
+
+" Move highlighted blocks up/down
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 " FileBrowser w/ Netrw
 let g:netrw_banner=0
