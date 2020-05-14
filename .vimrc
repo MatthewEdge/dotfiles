@@ -4,36 +4,29 @@ filetype plugin indent on
 
 let mapleader=' '
 
+set hidden
 set spell spelllang=en_us
 set noerrorbells novisualbell
 set number " line numbers
 set encoding=utf-8 fileencoding=utf-8
 set noswapfile nobackup nowritebackup
 set incsearch ignorecase smartcase hlsearch
-set autoindent expandtab tabstop=2 softtabstop=2 shiftwidth=2
-set wrap linebreak
+set smartindent expandtab tabstop=2 softtabstop=2 shiftwidth=2
+set nowrap linebreak
 set formatoptions+=j " Delete comment character when joining commented lines
 set backspace=indent,eol,start " Allow backspace to delete indentation and inserted text
-
-" Maintain undo history between sessions
-set undofile
-set undodir=~/.vim/undodir
+set undofile undodir=~/.vim/undodir " Maintain undo history between sessions
+set clipboard^=unnamed,unnamedplus " Enable cross-app copy/paste after vim yank/paste
+set noshowmode " Do not show mode on command line since vim-airline can show it
 
 " trim trailing whitespace pre-save
 autocmd BufWritePre * %s/\s\+$//e
-
-" Enable cross-app copy/paste after vim yank/paste
-set clipboard^=unnamed,unnamedplus
-
-" Do not show mode on command line since vim-airline can show it
-set noshowmode
 
 " Remember cursor position
 augroup vimrc-remember-cursor-position
   autocmd!
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
-
 
 
 " vim-plug
@@ -48,12 +41,19 @@ call plug#begin('~/.vim/plugged')
 " QoL
 Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
-
-" Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() }}
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
 Plug 'ap/vim-css-color'
+Plug 'mbbill/undotree'
 
-Plug 'christoomey/vim-tmux-navigator'
+" Markdown preview
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
+" Autocomplete
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 Plug 'sheerun/vim-polyglot'
 
@@ -65,26 +65,35 @@ let g:go_def_mapping_enabled = 0 " Let coc manage nav
 Plug 'derekwyatt/vim-scala'
 au BufRead,BufNewFile *.sbt set filetype=scala
 
-" Autocomplete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
 call plug#end()
 
-" Fix for languages that don't seem to work with polyglot
-" let g:polyglot_disabled = ['scala', 'go']
-
 " tmux
-nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <c-/> :TmuxNavigatePrevious<cr>
+" nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+" nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+" nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+" nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+" nnoremap <silent> <c-/> :TmuxNavigatePrevious<cr>
 
 " Colorscheme
-let &t_Co=256
 colorscheme gruvbox
 set background=dark
+
+" Remaps
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <Leader>ps :Rg<SPACE>
+nnoremap <C-p> :GFiles<CR> " GFiles for git?
+nnoremap <Leader>pf :Files<CR>
+nnoremap <Leader>+ :vertical resize +5<CR>
+nnoremap <Leader>- :vertical resize -5<CR>
+vnoremap X "_d
 
 " FileBrowser w/ Netrw
 let g:netrw_banner=0
@@ -94,18 +103,6 @@ let g:netrw_liststyle=3
 let g:netrw_winsize = 75 " with 25 for netrw split
 let g:netrw_list_hide=netrw_gitignore#Hide()
 
-" Vim splits
-" nnoremap <Leader>h :wincmd h<CR>
-" nnoremap <Leader>j :wincmd j<CR>
-" nnoremap <Leader>k :wincmd k<CR>
-" nnoremap <Leader>l :wincmd l<CR>
-" nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-" nnoremap <silent> <leader>+ :vertical resize +5<CR>
-" nnoremap <silent> <leader>- :vertical resize -5<CR>
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
 
 " NerdCommenter
 let g:NERDSpaceDelims=1
@@ -115,60 +112,44 @@ let g:NERDTrimTrailingWhitespace=1
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 "CoC config
-set hidden
-set updatetime=300
+" set updatetime=300
 set shortmess+=c
 set signcolumn=yes
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Use K to either doHover or show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+fun! GoCoc()
+  " Required for coc to function
+  inoremap <buffer> <silent><expr> <TAB>
+                  \ pumvisible() ? "\<C-n>" :
+                  \ <SID>check_back_space() ? "\<TAB>" :
+                  \ coc#refresh()
+  inoremap <buffer> <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  inoremap <buffer> <silent><expr> <C-space> coc#refresh()
 
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+  " Fix autofix problem of current line
+  nmap <buffer> <leader>qf  <Plug>(coc-fix-current)
 
-augroup cocformatter
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType scala setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+  " keys for gotos
+  nmap <buffer> <leader>gd <Plug>(coc-definition)
+  nmap <buffer> <leader>gy <Plug>(coc-type-definition)
+  nmap <buffer> <leader>gi <Plug>(coc-implementation)
+  nmap <buffer> <leader>gr <Plug>(coc-references)
+  nmap <buffer> <leader>rn <Plug>(coc-rename)
+  nnoremap <buffer> <leader>cr :CocRestart
 
-" Format and organize imports
-command! -nargs=0 Format :call CocAction('format')
-nnoremap <Leader>f :Format<CR>
-command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
-nnoremap <Leader>i :OR<CR>
+  " Format and organize imports
+  command! -nargs=0 Format :call CocAction('format')
+  nnoremap <Leader>f :Format<CR>
+  command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
+  nnoremap <Leader>oi :OR<CR>
 
-" Prettier integration
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
+  " Prettier integration
+  command! -nargs=0 Prettier :CocCommand prettier.formatFile
+endfun
+
+" In case we want to try YCM for ts/java/go
+autocmd FileType * :call GoCoc()
