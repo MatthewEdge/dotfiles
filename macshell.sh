@@ -8,7 +8,7 @@ brew tap AdoptOpenJDK/openjdk
 
 # Commonly used casks
 brew cask install iterm2 flux spectacle
-brew install jq 
+brew install jq
 
 # Github CLI
 brew install hub
@@ -34,3 +34,7 @@ java -version
 brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 zsh --version
+
+# Git config
+git config --global core.pager 'cat'
+git config --global user.name 'Matthew Edge'
