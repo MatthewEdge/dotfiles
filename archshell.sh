@@ -27,7 +27,13 @@ vim +PlugInstall +qall
 pacman -S jdk-openjdk scala sbt
 vim +CocInstall coc-metals
 
+# Git
+pacman -S git
+git config --global user.name "Matthew Edge"
+git config --global user.email "mattedgeis@gmail.com"
+
 # Misc. utilities
+
 install_pulse
 
 # Zoom
