@@ -132,3 +132,13 @@ export GOPATH=/Users/$(whoami)/code/go
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
 export PATH=$PATH:$SCALA_HOME/bin
+
+# FFmpeg
+screenshot() {
+  RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
+  DT=$(date +'%m-%d-%YT%H-%M-%S')
+  ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
+}
+
+# Image Viewing
+alias open="viewnior"

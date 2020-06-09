@@ -19,6 +19,10 @@ cp -f ./.vimrc $HOME/.vimrc
 
 # Ensure packages
 
+# Font preference
+pacman -S otf-fira-code
+cp -f ./archlinux/.Xresources $HOME/.Xresources
+
 ## Vim
 pacman -S vim nodejs git
 vim +PlugInstall +qall
@@ -38,6 +42,7 @@ git config --global user.email "mattedgeis@gmail.com"
 # TODO necessary?
 pacman -S mesa libva-mesa-driver vulkan-radeon
 
+# Audo fix
 install_pulse
 
 # Zoom
@@ -52,3 +57,6 @@ echo "Now paste this at the bottom of /etc/pulse/default.pa:"
 echo "set-default-source DEVICE-ID-HERE"
 
 echo "Probably a good idea to restart now!"
+
+# Screen capture
+pacman -S ffmpeg
