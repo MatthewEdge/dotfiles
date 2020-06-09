@@ -9,7 +9,7 @@ pacman -Syy
 systemctl enable NetworkManager
 
 # Copy trackpad conf
-cp -f ./archlinux/etc/X11/xorg.conf.d/30-touchpad.conf /etc/X11/xorg.conf.d/30-touchpad.conf
+cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
 # systemctl restart lightdm
 
 # Ensure working dir
@@ -32,7 +32,7 @@ cp -f ./archlinux/.Xresources $HOME/.Xresources
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ## Vim
-pacman -S vim nodejs git
+pacman -S gvim nodejs
 vim +PlugInstall +qall
 
 ## Java/Scala
