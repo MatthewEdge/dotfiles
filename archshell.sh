@@ -17,24 +17,27 @@ mkdir -p $HOME/code
 cp -f ./.zshrc $HOME/.zshrc
 cp -f ./.vimrc $HOME/.vimrc
 
+# Git
+pacman -S git
+git config --global user.name "Matthew Edge"
+git config --global user.email "mattedgeis@gmail.com"
+
 # Ensure packages
 
 # Font preference
 pacman -S otf-fira-code
 cp -f ./archlinux/.Xresources $HOME/.Xresources
 
+# ZSH autosuggest
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
 ## Vim
 pacman -S vim nodejs git
 vim +PlugInstall +qall
 
-## Scala
+## Java/Scala
 pacman -S jdk-openjdk scala sbt
 vim +CocInstall coc-metals
-
-# Git
-pacman -S git
-git config --global user.name "Matthew Edge"
-git config --global user.email "mattedgeis@gmail.com"
 
 # Misc. utilities
 
@@ -60,3 +63,4 @@ echo "Probably a good idea to restart now!"
 
 # Screen capture
 pacman -S ffmpeg
+echo "ffmpeg capture aliases in zshrc"
