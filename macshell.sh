@@ -1,6 +1,10 @@
 #!/bin/sh
 # Setup preferred shell environment on Mac
-# Run this first!
+
+# ZSH
+brew install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+zsh --version
 
 # Homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -14,28 +18,27 @@ brew install jq
 brew install hub
 
 cp ./.zshrc ~/.zshrc
+cp ./.vimrc ~/.vimrc
 
 # Vim
 brew install vim
-cp ./.vimrc ~/.vimrc
 vim +PlugInstall +qall!
 
 # For coc extensions
 brew install node
 
 # Notes Repo
-git clone git@github.com:MatthewEdge/notes.git ~/notes
+# git clone git@github.com:MatthewEdge/notes.git ~/notes
 
 # Homebrew-managed Java install
 brew cask install adoptopenjdk11
 java -version
 
-# ZSH
-brew install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-zsh --version
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# Scala
+brew install scala sbt
+vim +CocInstall coc-metals +qall!
 
 # Git config
+git config --global user.name "Matthew Edge"
+git config --global user.email "medge@medgelabs.io"
 git config --global core.pager 'cat'
-git config --global user.name 'Matthew Edge'

@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/$(whoami)/.oh-my-zsh
+export ZSH=$HOME/oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -7,12 +7,6 @@ ZSH_THEME="robbyrussell"
 
 DISABLE_UPDATE_PROMPT="true"
 export UPDATE_ZSH_DAYS=7
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -22,25 +16,15 @@ export UPDATE_ZSH_DAYS=7
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git history-substring-search zsh-autosuggestion)
+plugins=(git history-substring-search)
 
 # User configuration
-
-export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-# export MANPATH="/usr/local/man:$MANPATH"
-
 source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
 export EDITOR='vim'
-export TERM='xterm-256color'
-
-# Start tmux automatically
-# if [ -z "$TMUX" ]; then
-    # tmux attach -t default || tmux new -s default
-# fi
 
 #############################
 #  USER FUNCTION HELPERS
@@ -55,8 +39,6 @@ alias pip="/usr/local/bin/pip3"
 # Homebrew Tricks
 alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
 
-function killport() { lsof -i TCP:$1 | grep LISTEN | awk '{print $2}' | xargs kill -9 }
-
 # Git
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
@@ -70,15 +52,9 @@ export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
 
-# tmux
-alias tmuxrc="$EDITOR ~/.tmux.conf"
-alias t3p='tmux new-session \; split-window -v \; split-window -h \;'
-alias t2p='tmux new-session \; split-window -v \;'
-
 # Note Taking
 NOTES_DIR="$HOME/notes"
 mkdir -p $NOTES_DIR
-touch $NOTES_DIR/$(date '+%Y-%m-%d').txt
 alias note="vim $NOTES_DIR/$(date '+%Y-%m-%d').txt"
 alias catnote="cat $NOTES_DIR/$(date '+%Y-%m-%d').txt"
 alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').txt"
@@ -127,18 +103,9 @@ alias mcv="mvn clean verify"
 alias mvnGenArchetype="mvn archetype:generate -DarchetypeArtifactId=maven-archetype-archetype"
 
 # Golang
-export GOPATH=/Users/$(whoami)/code/go
+export GOPATH=$HOME/code/go
 
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
 export PATH=$PATH:$SCALA_HOME/bin
 
-# FFmpeg
-screenshot() {
-  RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
-  DT=$(date +'%m-%d-%YT%H-%M-%S')
-  ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
-}
-
-# Image Viewing
-alias open="viewnior"

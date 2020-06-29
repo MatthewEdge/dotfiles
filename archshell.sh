@@ -2,6 +2,11 @@
 
 # Configure Manjaro ArchLinux w/ i3 WM
 
+waitForIt() {
+  echo "Press any key to continue..."
+  read HelloIT
+}
+
 sudo pacman -Syy
 
 # Autostart NetworkManager
@@ -16,19 +21,29 @@ mkdir -p $HOME/code
 cp -f ./.zshrc $HOME/.zshrc
 cp -f ./.vimrc $HOME/.vimrc
 
+# Add arch-specific aliases to zshrc
+cat <<EOT >> $HOME/.zshrc
+screenshot() {
+  RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
+  DT=$(date +'%m-%d-%YT%H-%M-%S')
+  ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
+}
+
+# Image Viewing
+alias open="viewnior"
+EOT
+
 # Git
 sudo pacman -S git
 git config --global user.name "Matthew Edge"
-git config --global user.email "mattedgeis@gmail.com"
+git config --global user.email "medge@medgelabs.io"
+git config --global core.pager 'cat'
 
 # Ensure packages
 
 # Font preference
 sudo pacman -S otf-fira-code
 cp -f ./archlinux/.Xresources $HOME/.Xresources
-
-# ZSH autosuggest
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ## Vim (need node for CoC)
 sudo pacman -S gvim nodejs
@@ -41,6 +56,9 @@ vim +CocInstall coc-metals +qall
 ## JS/TS
 vim +CocInstall coc-tsserver +qall
 
+## Golang
+sudo pacman -S go
+
 ## Docker
 sudo pacman -S docker
 sudo groupadd docker
@@ -50,7 +68,6 @@ newgrp docker
 # Misc. utilities
 
 ## Radeo Drivers
-# TODO necessary?
 sudo pacman -S mesa libva-mesa-driver vulkan-radeon
 
 # Audo fix
@@ -60,18 +77,18 @@ install_pulse
 echo "Zoom Client time. Download the .tar.xz to ~/Downloads"
 echo "open https://zoom.us/download?os=linux"
 echo "When done - click enter..."
-read WaitForIt
+waitForIt()
 sudo pacman -U $HOME/Downloads/zoom_x86_64.pkg.tar.xz
 
 # Configuring default microphone
 echo "Grab microphone device id:"
-pacmd list-sources | grep -e device.string -e 'name:'
+sudo pacmd list-sources | grep -e device.string -e 'name:'
 echo "Now paste this at the bottom of /etc/pulse/default.pa:"
 echo "set-default-source DEVICE-ID-HERE"
+waitForIt()
 
 # Screen capture
 sudo pacman -S ffmpeg
-echo "ffmpeg capture aliases in zshrc"
 
 echo "Done!"
 echo "Probably a good idea to restart now!"
