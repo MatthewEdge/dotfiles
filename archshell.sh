@@ -2,7 +2,7 @@
 
 # Configure Manjaro ArchLinux w/ i3 WM
 
-sudo pacman -Syy
+sudo pacman -Syu
 
 # Autostart NetworkManager
 sudo systemctl enable NetworkManager
@@ -11,15 +11,23 @@ sudo systemctl enable NetworkManager
 cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
 # systemctl restart lightdm
 
+# zsh insurance
+pacman -S zsh
+rm -rf $HOME/.oh-my-zsh
+
 # Ensure working dir
 mkdir -p $HOME/code
 cp -f ./.zshrc $HOME/.zshrc
 cp -f ./.vimrc $HOME/.vimrc
 
+# Firefox
+sudo pacman -S firefox
+
 # Git
 sudo pacman -S git
 git config --global user.name "Matthew Edge"
 git config --global user.email "mattedgeis@gmail.com"
+git config --global core.pager 'cat'
 
 # Ensure packages
 
@@ -45,12 +53,11 @@ vim +CocInstall coc-tsserver +qall
 sudo pacman -S docker
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
-newgrp docker
+# newgrp docker
 
 # Misc. utilities
 
 ## Radeo Drivers
-# TODO necessary?
 sudo pacman -S mesa libva-mesa-driver vulkan-radeon
 
 # Audo fix
@@ -72,6 +79,9 @@ echo "set-default-source DEVICE-ID-HERE"
 # Screen capture
 sudo pacman -S ffmpeg
 echo "ffmpeg capture aliases in zshrc"
+
+# Source zshrc as a last step
+source $HOME/.zshrc
 
 echo "Done!"
 echo "Probably a good idea to restart now!"
