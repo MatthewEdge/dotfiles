@@ -105,7 +105,7 @@ alias mcv="mvn clean verify"
 alias mvnGenArchetype="mvn archetype:generate -DarchetypeArtifactId=maven-archetype-archetype"
 
 # Golang
-export GOPATH=/Users/$(whoami)/code/go
+export GOPATH=$HOME/code/go
 
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
