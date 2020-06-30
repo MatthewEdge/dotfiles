@@ -9,7 +9,6 @@ sudo systemctl enable NetworkManager
 
 # Copy trackpad conf
 cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
-# systemctl restart lightdm
 
 # zsh insurance
 pacman -S zsh
@@ -34,9 +33,6 @@ git config --global core.pager 'cat'
 # Font preference
 sudo pacman -S otf-fira-code
 cp -f ./archlinux/.Xresources $HOME/.Xresources
-
-# ZSH autosuggest
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ## Vim (need node for CoC)
 sudo pacman -S gvim nodejs
