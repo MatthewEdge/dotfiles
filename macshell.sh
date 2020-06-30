@@ -39,3 +39,16 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # Git config
 git config --global core.pager 'cat'
 git config --global user.name 'Matthew Edge'
+git config --global user.email 'medge@medgelabs.io'
+
+# Scala
+brew install scala sbt
+
+# coc Intellisense
+vim +CocInstall coc-metals +qall!
+
+# JS
+brew install node
+
+# Coc extensions
+vim +CocInstall coc-tsserver coc-json +qall!
