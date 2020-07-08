@@ -7,14 +7,17 @@ waitForIt() {
   read HelloIT
 }
 
-sudo pacman -Syy
+sudo pacman -Syu
 
 # Autostart NetworkManager
 sudo systemctl enable NetworkManager
 
 # Copy trackpad conf
 cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
-# systemctl restart lightdm
+
+# zsh insurance
+pacman -S zsh
+rm -rf $HOME/.oh-my-zsh
 
 # Ensure working dir
 mkdir -p $HOME/code
@@ -32,6 +35,9 @@ screenshot() {
 # Image Viewing
 alias open="viewnior"
 EOT
+
+# Firefox
+sudo pacman -S firefox
 
 # Git
 sudo pacman -S git
@@ -63,7 +69,7 @@ sudo pacman -S go
 sudo pacman -S docker
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
-newgrp docker
+# newgrp docker
 
 # Misc. utilities
 
@@ -89,6 +95,9 @@ waitForIt()
 
 # Screen capture
 sudo pacman -S ffmpeg
+
+# Source zshrc as a last step
+source $HOME/.zshrc
 
 echo "Done!"
 echo "Probably a good idea to restart now!"

@@ -38,7 +38,11 @@ java -version
 brew install scala sbt
 vim +CocInstall coc-metals +qall!
 
+# JS
+vim +CocInstall coc-tsserver coc-json +qall!
+
 # Git config
 git config --global user.name "Matthew Edge"
 git config --global user.email "medge@medgelabs.io"
 git config --global core.pager 'cat'
+
