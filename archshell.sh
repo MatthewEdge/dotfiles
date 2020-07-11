@@ -7,12 +7,17 @@ sudo pacman -Syu
 # Autostart NetworkManager
 sudo systemctl enable NetworkManager
 
+# Enable AUR through yay
+sudo pacman -S yay
+
 # Copy trackpad conf
 cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
 
 # zsh insurance
-pacman -S zsh
-rm -rf $HOME/.oh-my-zsh
+sudo pacman -S zsh
+yay -S oh-my-zsh-git oh-my-zsh-powerline-theme-git
+sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
+sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
 
 # Ensure working dir
 mkdir -p $HOME/code
