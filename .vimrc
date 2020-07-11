@@ -164,10 +164,10 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 " keys for gotos
 nmap <leader>gd <Plug>(coc-definition)
-" nmap <buffer> <leader>gy <Plug>(coc-type-definition)
 nmap <leader>gi <Plug>(coc-implementation)
 nmap <leader>gr <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>rr <Plug>(coc-rename)
+nmap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
 nnoremap <leader>cr :CocRestart<CR>
 
 " Format and organize imports

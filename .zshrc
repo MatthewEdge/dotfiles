@@ -16,17 +16,15 @@ export UPDATE_ZSH_DAYS=7
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git history-substring-search archlinux)
+plugins=(git history-substring-search)
 
 # User configuration
-
 source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
 export EDITOR='vim'
-# export TERM='xterm-256color'
 
 #############################
 #  USER FUNCTION HELPERS
@@ -111,12 +109,3 @@ export GOPATH=$HOME/code/go
 export SCALA_HOME=/usr/local/opt/scala/idea
 export PATH=$PATH:$SCALA_HOME/bin
 
-# FFmpeg
-screenshot() {
-  RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
-  DT=$(date +'%m-%d-%YT%H-%M-%S')
-  ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
-}
-
-# Image Viewing
-alias open="viewnior"
