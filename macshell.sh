@@ -1,10 +1,14 @@
 #!/bin/sh
 # Setup preferred shell environment on Mac
 
+# Override Git with latest version
+brew install git
+brew link --overwrite git
+
 # ZSH
 brew install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-zsh --version
+#sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+#zsh --version
 
 # Homebrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -44,5 +48,5 @@ vim +CocInstall coc-tsserver coc-json +qall!
 # Git config
 git config --global user.name "Matthew Edge"
 git config --global user.email "medge@medgelabs.io"
-git config --global core.pager 'cat'
-
+git config --global core.pager 'less'
+git config --global init.defaultBranch main
