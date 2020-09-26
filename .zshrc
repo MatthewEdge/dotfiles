@@ -47,6 +47,14 @@ gitclean() {
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
 }
 
+# Streams
+alias sorceryDeath="$HOME/code/stream/sorcery-sync/bin/sync -f ~/DriveSync/SorcerySync/Deaths.txt"
+alias showSorceryDeaths="cat $HOME/DriveSync/SorcerySync/Deaths.txt"
+
+## Medgelabs Stream
+export TWITCH_HOME=$HOME/twitch
+mkdir -p $TWITCH_HOME
+
 # VIM
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
@@ -108,4 +116,24 @@ export GOPATH=$HOME/code/go
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
 export PATH=$PATH:$SCALA_HOME/bin
+
+# Terraform
+ekstf() {
+  export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
+  export SECRET_KEY=$(cat ~/.aws/credentials| grep aws_secret_access_key | cut -d '=' -f2 | cut -d ' ' -f2)
+
+  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light init
+  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light apply -auto-approve
+  aws eks --region us-east-1 update-kubeconfig --name medgelabs
+}
+
+ekstfd() {
+  export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
+  export SECRET_KEY=$(cat ~/.aws/credentials| grep aws_secret_access_key | cut -d '=' -f2 | cut -d ' ' -f2)
+
+  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light destroy
+}
+
+alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
+alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
