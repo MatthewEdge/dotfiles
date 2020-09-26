@@ -10,8 +10,8 @@ set noerrorbells novisualbell
 set relativenumber " jump line numbers
 set encoding=utf-8 fileencoding=utf-8
 set noswapfile nobackup nowritebackup
-set incsearch hlsearch
-set ignorecase
+set incsearch nohlsearch
+" set ignorecase
 set smartcase
 set smartindent expandtab tabstop=2 shiftwidth=2
 set nowrap linebreak
@@ -20,9 +20,9 @@ set backspace=indent,eol,start " Allow backspace to delete indentation and inser
 set undofile undodir=~/.vim/undodir " Maintain undo history between sessions
 set clipboard^=unnamed,unnamedplus " Enable cross-app copy/paste after vim yank/paste
 set noshowmode " Do not show mode on command line since vim-airline can show it
-set cmdheight=2
+set cmdheight=2 " More space for bottom messages
 set updatetime=50
-set shortmess+=c
+set shortmess+=c " Don't pass messages to ins-completion-menu
 
 " trim trailing whitespace pre-save
 autocmd BufWritePre * %s/\s\+$//e
@@ -47,14 +47,15 @@ Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() }}
 Plug 'junegunn/fzf.vim'
+Plug 'stsewd/fzf-checkout.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
-Plug 'ap/vim-css-color'
+" Plug 'ap/vim-css-color'
 Plug 'sheerun/vim-polyglot'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 
 " Lint/fix
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 
 " Autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -68,6 +69,10 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 au BufRead,BufNewFile *.sbt set filetype=scala
 
 call plug#end()
+
+" FZF
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
 
 " Colorscheme
 let g:gruvbox_contrast_dark = 'hard'
@@ -87,7 +92,6 @@ nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
-" nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <leader>ps :Rg<SPACE>
 nnoremap <leader>pf :Files<CR>
@@ -98,21 +102,12 @@ nnoremap <leader>- :vertical resize -5<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
-" ale
-let g:ale_completion_enabled = 0
-let g:airline#extensions#ale#enabled = 1
-let g:ale_fix_on_save = 1
-let g:ale_linters = {
-      \ 'go': ['golint', 'gofmt'],
-      \ 'javascript': ['prettier','eslint']
-      \}
-let g:ale_fixers = {
-      \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-      \   'javascript': ['prettier','eslint'],
-      \}
-let g:ale_lint_delay = 800
+" Open in Firefox
+nnoremap <leader>of :!open -a Firefox %<CR><CR>
 
 " vim-fugitive
+nnoremap <leader>ga :Git fetch --all<CR>
+nnoremap <leader>gc :GCheckout<CR>
 nmap <leader>gs :G<CR>
 " Get left side diff fragment
 nmap <leader>gf :diffget //2<CR>
@@ -180,6 +175,8 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " Or <C-space>
 inoremap <silent><expr> <C-space> coc#refresh()
 
+nnoremap <leader>cr :CocRestart<CR>
+
 " autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
@@ -190,7 +187,6 @@ nmap <leader>rr <Plug>(coc-rename)
 
 " Full project word search (and replace if edited)
 nmap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
-nnoremap <leader>cr :CocRestart<CR>
 
 " Format and organize imports
 command! -nargs=0 Format :call CocAction('format')
