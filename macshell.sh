@@ -15,7 +15,7 @@ brew install zsh
 brew tap AdoptOpenJDK/openjdk
 
 # Commonly used casks
-brew cask install iterm2 flux spectacle
+brew cask install iterm2 flux rectangle
 brew install jq
 
 # Github CLI
