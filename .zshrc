@@ -42,6 +42,13 @@ alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
 # Git
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
+## Open a GH PR window for the current branch
+pr() {
+  repo=$(got remote -v | grep -m 1 "(push)" | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/")
+  branch=$(git symbolic-ref --short -q HEAD)
+  open https://github.com/$repo/compare/main...$branch
+}
+
 gitclean() {
     git fetch -p
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
