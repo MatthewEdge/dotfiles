@@ -42,13 +42,6 @@ alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
 # Git
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
-## Open a GH PR window for the current branch
-pr() {
-  repo=$(got remote -v | grep -m 1 "(push)" | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/")
-  branch=$(git symbolic-ref --short -q HEAD)
-  open https://github.com/$repo/compare/main...$branch
-}
-
 gitclean() {
     git fetch -p
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
@@ -61,6 +54,7 @@ alias showSorceryDeaths="cat $HOME/DriveSync/SorcerySync/Deaths.txt"
 ## Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
+alias cdstream="cd $HOME/code/stream"
 
 # VIM
 export VIM_HOME="$HOME/.vim"
@@ -70,9 +64,15 @@ alias cocrc="$EDITOR ~/.vim/coc-settings.json"
 # Note Taking
 NOTES_DIR="$HOME/notes"
 mkdir -p $NOTES_DIR
-alias note="vim $NOTES_DIR/$(date '+%Y-%m-%d').txt"
-alias catnote="cat $NOTES_DIR/$(date '+%Y-%m-%d').txt"
-alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').txt"
+alias note="vim $NOTES_DIR/$(date '+%Y-%m-%d').md"
+alias catnote="cat $NOTES_DIR/$(date '+%Y-%m-%d').md"
+alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').md"
+alias opennotes="open $NOTES_DIR"
+
+# Vault for Local
+mkdir -p $HOME/vault
+export VAULT_ADDR='http://127.0.0.1:8200'
+export VAULT_TOKEN=$(cat $HOME/vault/token)
 
 # Kubernetes
 alias kgp="kubectl get pods"
@@ -119,6 +119,7 @@ alias mvnGenArchetype="mvn archetype:generate -DarchetypeArtifactId=maven-archet
 
 # Golang
 export GOPATH=$HOME/code/go
+alias gotest="go test ./..."
 
 # Scala
 export SCALA_HOME=/usr/local/opt/scala/idea
