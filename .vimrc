@@ -50,12 +50,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'stsewd/fzf-checkout.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
-" Plug 'ap/vim-css-color'
 Plug 'sheerun/vim-polyglot'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
-
-" Lint/fix
-" Plug 'dense-analysis/ale'
 
 " Autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -64,10 +60,6 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 " Go
 Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 
-" Scala
-Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
-au BufRead,BufNewFile *.sbt set filetype=scala
-
 call plug#end()
 
 " FZF
@@ -75,14 +67,14 @@ let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
 
 " Colorscheme
+colorscheme gruvbox
+set background=dark
 let g:gruvbox_contrast_dark = 'hard'
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 let g:gruvbox_invert_selection='0'
-colorscheme gruvbox
-set background=dark
 
 " Remaps
 nnoremap <C-J> <C-W><C-J>
@@ -95,6 +87,7 @@ nnoremap <leader>l :wincmd l<CR>
 nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <leader>ps :Rg<SPACE>
 nnoremap <leader>pf :Files<CR>
+nnoremap <leader>ds :CocList diagnostics<CR>
 nnoremap <C-p> :GFiles<CR>
 nnoremap <leader>+ :vertical resize +5<CR>
 nnoremap <leader>- :vertical resize -5<CR>
