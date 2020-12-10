@@ -60,6 +60,7 @@ alias cdstream="cd $HOME/code/stream"
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
+alias upvim="vim +PlugUpdate +PlugClean +qall"
 
 # Note Taking
 NOTES_DIR="$HOME/notes"
