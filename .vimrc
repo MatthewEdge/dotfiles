@@ -5,7 +5,8 @@ filetype plugin indent on
 let mapleader=' '
 
 set hidden
-set spell spelllang=en_us
+set nospell
+" set spell spelllang=en_us
 set noerrorbells novisualbell
 set relativenumber " jump line numbers
 set encoding=utf-8 fileencoding=utf-8
@@ -49,9 +50,12 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() }}
 Plug 'junegunn/fzf.vim'
 Plug 'stsewd/fzf-checkout.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'morhetz/gruvbox'
 Plug 'sheerun/vim-polyglot'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
+" Color Scheme
+" Plug 'morhetz/gruvbox'
+Plug 'aonemd/kuroi.vim'
 
 " Autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -62,19 +66,21 @@ Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 
 call plug#end()
 
+" Color Scheme
+colorscheme kuroi
+set background=dark
+set termguicolors
+" let g:gruvbox_contrast_dark = 'hard'
+" if exists('+termguicolors')
+  " let &t_8f = '\<Esc>[38;2;%lu;%lu;%lum'
+  " let &t_8b = '\<Esc>[48;2;%lu;%lu;%lum'
+" endif
+" let g:gruvbox_invert_selection='0'
+
 " FZF
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
 
-" Colorscheme
-colorscheme gruvbox
-set background=dark
-let g:gruvbox_contrast_dark = 'hard'
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-let g:gruvbox_invert_selection='0'
 
 " Remaps
 nnoremap <C-J> <C-W><C-J>
@@ -125,16 +131,29 @@ let g:NERDSpaceDelims=1
 let g:NERDTrimTrailingWhitespace=1
 
 " Go
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+augroup filetype_go
+  autocmd!
+  autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
-" shortcut go error
-nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
+  " shortcut go error
+  nnoremap <Leader>ee oif err != nil {<CR>log.Fatalf("%+v\n", err)<CR>}<CR><esc>kkI<esc>
+
+  " Debug shortcuts
+  nnoremap <leader>bp :GoDebugBreakpoint<CR>
+  nnoremap <leader>dn :GoDebugContinue<CR>
+
+  " we leave this hanging for flag input
+  nnoremap <leader>dbs :GoDebugStart
+  nnoremap <leader>dbe :GoDebugStop<CR>
+augroup END
 
 let g:go_def_mapping_enabled = 0
 let g:go_auto_type_info = 1
 let g:go_auto_sameids = 1
-let g:go_def_mode='gopls'
-let g:go_info_mode='gopls'
+let g:go_debug_windows = {
+      \ 'vars':       'rightbelow 40vnew',
+      \ 'stack':      'rightbelow 10new',
+\ }
 
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
