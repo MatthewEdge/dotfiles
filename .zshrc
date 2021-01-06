@@ -8,14 +8,6 @@ ZSH_THEME="robbyrussell"
 DISABLE_UPDATE_PROMPT="true"
 export UPDATE_ZSH_DAYS=7
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git history-substring-search)
 
 # User configuration
@@ -32,9 +24,8 @@ export EDITOR='vim'
 alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias ll="ls -alh"
 
-# Default to Python3
-alias python="/usr/local/bin/python3"
-alias pip="/usr/local/bin/pip3"
+# Locations
+alias code="$HOME/code"
 
 # Homebrew Tricks
 alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
@@ -47,20 +38,17 @@ gitclean() {
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
 }
 
-# Streams
-alias sorceryDeath="$HOME/code/stream/sorcery-sync/bin/sync -f ~/DriveSync/SorcerySync/Deaths.txt"
-alias showSorceryDeaths="cat $HOME/DriveSync/SorcerySync/Deaths.txt"
-
-## Medgelabs Stream
+# Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
 alias cdstream="cd $HOME/code/stream"
+alias cdbot="cd $HOME/code/stream/medgebot"
 
 # VIM
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
-alias upvim="vim +PlugUpdate +PlugClean +qall"
+alias upvim="vim +PlugUpdate +PlugClean +qall!"
 
 # Note Taking
 NOTES_DIR="$HOME/notes"
@@ -71,12 +59,13 @@ alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').md"
 alias opennotes="open $NOTES_DIR"
 
 # Vault for Local
-mkdir -p $HOME/vault
-export VAULT_ADDR='http://127.0.0.1:8200'
-export VAULT_TOKEN=$(cat $HOME/vault/token)
+# mkdir -p $HOME/vault
+# export VAULT_ADDR='http://127.0.0.1:8200'
+# export VAULT_TOKEN=$(cat $HOME/vault/token)
 
 # Kubernetes
 alias kgp="kubectl get pods"
+alias kgpan="kubectl get pods --all-namespaces -o wide"
 alias kgs="kubectl get svc"
 
 # Docker
@@ -145,4 +134,8 @@ ekstfd() {
 
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
+
+# Python
+alias pip="python -m pip"
+alias pipir="pip install -r requirements.txt"
 
