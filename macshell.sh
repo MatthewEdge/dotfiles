@@ -31,9 +31,6 @@ vim +PlugInstall +qall!
 # For coc extensions
 brew install node
 
-# Notes Repo
-# git clone git@github.com:MatthewEdge/notes.git ~/notes
-
 # Homebrew-managed Java install
 brew cask install adoptopenjdk11
 java -version
