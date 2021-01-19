@@ -46,8 +46,4 @@ vim +CocInstall coc-metals +qall!
 vim +CocInstall coc-tsserver coc-json +qall!
 
 # Git config
-git config --global user.name "Matthew Edge"
-git config --global user.email "medge@medgelabs.io"
-git config --global core.pager 'less'
-git config --global init.defaultBranch main
-git config --global pull.rebase false
+sh git.sh
