@@ -20,12 +20,11 @@ cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
 
 # zsh insurance
 sudo pacman -S zsh
-yay -S oh-my-zsh-git oh-my-zsh-powerline-theme-git
+yay -S oh-my-zsh-git
 sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
 sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
 
 # Ensure working dir
-mkdir -p $HOME/code
 cp -f ./.zshrc $HOME/.zshrc
 cp -f ./.vimrc $HOME/.vimrc
 
@@ -46,9 +45,7 @@ sudo pacman -S firefox
 
 # Git
 sudo pacman -S git
-git config --global user.name "Matthew Edge"
-git config --global user.email "medge@medgelabs.io"
-git config --global core.pager 'cat'
+sh ../git.sh
 
 # Ensure packages
 
@@ -78,7 +75,7 @@ sudo usermod -aG docker $(whoami)
 
 # Misc. utilities
 
-## Radeo Drivers
+## Radeon Drivers
 sudo pacman -S mesa libva-mesa-driver vulkan-radeon
 
 # Audo fix
