@@ -8,11 +8,6 @@ ZSH_THEME="robbyrussell"
 DISABLE_UPDATE_PROMPT="true"
 export UPDATE_ZSH_DAYS=7
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
@@ -21,9 +16,7 @@ plugins=(git history-substring-search)
 # User configuration
 source $ZSH/oh-my-zsh.sh
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
+export LANG=en_US.UTF-8
 export EDITOR='vim'
 
 #############################
@@ -32,9 +25,9 @@ export EDITOR='vim'
 alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias ll="ls -alh"
 
-# Default to Python3
-alias python="/usr/local/bin/python3"
-alias pip="/usr/local/bin/pip3"
+# Code folder
+CODE_DIR=$HOME/code
+mkdir -p $CODE_DIR
 
 # Homebrew Tricks
 alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
@@ -47,14 +40,10 @@ gitclean() {
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
 }
 
-# Streams
-alias sorceryDeath="$HOME/code/stream/sorcery-sync/bin/sync -f ~/DriveSync/SorcerySync/Deaths.txt"
-alias showSorceryDeaths="cat $HOME/DriveSync/SorcerySync/Deaths.txt"
-
-## Medgelabs Stream
+# Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
-alias cdstream="cd $HOME/code/stream"
+alias cdstream="cd $CODE_DIR/stream"
 
 # VIM
 export VIM_HOME="$HOME/.vim"
@@ -62,21 +51,52 @@ alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
 alias upvim="vim +PlugUpdate +PlugClean +qall"
 
-# Note Taking
-NOTES_DIR="$HOME/notes"
-mkdir -p $NOTES_DIR
-alias note="vim $NOTES_DIR/$(date '+%Y-%m-%d').md"
-alias catnote="cat $NOTES_DIR/$(date '+%Y-%m-%d').md"
-alias delnote="rm -f $NOTES_DIR/$(date '+%Y-%m-%d').md"
-alias opennotes="open $NOTES_DIR"
+# Note Taking, hosted by Mkdocs
+NOTES_DIR=$CODE_DIR/medgedocs/docs
+if [ ! -d "$NOTES_DIR" ]; then
+  git clone git@github.com:MatthewEdge/medgedocs.git $CODE_DIR/medgedocs
+fi
 
-# Vault for Local
-mkdir -p $HOME/vault
-export VAULT_ADDR='http://127.0.0.1:8200'
-export VAULT_TOKEN=$(cat $HOME/vault/token)
+alias cdnotes="cd $NOTES_DIR"
+
+# CLI for interacting with note files
+note() {
+  DATE=$(date '+%Y-%m-%d')
+  NOTE_NAME=${2:-$DATE}.md
+  NOTE_PATH=$NOTES_DIR/$NOTE_NAME
+
+  case $1 in
+    new|n)
+      vim $NOTE_PATH
+      ;;
+    cat|c)
+      cat $NOTE_PATH
+      ;;
+    del|d)
+      rm $NOTE_PATH
+      ;;
+    rename|r)
+      if [ -z "$2" ]; then echo "Usage: note rename NEW_NAME"; exit 1; fi
+      # TODO allow file > file rename?
+      mv $NOTE_PATH $NOTES_DIR/$2.md
+      ;;
+    *)
+      echo "Usage: note CMD ARGS"
+      echo "  new [NAME] - Create a new note, optionally with a given name"
+      echo "  cat [NAME] - cat the contents of the given / current day's note"
+      echo "  del [NAME] - delete the given / current day's note"
+      echo "  rename NEW_NAME - rename the current day's note to the given name"
+      exit 1
+      ;;
+  esac
+}
+
+alias opennotes="open http://localhost:8000" # Mkdocs Container
+alias todos="vim $NOTES_DIR/index.md"
 
 # Kubernetes
 alias kgp="kubectl get pods"
+alias kgpan="kubectl get pods --all-namespaces"
 alias kgs="kubectl get svc"
 
 # Docker
@@ -109,14 +129,6 @@ alias npmls="npm ls -g --parsable true --depth 1"
 nbin() {
   ./node_modules/.bin/"$@"
 }
-
-# Maven Aliases
-alias mci="mvn clean install"
-alias mcc="mvn clean compile"
-alias mct="mvn clean test"
-alias mcp="mvn clean package"
-alias mcv="mvn clean verify"
-alias mvnGenArchetype="mvn archetype:generate -DarchetypeArtifactId=maven-archetype-archetype"
 
 # Golang
 export GOPATH=$HOME/code/go
