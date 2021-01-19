@@ -8,9 +8,6 @@ ZSH_THEME="robbyrussell"
 DISABLE_UPDATE_PROMPT="true"
 export UPDATE_ZSH_DAYS=7
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git history-substring-search)
 
 # User configuration
@@ -44,12 +41,13 @@ gitclean() {
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
 alias cdstream="cd $CODE_DIR/stream"
+alias cdbot="cd $HOME/code/stream/medgebot"
 
 # VIM
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
-alias upvim="vim +PlugUpdate +PlugClean +qall"
+alias upvim="vim +PlugUpdate +PlugClean +qall!"
 
 # Note Taking, hosted by Mkdocs
 NOTES_DIR=$CODE_DIR/medgedocs/docs
@@ -96,8 +94,13 @@ alias todos="vim $NOTES_DIR/index.md"
 
 # Kubernetes
 alias kgp="kubectl get pods"
-alias kgpan="kubectl get pods --all-namespaces"
+alias kgpan="kubectl get pods --all-namespaces -o wide"
 alias kgs="kubectl get svc"
+
+# Vault for Local
+# mkdir -p $HOME/vault
+# export VAULT_ADDR='http://127.0.0.1:8200'
+# export VAULT_TOKEN=$(cat $HOME/vault/token)
 
 # Docker
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
@@ -157,4 +160,8 @@ ekstfd() {
 
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
+
+# Python
+alias pip="python -m pip"
+alias pipir="pip install -r requirements.txt"
 
