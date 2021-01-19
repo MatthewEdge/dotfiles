@@ -7,6 +7,5 @@ git config --global core.pager 'less'
 git config --global init.defaultBranch main
 git config --global pull.rebase false
 
-touch ~/.gitignore_global
+cp ./.gitignore_global ~/.gitignore_global
 git config --global core.excludesfile $HOME/.gitignore_global
-echo ".DS_Store" >> $HOME/.gitignore_global
