@@ -65,10 +65,16 @@ note() {
 
   case $1 in
     new|n)
-      vim $NOTE_PATH
+      $EDITOR $NOTE_PATH
       ;;
     cat|c)
       cat $NOTE_PATH
+      ;;
+    list|l)
+      ls $NOTES_DIR
+      ;;
+    open|o)
+      $EDITOR $NOTE_PATH
       ;;
     del|d)
       rm $NOTE_PATH
@@ -82,6 +88,8 @@ note() {
       echo "Usage: note CMD ARGS"
       echo "  new [NAME] - Create a new note, optionally with a given name"
       echo "  cat [NAME] - cat the contents of the given / current day's note"
+      echo "  open [NAME] - open the contents of the given / current day's note in the shell EDITOR"
+      echo "  list [NAME] - list notes in the Notes directory"
       echo "  del [NAME] - delete the given / current day's note"
       echo "  rename NEW_NAME - rename the current day's note to the given name"
       exit 1
