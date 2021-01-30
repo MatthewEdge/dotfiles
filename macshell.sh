@@ -2,6 +2,7 @@
 # Setup preferred shell environment on Mac
 
 # Ask for sudo early
+echo "Input password for sudo-enabled commands: "
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
@@ -13,6 +14,9 @@ if ! hash brew &> /dev/null; then
 fi
 
 sudo chown -R $(whoami) /usr/local/bin
+
+# For removing kegs and their dependencies: brew rmtree FORMULA
+brew tap beeftornado/rmtree
 
 # Git
 # Override Git with latest version
@@ -40,7 +44,7 @@ cp ./.zshrc ~/.zshrc
 cp ./.vimrc ~/.vimrc
 
 # Vim
-brew install vim
+brew install vim ripgrep node yarn
 vim +PlugInstall +qall!
 
 # Mac System Config
@@ -65,8 +69,8 @@ defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+defaults write NSGlobalDomain KeyRepeat -int 3
+defaults write NSGlobalDomain InitialKeyRepeat -int 20
 
 # Require password immediately after sleep or screen saver begins
 defaults write com.apple.screensaver askForPassword -int 1
