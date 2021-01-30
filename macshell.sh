@@ -1,8 +1,18 @@
 #!/bin/sh
 # Setup preferred shell environment on Mac
 
+# Ask for sudo early
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until `.macos` has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 # Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+if ! hash brew &> /dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+fi
+
+sudo chown -R $(whoami) /usr/local/bin
 
 # Git
 # Override Git with latest version
@@ -10,6 +20,9 @@ brew install git
 brew link --overwrite git
 
 sh git.sh
+
+# SSH
+sh ssh.sh
 
 # ZSH
 brew install zsh
@@ -31,6 +44,10 @@ brew install vim
 vim +PlugInstall +qall!
 
 # Mac System Config
+
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
 
 # Save to disk (not to iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
