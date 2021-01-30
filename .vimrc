@@ -54,7 +54,7 @@ Plug 'morhetz/gruvbox'
 
 " QoL
 Plug 'preservim/nerdcommenter'
-" Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() }}
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
