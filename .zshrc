@@ -20,7 +20,19 @@ export EDITOR='vim'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
-alias ll="ls -alh"
+alias srczsh="source ~/.zshrc"
+
+# ls
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then # GNU `ls`
+  colorFlag="--color"
+  export LS_COLORS='no=00:fi=00:di=01;31:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
+else # macOS `ls`
+  colorFlag="-G"
+  export LSCOLORS='BxBxhxDxfxhxhxhxhxcxcx'
+fi
+alias ll="ls -alhF ${colorFlag}"
+alias ls="command ls ${colorFlag}"
 
 # Code folder
 CODE_DIR=$HOME/code
@@ -30,18 +42,52 @@ mkdir -p $CODE_DIR
 alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
 
 # Git
-alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
+
+# Echos the current directory's git branch name (if any)
+# Thanks marksost/dotfiles !
+function git_branch_name() {
+  echo -e "$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+    git rev-parse --short HEAD 2> /dev/null || \
+    echo '(unknown)')"
+}
+
+alias gg="git log --oneline --abbrev-commit --all --graph --decorate --color"
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit -m"
+alias gd="git diff"
+alias gfp="git fetch --prune && git pull"
+alias grbm="git fetch origin && git rebase origin/main"
+alias gpocb="git push origin $(git_branch_name)"
 
 gitclean() {
     git fetch -p
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
 }
 
+# MacOS specific helpers
+
+# Empty the Trash on all mounted volumes and the main HDD.
+# Also, clear Apple’s System Logs to improve shell startup speed.
+# Finally, clear download history from quarantine. https://mths.be/bum
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
+
+# Show/hide hidden files in Finder
+alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
 # Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
 alias cdstream="cd $CODE_DIR/stream"
-alias cdbot="cd $HOME/code/stream/medgebot"
+alias cdbot="cd $CODE_DIR/stream/medgebot"
+
+startStream() {
+  OLD_DIR=$(pwd)
+  cd $CODE_DIR/stream/stream-config
+  ./startStream.sh
+  cd $OLD_DIR
+}
 
 # VIM
 export VIM_HOME="$HOME/.vim"
@@ -96,6 +142,7 @@ alias todos="vim $NOTES_DIR/index.md"
 alias kgp="kubectl get pods"
 alias kgpan="kubectl get pods --all-namespaces -o wide"
 alias kgs="kubectl get svc"
+alias k8t="$CODE_DIR/stream/lab-kit/k8t/k8t"
 
 # Vault for Local
 # mkdir -p $HOME/vault
@@ -135,6 +182,7 @@ nbin() {
 
 # Golang
 export GOPATH=$HOME/code/go
+export PATH=$PATH:$GOPATH/bin
 alias gotest="go test ./..."
 
 # Scala
@@ -164,4 +212,3 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 # Python
 alias pip="python -m pip"
 alias pipir="pip install -r requirements.txt"
-
