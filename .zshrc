@@ -20,7 +20,7 @@ export EDITOR='vim'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
-alias srczsh="source ~/.zshrc"
+alias srczsh='source ~/.zshrc'
 
 # ls
 # Detect which `ls` flavor is in use
@@ -39,7 +39,7 @@ CODE_DIR=$HOME/code
 mkdir -p $CODE_DIR
 
 # Homebrew Tricks
-alias brewdeps="brew leaves | xargs brew deps --installed --for-each"
+alias brewdeps='brew leaves | xargs brew deps --installed --for-each'
 
 # Git
 
@@ -51,13 +51,13 @@ function git_branch_name() {
     echo '(unknown)')"
 }
 
-alias gg="git log --oneline --abbrev-commit --all --graph --decorate --color"
-alias gs="git status"
-alias ga="git add"
-alias gc="git commit -m"
-alias gd="git diff"
-alias gfp="git fetch --prune && git pull"
-alias grbm="git fetch origin && git rebase origin/main"
+alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit -m '
+alias gd='git diff'
+alias gfp='git fetch --prune && git pull'
+alias grbm='git fetch origin && git rebase origin/main'
 alias gpocb="git push origin $(git_branch_name)"
 
 gitclean() {
