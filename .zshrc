@@ -139,6 +139,36 @@ note() {
 alias opennotes="open http://localhost:8000" # Mkdocs Container
 alias todos="vim $NOTES_DIR/index.md"
 
+## Notes Shell Completion
+_note_completions() {
+  local cur prev notes
+  cur=${COMP_WORDS[COMP_CWORD]}
+  prev=${COMP_WORDS[COMP_CWORD-1]}
+
+  case ${COMP_CWORD} in
+    1)
+      # Complete `note` with subcommands
+      COMPREPLY+=("new")
+      COMPREPLY+=("cat")
+      COMPREPLY+=("open")
+      COMPREPLY+=("list")
+      COMPREPLY+=("del")
+      COMPREPLY+=("rename")
+      ;;
+    2)
+      # Complete subcommands with ls of notes directory
+      notes=$(command ls $NOTES_DIR)
+      COMPREPLY=($(compgen -W "${notes}" -- ${cur}))
+      ;;
+    *)
+      COMPREPLY=()
+      ;;
+  esac
+}
+
+complete -F _note_completions note
+
+
 # Kubernetes
 alias kgp="kubectl get pods"
 alias kgpan="kubectl get pods --all-namespaces -o wide"
