@@ -23,13 +23,14 @@ alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias srczsh='source ~/.zshrc'
 
 # ls
-alias ll="ls -alhF ${colorFlag}"
+alias ll="ls -alh"
 
 # Code folder
 CODE_DIR=$HOME/code
 mkdir -p $CODE_DIR
 
 # Homebrew Tricks
+alias upbrew='brew update && brew upgrade && brew cleanup'
 alias brewdeps='brew leaves | xargs brew deps --installed --for-each'
 
 # Git
@@ -99,7 +100,14 @@ alias cdnotes="cd $NOTES_DIR"
 # CLI for interacting with note files
 note() {
   DATE=$(date '+%Y-%m-%d')
-  NOTE_NAME=${2:-$DATE}.md
+  NOTE_NAME=${2:-$DATE}
+
+  # Add extension if missing
+  case "$NOTE_NAME" in
+    *.md) ;;
+    *) NOTE_NAME=$NOTE_NAME.md
+  esac
+
   NOTE_PATH=$NOTES_DIR/$NOTE_NAME
 
   case $1 in
@@ -109,7 +117,7 @@ note() {
     cat|c)
       cat $NOTE_PATH
       ;;
-    list|l)
+    ls|l)
       ls $NOTES_DIR
       ;;
     open|o)
@@ -131,7 +139,6 @@ note() {
       echo "  list [NAME] - list notes in the Notes directory"
       echo "  del [NAME] - delete the given / current day's note"
       echo "  rename NEW_NAME - rename the current day's note to the given name"
-      exit 1
       ;;
   esac
 }
