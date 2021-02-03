@@ -38,9 +38,7 @@ alias brewdeps='brew leaves | xargs brew deps --installed --for-each'
 # Echos the current directory's git branch name (if any)
 # Thanks marksost/dotfiles !
 function git_branch_name() {
-  echo -e "$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
-    git rev-parse --short HEAD 2> /dev/null || \
-    echo '(unknown)')"
+  echo -e "$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)')"
 }
 
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
