@@ -33,6 +33,7 @@ ln -s ./.config/X11 $CONFIG_DIR
 
 # i3
 sudo pacman -S i3wm i3status dmenu
+ln -s ./.config/i3 $CONFIG_DIR
 
 # Terminal
 sudo pacman -S \
