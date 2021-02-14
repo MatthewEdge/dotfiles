@@ -1,22 +1,44 @@
 #!/bin/sh
-
-# Configure Manjaro ArchLinux w/ i3 WM
-
 waitForIt() {
   echo "Press any key to continue..."
   read HelloIT
 }
 
 sudo pacman -Syu
+sudo pacman -S neovim
 
-# Autostart NetworkManager
+# Ensure dotfiles config
+export CONFIG_DIR=$CONFIG_DIR
+mkdir -p $CONFIG_DIR
+
+# Install and autostart NetworkManager
+sudo pacman -S NetworkManager
 sudo systemctl enable NetworkManager
 
-# Enable AUR through yay
-sudo pacman -S yay
+# Git
+sudo pacman -S git openssh
+sh ../git.sh
 
-# Copy trackpad conf
-cp -f ./archlinux/etc/X11/xorg.conf.d/*.conf /etc/X11/xorg.conf.d/
+# Enable AUR through yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -s
+ls | grep yay*.zst | xargs sudo pacman -U
+
+# Xorg
+sudo pacman -S xorg xorg-xinit
+mkdir -p $CONFIG_DIR/X11
+rm -rf $CONFIG_DIR/X11
+ln -s ./.config/X11 $CONFIG_DIR
+
+# i3
+sudo pacman -S i3wm i3status dmenu
+
+# Terminal
+sudo pacman -S \
+	rxvt-unicode \
+	xsel \ # for clipboard sharing
+	ttf-fira-code # font of choice
 
 # zsh insurance
 sudo pacman -S zsh
@@ -25,8 +47,9 @@ sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
 sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
 
 # Ensure working dir
-cp -f ./.zshrc $HOME/.zshrc
-cp -f ./.vimrc $HOME/.vimrc
+ln -s ./.zshrc $HOME/.zshrc
+
+ln -S ./.config/nvim/init.vim $CONFIG_DIR/nvim/init.vim
 
 # Add arch-specific aliases to zshrc
 cat <<EOT >> $HOME/.zshrc
@@ -43,9 +66,6 @@ EOT
 # Firefox
 sudo pacman -S firefox
 
-# Git
-sudo pacman -S git
-sh ../git.sh
 
 # Ensure packages
 

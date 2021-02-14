@@ -7,5 +7,5 @@ git config --global core.pager 'less'
 git config --global init.defaultBranch main
 git config --global pull.rebase false
 
-cp ./.gitignore_global ~/.gitignore_global
+ln -s ./.config/git/.gitignore_global $HOME/.gitignore_global
 git config --global core.excludesfile $HOME/.gitignore_global
