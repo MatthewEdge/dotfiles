@@ -8,7 +8,7 @@ sudo pacman -Syu
 sudo pacman -S neovim
 
 # Ensure dotfiles config
-export CONFIG_DIR=$CONFIG_DIR
+export CONFIG_DIR=$HOME/.config
 mkdir -p $CONFIG_DIR
 
 # Install and autostart NetworkManager
