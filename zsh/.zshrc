@@ -2,7 +2,7 @@
 autoload -Uz compinit; compinit
 # Autocomplete dotfiles
 _comp_options+=(globdots)
-source $DOTFILES_DIR/zsh/external/completion.zsh
+source $DOTFILES_DIR/zsh/external/completions.zsh
 fpath=($ZDOTDIR/external $fpath)
 autoload -Uz prompt_purification_setup; prompt_purification_setup
 
