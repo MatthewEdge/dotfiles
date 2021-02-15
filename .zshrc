@@ -57,17 +57,6 @@ gitclean() {
     git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
 }
 
-# MacOS specific helpers
-
-# Empty the Trash on all mounted volumes and the main HDD.
-# Also, clear Apple’s System Logs to improve shell startup speed.
-# Finally, clear download history from quarantine. https://mths.be/bum
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
-
-# Show/hide hidden files in Finder
-alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-
 # Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
@@ -142,7 +131,7 @@ note() {
 }
 
 alias opennotes="open http://localhost:8000" # Mkdocs Container
-alias todos="vim $NOTES_DIR/index.md"
+alias todos="$EDITOR $NOTES_DIR/index.md"
 
 ## Notes Shell Completion
 _note_completions() {
@@ -220,10 +209,6 @@ nbin() {
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 alias gotest="go test ./..."
-
-# Scala
-export SCALA_HOME=/usr/local/opt/scala/idea
-export PATH=$PATH:$SCALA_HOME/bin
 
 # Terraform
 ekstf() {
