@@ -22,6 +22,9 @@ export EDITOR='vim'
 alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias srczsh='source ~/.zshrc'
 
+export DOTFILES_DIR=$HOME/dotfiles
+export CONFIG_DIR=$HOME/.config
+
 # ls
 alias ll="ls -alh"
 

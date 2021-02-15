@@ -4,12 +4,10 @@ waitForIt() {
   read HelloIT
 }
 
-DOTFILES_DIR=$HOME/dotfiles
-
 sudo pacman -Syu
-sudo pacman -S neovim
 
 # Ensure dotfiles config
+export DOTFILES_DIR=$HOME/dotfiles
 export CONFIG_DIR=$HOME/.config
 mkdir -p $CONFIG_DIR
 
@@ -22,22 +20,30 @@ sudo pacman -S git openssh
 sh $DOTFILES_DIR/git.sh
 
 # Enable AUR through yay
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -s
-ls | grep yay*.zst | xargs sudo pacman -U
-cd ../
-rm -rf ./yay
+if [ ! -d "$HOME/yay" ]; then
+  OLD_DIR=$(pwd)
+  git clone https://aur.archlinux.org/yay.git $HOME/yay
+  cd $HOME/yay
+  makepkg -s
+  ls | grep yay*.zst | xargs sudo pacman -U
+  cd $OLD_DIR
+fi
+
+# neovim
+sudo pacman -S neovim
+mkdir -p $CONFIG_DIR/nvim
+mkdir -p $CONFIG_DIR/nvim/undo
+ln -sf $DOTFILES_DIR/nvim/init.vim $CONFIG_DIR/nvim
 
 # Xorg
 sudo pacman -S xorg xorg-xinit
-mkdir -p $CONFIG_DIR/X11
-ln -sf $DOTFILES_DIR/X11 $CONFIG_DIR
+rm -rf $CONFIG_DIR/X11
+ln -s $DOTFILES_DIR/X11 $CONFIG_DIR
 
 # i3
 sudo pacman -S i3-wm i3status dmenu
-mkdir -p $CONFIG_DIR/i3
-ln -sf $DOTFILES_DIR/i3 $CONFIG_DIR
+rm -rf $CONFIG_DIR/i3
+ln -s $DOTFILES_DIR/i3 $CONFIG_DIR
 
 # Terminal, clipboard sharing with vim, and font of choice
 sudo pacman -S rxvt-unicode xsel xclip ttf-fira-code
@@ -45,18 +51,12 @@ sudo pacman -S rxvt-unicode xsel xclip ttf-fira-code
 # zsh insurance
 sudo pacman -S zsh
 yay -S oh-my-zsh-git
-
-if [ ! -d "$HOME/oh-my-zsh" ]; then
-  sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
-  sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
-fi
+sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
+sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
 
 # Ensure working dir
-ln -sf ./.zshrc $HOME/.zshrc
-
-mkdir -p $CONFIG_DIR/nvim
-mkdir -p $CONFIG_DIR/nvim/undo
-ln -sf $DOTFILES_DIR/nvim/init.vim $CONFIG_DIR/nvim
+rm -f $HOME/.zshrc
+ln -s ./.zshrc $HOME/.zshrc
 
 # Add arch-specific aliases to zshrc
 cat <<EOT >> $HOME/.zshrc
