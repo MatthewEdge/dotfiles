@@ -14,6 +14,7 @@ export EDITOR='nvim'
 # Enable vim mode?
 bindkey -v
 export KEYTIMEOUT=1
+autoload -Uz cursor_mode && cursor_mode
 
 #############################
 #  USER FUNCTION HELPERS
