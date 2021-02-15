@@ -4,6 +4,7 @@ autoload -Uz compinit; compinit
 _comp_options+=(globdots)
 source $DOTFILES_DIR/zsh/external/completion.zsh
 fpath=($ZDOTDIR/external $fpath)
+autoload -Uz prompt_purification_setup; prompt_purification_setup
 
 plugins=(git history-substring-search)
 

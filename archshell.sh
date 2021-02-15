@@ -57,6 +57,9 @@ mkdir -p $CONFIG_DIR/zsh
 ln -sf $DOTFILES_DIR/zsh/.zshenv $HOME
 ln -sf $DOTFILES_DIR/zsh/.zshrc $CONFIG_DIR/zsh
 
+rm -rf $CONFIG_DIR/zsh/external
+ln -sf $DOTFILES_DIR/zsh/external $CONFIG_DIR/zsh
+
 # Firefox
 sudo pacman -S firefox
 
