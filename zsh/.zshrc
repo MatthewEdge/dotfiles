@@ -1,29 +1,24 @@
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/oh-my-zsh
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-ZSH_THEME="robbyrussell"
-
-DISABLE_UPDATE_PROMPT="true"
-export UPDATE_ZSH_DAYS=7
+# Enable autocompletion
+autoload -Uz compinit; compinit
+# Autocomplete dotfiles
+_comp_options+=(globdots)
+source $DOTFILES_DIR/zsh/external/completion.zsh
+fpath=($ZDOTDIR/external $fpath)
 
 plugins=(git history-substring-search)
 
-# User configuration
-source $ZSH/oh-my-zsh.sh
-
 export LANG=en_US.UTF-8
-export EDITOR='vim'
+export EDITOR='nvim'
+
+# Enable vim mode?
+bindkey -v
+export KEYTIMEOUT=1
 
 #############################
 #  USER FUNCTION HELPERS
 #############################
-alias zshrc="$EDITOR ~/.zshrc && source ~/.zshrc"
-alias srczsh='source ~/.zshrc'
-
-export DOTFILES_DIR=$HOME/dotfiles
-export CONFIG_DIR=$HOME/.config
+alias zshrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
+alias srczsh="source $ZDOTDIR/.zshrc"
 
 # ls
 alias ll="ls -alh"
@@ -236,3 +231,13 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 # Python
 alias pip="python -m pip"
 alias pipir="pip install -r requirements.txt"
+
+# Arch-Specific
+screenshot() {
+  RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
+  DT=$(date +'%m-%d-%YT%H-%M-%S')
+  ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
+}
+
+# Image Viewing
+alias open="viewnior"
