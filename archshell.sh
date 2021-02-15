@@ -49,7 +49,7 @@ ln -s $DOTFILES_DIR/i3 $CONFIG_DIR
 sudo pacman -S rxvt-unicode xsel xclip ttf-fira-code
 
 # ZSH
-sudo pacman -S zsh
+sudo pacman -S zsh zsh-completions zsh-history-substring-search fzf ripgrep
 # yay -S oh-my-zsh-git
 # sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
 # sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh

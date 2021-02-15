@@ -6,7 +6,8 @@ source $DOTFILES_DIR/zsh/external/completions.zsh
 fpath=($ZDOTDIR/external $fpath)
 autoload -Uz prompt_purification_setup; prompt_purification_setup
 
-plugins=(git history-substring-search)
+# Plugins
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 export LANG=en_US.UTF-8
 export EDITOR='nvim'
@@ -14,7 +15,7 @@ export EDITOR='nvim'
 # Enable vim mode?
 bindkey -v
 export KEYTIMEOUT=1
-autoload -Uz cursor_mode && cursor_mode
+autoload -Uz cursor_mode; cursor_mode
 
 #############################
 #  USER FUNCTION HELPERS
