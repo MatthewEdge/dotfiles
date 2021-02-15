@@ -16,8 +16,9 @@ sudo pacman -S networkmanager
 sudo systemctl enable NetworkManager.service
 
 # Git
-sudo pacman -S git openssh
+sudo pacman -S git openssh diff-so-fancy
 sh $DOTFILES_DIR/git.sh
+
 
 # Enable AUR through yay
 if [ ! -d "$HOME/yay" ]; then
