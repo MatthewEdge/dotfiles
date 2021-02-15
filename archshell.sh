@@ -4,6 +4,8 @@ waitForIt() {
   read HelloIT
 }
 
+DOTFILES_DIR=$HOME/dotfiles
+
 sudo pacman -Syu
 sudo pacman -S neovim
 
@@ -12,45 +14,49 @@ export CONFIG_DIR=$HOME/.config
 mkdir -p $CONFIG_DIR
 
 # Install and autostart NetworkManager
-sudo pacman -S NetworkManager
-sudo systemctl enable NetworkManager
+sudo pacman -S networkmanager
+sudo systemctl enable NetworkManager.service
 
 # Git
 sudo pacman -S git openssh
-sh ../git.sh
+sh $DOTFILES_DIR/git.sh
 
 # Enable AUR through yay
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -s
 ls | grep yay*.zst | xargs sudo pacman -U
+cd ../
+rm -rf ./yay
 
 # Xorg
 sudo pacman -S xorg xorg-xinit
 mkdir -p $CONFIG_DIR/X11
-rm -rf $CONFIG_DIR/X11
-ln -s ./.config/X11 $CONFIG_DIR
+ln -sf $DOTFILES_DIR/X11 $CONFIG_DIR
 
 # i3
-sudo pacman -S i3wm i3status dmenu
-ln -s ./.config/i3 $CONFIG_DIR
+sudo pacman -S i3-wm i3status dmenu
+mkdir -p $CONFIG_DIR/i3
+ln -sf $DOTFILES_DIR/i3 $CONFIG_DIR
 
-# Terminal
-sudo pacman -S \
-	rxvt-unicode \
-	xsel \ # for clipboard sharing
-	ttf-fira-code # font of choice
+# Terminal, clipboard sharing with vim, and font of choice
+sudo pacman -S rxvt-unicode xsel xclip ttf-fira-code
 
 # zsh insurance
 sudo pacman -S zsh
 yay -S oh-my-zsh-git
-sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
-sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
+
+if [ ! -d "$HOME/oh-my-zsh" ]; then
+  sudo mv /usr/share/oh-my-zsh $HOME/oh-my-zsh
+  sudo chown -R $(whoami):$(whoami) $HOME/oh-my-zsh
+fi
 
 # Ensure working dir
-ln -s ./.zshrc $HOME/.zshrc
+ln -sf ./.zshrc $HOME/.zshrc
 
-ln -S ./.config/nvim/init.vim $CONFIG_DIR/nvim/init.vim
+mkdir -p $CONFIG_DIR/nvim
+mkdir -p $CONFIG_DIR/nvim/undo
+ln -sf $DOTFILES_DIR/nvim/init.vim $CONFIG_DIR/nvim
 
 # Add arch-specific aliases to zshrc
 cat <<EOT >> $HOME/.zshrc
@@ -67,23 +73,9 @@ EOT
 # Firefox
 sudo pacman -S firefox
 
-
-# Ensure packages
-
-# Font preference
-sudo pacman -S otf-fira-code
-cp -f ./archlinux/.Xresources $HOME/.Xresources
-
-## Vim (need node for CoC)
-sudo pacman -S gvim nodejs
+## For CoC
+sudo pacman -S nodejs yarn
 vim +PlugInstall +qall
-
-## Java/Scala
-sudo pacman -S jdk-openjdk scala sbt
-vim +CocInstall coc-metals +qall
-
-## JS/TS
-vim +CocInstall coc-tsserver +qall
 
 ## Golang
 sudo pacman -S go
@@ -92,7 +84,6 @@ sudo pacman -S go
 sudo pacman -S docker
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
-# newgrp docker
 
 # Misc. utilities
 
@@ -119,8 +110,5 @@ waitForIt()
 # Screen capture
 sudo pacman -S ffmpeg
 
-# Source zshrc as a last step
-source $HOME/.zshrc
-
-echo "Done!"
-echo "Probably a good idea to restart now!"
+echo "Done! Don't forget to source $HOME/.zshrc"
+#startx

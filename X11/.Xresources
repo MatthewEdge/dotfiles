@@ -39,6 +39,7 @@ URxvt*saveLines: 10000
 ! LightGrey + White
 *color7:  #a89984
 *color15: #ebdbb2
+
 URxvt.color24:  #076678
 URxvt.color66:  #427b58
 URxvt.color88:  #9d0006
