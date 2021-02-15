@@ -3,7 +3,7 @@ URxvt*letterSpace: -1
 
 ! Borders
 URxvt*borderLess: false
-URxvt*borderColor: #458588
+URxvt*borderColor: #1d2021
 URxvt*externalBorder: 0
 URxvt*internalBorder: 4
 URxvt*scrollBar: false

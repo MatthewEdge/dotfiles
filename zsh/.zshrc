@@ -20,9 +20,9 @@ export LANG=en_US.UTF-8
 export EDITOR='nvim'
 
 # Enable vim mode?
-bindkey -v
-export KEYTIMEOUT=1
-autoload -Uz cursor_mode; cursor_mode
+#bindkey -v
+#export KEYTIMEOUT=1
+#autoload -Uz cursor_mode; cursor_mode
 
 #############################
 #  USER FUNCTION HELPERS
@@ -80,6 +80,7 @@ startStream() {
 }
 
 # VIM
+alias vim="nvim"
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
