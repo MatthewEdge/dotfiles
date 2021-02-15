@@ -7,7 +7,14 @@ fpath=($ZDOTDIR/external $fpath)
 autoload -Uz prompt_purification_setup; prompt_purification_setup
 
 # Plugins
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# FZF
+if [ $(command -v "fzf") ]; then
+  source /usr/share/fzf/completion.zsh
+  source /usr/share/fzf/key-bindings.zsh
+fi
 
 export LANG=en_US.UTF-8
 export EDITOR='nvim'
@@ -21,6 +28,7 @@ autoload -Uz cursor_mode; cursor_mode
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
+alias zenv="$EDITOR $HOME/.zshenv"
 alias srczsh="source $ZDOTDIR/.zshrc"
 
 # ls
@@ -244,3 +252,8 @@ screenshot() {
 
 # Image Viewing
 alias open="viewnior"
+
+# start i3
+if [ "$(tty)" = "/dev/tty1" ]; then
+  pgrep i3 || exec startx "$CONFIG_DIR/X11/.xinitrc"
+fi
