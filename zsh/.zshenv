@@ -4,6 +4,8 @@ export VISUAL=$EDITOR
 export DOTFILES_DIR=$HOME/dotfiles
 export CONFIG_DIR=$HOME/.config
 
+export XDG_CONFIG_HOME=$CONFIG_DIR
+
 # ZSH
 export ZDOTDIR=$CONFIG_DIR/zsh
 export HISTFILE=$ZDOTDIR/.zhistory
