@@ -18,6 +18,9 @@ sudo chown -R $(whoami) /usr/local/bin
 # For removing kegs and their dependencies: brew rmtree FORMULA
 brew tap beeftornado/rmtree
 
+# Good ol' CLI tools
+brew install tree
+
 # Git
 # Override Git with latest version
 brew install git
