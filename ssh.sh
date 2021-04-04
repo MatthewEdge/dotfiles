@@ -1,5 +1,5 @@
 #!/bin/sh
-EMAIL=${1:-"mattedgeis@gmail.com"}
+EMAIL=${1:-"medge@medgelabs.io"}
 
 if [ ! -z "$HOME/.ssh/id_rsa" ]; then
   echo "SSH Key already present. Exiting.."
