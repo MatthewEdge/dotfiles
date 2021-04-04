@@ -43,7 +43,7 @@ brew install jq
 # Github CLI
 brew install hub
 
-cp ./.zshrc ~/.zshrc
+cp ./.zshenv ~/.zshenv
 cp ./.vimrc ~/.vimrc
 
 # Vim
