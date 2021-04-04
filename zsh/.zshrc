@@ -1,3 +1,6 @@
+# FZF
+export FZF_BASE=$(brew --prefix fzf)
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/oh-my-zsh
 
