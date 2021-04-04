@@ -47,6 +47,6 @@ cp ./.zshrc ~/.zshrc
 cp ./.vimrc ~/.vimrc
 
 # Vim
-brew install vim ripgrep node yarn
+brew install vim ripgrep node yarn fzf
 vim +PlugInstall +qall!
 
