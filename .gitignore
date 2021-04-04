@@ -1,4 +1,5 @@
 nvim/undo
 nvim/autoload/plugged
 .zsh_history
+.zhistory
 **/.zcompdump*
