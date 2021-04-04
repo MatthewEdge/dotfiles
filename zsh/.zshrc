@@ -45,7 +45,9 @@ alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
-alias gpocb="git push origin $(git branch --show-current)"
+gpocb() {
+  git push origin $(git branch --show-current)
+}
 
 # Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
