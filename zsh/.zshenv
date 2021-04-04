@@ -7,7 +7,7 @@ export CONFIG_DIR=$HOME/.config
 export XDG_CONFIG_HOME=$CONFIG_DIR
 
 # ZSH
-export ZDOTDIR=$CONFIG_DIR/zsh
+export ZDOTDIR=$DOTFILES_DIR/zsh
 export HISTFILE=$ZDOTDIR/.zhistory
 export HISTSIZE=10000
 export SAVEHIST=10000

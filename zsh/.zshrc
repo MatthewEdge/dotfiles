@@ -1,6 +1,3 @@
-# FZF
-export FZF_BASE=$(brew --prefix fzf)
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/oh-my-zsh
 
@@ -22,9 +19,8 @@ export EDITOR='vim'
 #############################
 #  USER FUNCTION HELPERS
 #############################
-alias zshrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
+alias zrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
 alias zenv="$EDITOR $HOME/.zshenv"
-alias srczsh="source $ZDOTDIR/.zshrc && source $ZDOTDIR/.zenv"
 
 # ls
 alias ll="ls -alh"
