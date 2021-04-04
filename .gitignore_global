@@ -17,9 +17,8 @@ Thumbs.db
 target/
 .settings/
 .classpath
-.project
+.project/
 .vscode/
 .metals/
 .bloop/
 .ammonite/
-project/metals.sbt

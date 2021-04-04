@@ -1,32 +1,38 @@
 set nocompatible
-syntax on
+syntax on " Enable syntax highlighting
 filetype plugin indent on
 
 let mapleader=' '
 
 set hidden
-set nospell
-set noerrorbells novisualbell
-set relativenumber " jump line numbers
-set encoding=utf-8 fileencoding=utf-8
-set noswapfile nobackup nowritebackup
-set incsearch nohlsearch
-set ignorecase
-set smartcase
-set smartindent expandtab tabstop=2 shiftwidth=2
+set nospell " disable spell check
+set noerrorbells novisualbell " disable annoying bells
+set relativenumber number " jump line numbers with line number for current line
+set encoding=utf-8 fileencoding=utf-8 " standardize utf-8
+set noswapfile nobackup nowritebackup " no swp / bak files
+set hlsearch " enable search highlight
+set incsearch " highlight searches while being typed
+set ignorecase " ignore casing in search
+set tabstop=2 shiftwidth=2 " Tabs == 2 spaces
+set smartindent " Enable smart indentation
+set expandtab " expand tabs to spaces
 set nowrap linebreak
 set formatoptions+=j " Delete comment character when joining commented lines
-set backspace=indent,eol,start " Allow backspace to delete indentation and inserted text
+set backspace=indent,eol,start " Allow backspace in insert mode
 set undofile undodir=~/.vim/undodir " Maintain undo history between sessions
 set clipboard^=unnamed,unnamedplus " Enable cross-app copy/paste after vim yank/paste
+
+set title " Show filename in window title bar
+set showmode " Show the current mode
 set noshowmode " Do not show mode on command line since vim-airline can show it
 set cmdheight=2 " More space for bottom messages
-set updatetime=50
 set shortmess+=c " Don't pass messages to ins-completion-menu
+set scrolloff=3 " Start scrolling 3 lines before horizontal window border
 
-" Command-line completion in enhanced mode
-set wildmenu
-set wildmode=list:longest,full
+set ttyfast " Optimize for fast terminal connections
+set updatetime=50
+
+set wildmenu wildmode=list:longest,full " Command-line completion in enhanced mode
 
 " trim trailing whitespace pre-save
 autocmd BufWritePre * %s/\s\+$//e
@@ -108,7 +114,7 @@ let g:ale_fixers = {
 
 " Search for word under cursor with RipGrep
 nnoremap <leader>g :<C-U>execute "Rg ".expand('<cword>') \| cw<CR>
-nnoremap <leader>ps :Rg<SPACE>
+nnoremap <leader>rg :Rg<SPACE>
 
 " Quick access to vimrc
 nnoremap <leader>ev :vsplit $HOME/.vimrc<cr>
@@ -125,6 +131,7 @@ nnoremap <leader>+ :vertical resize +5<CR>
 nnoremap <leader>- :vertical resize -5<CR>
 nnoremap <leader>pv :wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 
+" fzf files view
 nnoremap <leader>pf :Files<CR>
 
 " Move highlighted blocks up/down
@@ -164,6 +171,8 @@ let g:NERDTrimTrailingWhitespace=1
 " Go
 augroup filetype_go
   autocmd!
+
+  " Set formatting to match Go compiler
   autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 
   " shortcut go error
@@ -178,6 +187,7 @@ augroup filetype_go
   nnoremap <leader>dbe :GoDebugStop<CR>
 augroup END
 
+" vim-go
 let g:go_def_mapping_enabled = 0
 let g:go_auto_type_info = 1
 let g:go_auto_sameids = 1
