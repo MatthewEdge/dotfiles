@@ -1,35 +1,27 @@
-# Enable autocompletion
-autoload -Uz compinit; compinit
-# Autocomplete dotfiles
-_comp_options+=(globdots)
-source $DOTFILES_DIR/zsh/external/completions.zsh
-fpath=($ZDOTDIR/external $fpath)
-autoload -Uz prompt_purification_setup; prompt_purification_setup
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/oh-my-zsh
 
-# Plugins
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+ZSH_THEME="robbyrussell"
 
-# FZF
-if [ $(command -v "fzf") ]; then
-  source /usr/share/fzf/completion.zsh
-  source /usr/share/fzf/key-bindings.zsh
-fi
+DISABLE_UPDATE_PROMPT="true"
+export UPDATE_ZSH_DAYS=7
+
+plugins=(git history-substring-search fzf)
+
+# User configuration
+source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
-export EDITOR='nvim'
-
-# Enable vim mode?
-#bindkey -v
-#export KEYTIMEOUT=1
-#autoload -Uz cursor_mode; cursor_mode
+export EDITOR='vim'
 
 #############################
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
 alias zenv="$EDITOR $HOME/.zshenv"
-alias srczsh="source $ZDOTDIR/.zshrc"
+alias srczsh="source $ZDOTDIR/.zshrc && source $ZDOTDIR/.zenv"
 
 # ls
 alias ll="ls -alh"
@@ -44,27 +36,17 @@ alias brewdeps='brew leaves | xargs brew deps --installed --for-each'
 
 # Git
 
-# Echos the current directory's git branch name (if any)
-# Thanks marksost/dotfiles !
-function git_branch_name() {
-  echo -e "$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)')"
-}
-
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
 alias ga='git add'
 alias gall='git add --all'
-alias gc='git commit -m '
+alias gc='git commit'
+alias gcm='git commit -m'
 alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
-alias gpocb="git push origin $(git_branch_name)"
-
-gitclean() {
-    git fetch -p
-    git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D
-}
+alias gpocb="git push origin $(git branch --show-current)"
 
 # Medgelabs Stream
 export TWITCH_HOME=$HOME/twitch
@@ -80,7 +62,6 @@ startStream() {
 }
 
 # VIM
-alias vim="nvim"
 export VIM_HOME="$HOME/.vim"
 alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
@@ -172,8 +153,8 @@ _note_completions() {
 
 complete -F _note_completions note
 
-
 # Kubernetes
+alias k='kubectl'
 alias kgp="kubectl get pods"
 alias kgpan="kubectl get pods --all-namespaces -o wide"
 alias kgs="kubectl get svc"
@@ -245,16 +226,16 @@ alias pip="python -m pip"
 alias pipir="pip install -r requirements.txt"
 
 # Arch-Specific
-screenshot() {
-  RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
-  DT=$(date +'%m-%d-%YT%H-%M-%S')
-  ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
-}
+# screenshot() {
+  # RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
+  # DT=$(date +'%m-%d-%YT%H-%M-%S')
+  # ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
+# }
 
-# Image Viewing
-alias open="viewnior"
+# # Image Viewing
+# alias open="viewnior"
 
-# start i3
-if [ "$(tty)" = "/dev/tty1" ]; then
-  pgrep i3 || exec startx "$CONFIG_DIR/X11/.xinitrc"
-fi
+# # start i3
+# if [ "$(tty)" = "/dev/tty1" ]; then
+  # pgrep i3 || exec startx "$CONFIG_DIR/X11/.xinitrc"
+# fi
