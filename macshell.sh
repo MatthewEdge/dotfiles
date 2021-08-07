@@ -40,13 +40,17 @@ brew install --cask iterm2 flux rectangle
 # JSON processing on the CLI
 brew install jq
 
+# Fast search
+brew install ripgrep
+
 # Github CLI
 brew install hub
 
-cp ./.zshenv ~/.zshenv
+cp ./zsh/.zshrc ~/.zshrc
+cp ./zsh/.zshenv ~/.zshenv
 cp ./.vimrc ~/.vimrc
 
 # Vim
-brew install vim ripgrep node yarn fzf
+brew install vim node yarn fzf
 vim +PlugInstall +qall!
 

@@ -12,18 +12,18 @@ set encoding=utf-8 fileencoding=utf-8 " standardize utf-8
 set noswapfile nobackup nowritebackup " no swp / bak files
 set hlsearch " enable search highlight
 set incsearch " highlight searches while being typed
-set ignorecase " ignore casing in search
-set tabstop=2 shiftwidth=2 " Tabs == 2 spaces
+set ignorecase smartcase " ignore casing in search
 set smartindent " Enable smart indentation
 set expandtab " expand tabs to spaces
+set tabstop=2 shiftwidth=2 " Tabs == 2 spaces
 set nowrap linebreak
+set colorcolumn=120
 set formatoptions+=j " Delete comment character when joining commented lines
 set backspace=indent,eol,start " Allow backspace in insert mode
 set undofile undodir=~/.vim/undodir " Maintain undo history between sessions
 set clipboard^=unnamed,unnamedplus " Enable cross-app copy/paste after vim yank/paste
 
 set title " Show filename in window title bar
-set showmode " Show the current mode
 set noshowmode " Do not show mode on command line since vim-airline can show it
 set cmdheight=2 " More space for bottom messages
 set shortmess+=c " Don't pass messages to ins-completion-menu
@@ -79,6 +79,9 @@ Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 
 call plug#end()
 
+# CoC Default Plugins
+let g:coc_global_extensions = ['coc-json', 'coc-tsserver']
+
 " Color Scheme
 colorscheme gruvbox
 set background=dark
@@ -91,23 +94,19 @@ let g:gruvbox_invert_selection='0'
 
 " FZF
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
-let $FZF_DEFAULT_OPTS='--reverse'
+let $FZF_DEFAULT_COMMAND="rg --hidden -l -g '!{.git}' --sort path ."
+let $FZF_DEFAULT_OPTS='--reverse' # Search at top, results below
 
 " ALE
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
 
-let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_enter = 1
 
 let g:ale_linters = {
   \ 'javascript': ['eslint'],
-  \ 'python': ['pylint'],
-\}
-
-let g:ale_fixers = {
-  \ 'python': ['black'],
 \}
 
 " Remaps
@@ -209,13 +208,6 @@ let g:go_highlight_function_calls = 1
 let g:go_highlight_generate_tags = 1
 let g:go_highlight_format_strings = 1
 let g:go_highlight_variable_declarations = 1
-
-" Python
-augroup filetype_python
-  autocmd!
-  autocmd FileType python set expandtab autoindent
-  autocmd FileType python set tabstop=4 softtabstop=4 shiftwidth=4
-augroup END
 
 "CoC config
 set signcolumn=yes
