@@ -79,7 +79,7 @@ Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 
 call plug#end()
 
-# CoC Default Plugins
+" CoC Default Plugins
 let g:coc_global_extensions = ['coc-json', 'coc-tsserver']
 
 " Color Scheme
@@ -95,7 +95,7 @@ let g:gruvbox_invert_selection='0'
 " FZF
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_COMMAND="rg --hidden -l -g '!{.git}' --sort path ."
-let $FZF_DEFAULT_OPTS='--reverse' # Search at top, results below
+let $FZF_DEFAULT_OPTS='--reverse' " Search at top, results below
 
 " ALE
 let g:ale_sign_error = '>>'
