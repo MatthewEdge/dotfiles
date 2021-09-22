@@ -19,8 +19,7 @@ export EDITOR='vim'
 #############################
 #  USER FUNCTION HELPERS
 #############################
-alias zrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
-alias zenv="$EDITOR $HOME/.zshenv"
+alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 
 # ls
 alias ll="ls -alh"
@@ -174,7 +173,9 @@ alias dcu="docker-compose up"
 alias dcl="docker-compose logs -f"
 alias dcd="docker-compose down"
 alias dcrm="docker-compose rm -f"
-alias dkrmac="docker rm -f $(docker ps -aq)"
+dkrmac() {
+  docker rm -f $(docker ps -aq)
+}
 
 # Rebuild given containers (or all in YAML if no args passed)
 dcre() {
