@@ -34,6 +34,9 @@ sh ssh.sh
 brew install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
+## Fix for oh-my-zsh folder for .zshrc
+mv $HOME/.oh-my-zsh $HOME/oh-my-zsh
+
 # Commonly used casks
 brew install --cask iterm2 flux rectangle
 
