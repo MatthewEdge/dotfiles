@@ -19,21 +19,37 @@ export EDITOR='vim'
 #############################
 #  USER FUNCTION HELPERS
 #############################
-alias zrc="$EDITOR $ZDOTDIR/.zshrc && source $ZDOTDIR/.zshrc"
-alias zenv="$EDITOR $HOME/.zshenv"
+alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 
 # ls
 alias ll="ls -alh"
+
+alias update="sudo apt update -y && sudo apt upgrade -y"
+
+audio() {
+  $HOME/set-audio-devices.sh
+}
 
 # Code folder
 CODE_DIR=$HOME/code
 mkdir -p $CODE_DIR
 
-# Homebrew Tricks
-alias upbrew='brew update && brew upgrade && brew cleanup'
-alias brewdeps='brew leaves | xargs brew deps --installed --for-each'
+# Prime95
+alias prime95="$HOME/prime95/mprime"
 
 # Git
+
+# Clone my repos
+medgeclone() {
+  REPO=$1
+
+  if [ -z "$REPO" ]; then
+    echo "usage: $0 REPO_NAME (without .git)"
+    exit 1
+  fi
+
+  git clone git@github.com:MatthewEdge/$REPO.git
+}
 
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
@@ -53,7 +69,7 @@ gpocb() {
 export TWITCH_HOME=$HOME/twitch
 mkdir -p $TWITCH_HOME
 alias cdstream="cd $CODE_DIR/stream"
-alias cdbot="cd $CODE_DIR/stream/medgebot"
+alias cdbot="cd $CODE_DIR/stream-bot"
 
 startStream() {
   OLD_DIR=$(pwd)
@@ -174,7 +190,9 @@ alias dcu="docker-compose up"
 alias dcl="docker-compose logs -f"
 alias dcd="docker-compose down"
 alias dcrm="docker-compose rm -f"
-alias dkrmac="docker rm -f $(docker ps -aq)"
+dkrmac() {
+  docker rm -f $(docker ps -aq)
+}
 
 # Rebuild given containers (or all in YAML if no args passed)
 dcre() {
@@ -198,6 +216,7 @@ nbin() {
 }
 
 # Golang
+export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 alias gotest="go test ./..."
@@ -235,6 +254,7 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 # Python
 alias pip="python -m pip"
 alias pipir="pip install -r requirements.txt"
+export PATH=$PATH:/home/medge/.local/bin
 
 # Arch-Specific
 # screenshot() {
