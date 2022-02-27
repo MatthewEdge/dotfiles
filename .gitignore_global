@@ -9,16 +9,3 @@ Thumbs.db
 # Files that might appear on external disks
 .Spotlight-V100
 .Trashes
-
-# IDE ignores
-.idea/
-*.iml
-.vscode/
-target/
-.settings/
-.classpath
-.project/
-.vscode/
-.metals/
-.bloop/
-.ammonite/

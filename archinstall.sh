@@ -41,20 +41,9 @@ if [ ! -d "$HOME/yay" ]; then
 fi
 
 # neovim
-sudo pacman -S --noconfirm neovim
-mkdir -p $CONFIG_DIR/nvim
-mkdir -p $CONFIG_DIR/nvim/undo
-ln -sf $DOTFILES_DIR/nvim/init.vim $CONFIG_DIR/nvim
-
-# Xorg
-sudo pacman -S --noconfirm xorg xorg-xinit
-rm -rf $CONFIG_DIR/X11
-ln -s $DOTFILES_DIR/X11 $CONFIG_DIR
-
-# i3
-sudo pacman -S --noconfirm i3-wm i3status dmenu
-rm -rf $CONFIG_DIR/i3
-ln -s $DOTFILES_DIR/i3 $CONFIG_DIR
+sudo pacman -R vim
+sudo pacman -S --noconfirm vim
+cp ./.vimrc $HOME/.vimrc
 
 # Terminal, clipboard sharing with vim, and font of choice
 sudo pacman -S --noconfirm rxvt-unicode xsel xclip ttf-fira-code
@@ -67,7 +56,7 @@ sudo pacman -S --noconfirm firefox
 sudo pacman -S --noconfirm htop
 
 ## Radeon Drivers
-sudo pacman -S --noconfirm mesa libva-mesa-driver vulkan-radeon
+# sudo pacman -S --noconfirm mesa libva-mesa-driver vulkan-radeon
 
 # Audo fix
 #install_pulse
