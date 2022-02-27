@@ -22,3 +22,8 @@ vim +PlugInstall +qall
 sudo pacman -S docker
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
+
+COMPOSE_VER=2.2.3
+curl -L "https://github.com/docker/compose/releases/download/v$COMPOSE_VER/docker-compose-$(uname -s| tr '[:upper:]' '[:lower:]')-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+chown $(whoami): /usr/local/bin/docker-compose
