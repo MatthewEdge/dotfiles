@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -24,7 +24,7 @@ alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 # ls
 alias ll="ls -alh"
 
-alias update="sudo apt update -y && sudo apt upgrade -y"
+alias update="sudo pacman -Syu"
 
 audio() {
   $HOME/set-audio-devices.sh
@@ -63,19 +63,6 @@ alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
 gpocb() {
   git push origin $(git branch --show-current)
-}
-
-# Medgelabs Stream
-export TWITCH_HOME=$HOME/twitch
-mkdir -p $TWITCH_HOME
-alias cdstream="cd $CODE_DIR/stream"
-alias cdbot="cd $CODE_DIR/stream-bot"
-
-startStream() {
-  OLD_DIR=$(pwd)
-  cd $CODE_DIR/stream/stream-config
-  ./startStream.sh
-  cd $OLD_DIR
 }
 
 # VIM
@@ -263,10 +250,8 @@ export PATH=$PATH:/home/medge/.local/bin
   # ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
 # }
 
-# # Image Viewing
+## Image Viewing
 # alias open="viewnior"
 
-# # start i3
-# if [ "$(tty)" = "/dev/tty1" ]; then
-  # pgrep i3 || exec startx "$CONFIG_DIR/X11/.xinitrc"
-# fi
+## Key Repeat
+#xset r rate 160 40
