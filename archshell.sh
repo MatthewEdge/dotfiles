@@ -1,9 +1,11 @@
 #!/bin/sh
-sudo pacman -Syu
+
+sudo pacman-mirrors --fasttrack 7
+sudo pacman -Syyu
 
 # Git
 sudo pacman -S git openssh
-sh $DOTFILES_DIR/git.sh
+./git.sh
 
 # Terminal, clipboard sharing with vim, and font of choice
 sudo pacman -S rxvt-unicode xsel xclip ttf-fira-code

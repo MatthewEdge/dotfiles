@@ -7,7 +7,7 @@ if [ ! -z "$HOME/.ssh/id_rsa" ]; then
 fi
 
 # NOTE: `-q` silences the agent and `-N` sets an empty password
-ssh-keygen -t rsa -b 4096 -C $EMAIL -f $HOME/.ssh/id_rsa -q -N ""
+ssh-keygen -t rsa -b 4096 -C $EMAIL -f $HOME/.ssh/id_rsa -q -N "${SSH_PASS}"
 
 # Ensure SSH agent is running
 eval "$(ssh-agent -s)"

@@ -24,7 +24,7 @@ alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 # ls
 alias ll="ls -alh"
 
-alias update="sudo pacman -Syu"
+alias update="sudo pacman -Syyu"
 
 audio() {
   $HOME/set-audio-devices.sh
@@ -254,4 +254,4 @@ export PATH=$PATH:/home/medge/.local/bin
 # alias open="viewnior"
 
 ## Key Repeat
-#xset r rate 160 40
+#xset r rate 190 40
