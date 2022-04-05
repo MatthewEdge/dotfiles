@@ -25,7 +25,7 @@ set clipboard^=unnamed,unnamedplus " Enable cross-app copy/paste after vim yank/
 
 set title " Show filename in window title bar
 set noshowmode " Do not show mode on command line since vim-airline can show it
-set cmdheight=2 " More space for bottom messages
+set cmdheight=2 " Space for bottom messages
 set shortmess+=c " Don't pass messages to ins-completion-menu
 set scrolloff=3 " Start scrolling 3 lines before horizontal window border
 
@@ -80,7 +80,7 @@ Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 call plug#end()
 
 " CoC Default Plugins
-let g:coc_global_extensions = ['coc-json', 'coc-tsserver']
+let g:coc_global_extensions = ['coc-json', 'coc-go']
 
 " Color Scheme
 colorscheme gruvbox
@@ -106,7 +106,8 @@ let g:ale_lint_on_save = 1
 let g:ale_fix_on_enter = 1
 
 let g:ale_linters = {
-  \ 'javascript': ['eslint'],
+  \ 'javascript': ['prettier'],
+  \ 'css': ['prettier'],
 \}
 
 " Remaps
