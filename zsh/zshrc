@@ -8,7 +8,7 @@ ZSH_THEME="robbyrussell"
 DISABLE_UPDATE_PROMPT="true"
 export UPDATE_ZSH_DAYS=7
 
-plugins=(git history-substring-search fzf)
+plugins=(git history-substring-search)
 
 # User configuration
 source $ZSH/oh-my-zsh.sh
@@ -24,7 +24,11 @@ alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 # ls
 alias ll="ls -alh"
 
-alias update="sudo pacman -Syyu"
+alias update="sudo pacman -Syu"
+
+audio() {
+  $HOME/set-audio-devices.sh
+}
 
 # Code folder
 CODE_DIR=$HOME/code
@@ -125,6 +129,10 @@ export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 alias gotest="go test ./..."
 
+## Protobuf
+export PROTOPATH=$HOME/protobuf
+export PATH=$PATH:$PROTOPATH/bin
+
 # Terraform
 awstf-dry() {
   export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
@@ -159,16 +167,19 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 alias pip="python -m pip"
 alias pipir="pip install -r requirements.txt"
 export PATH=$PATH:/home/medge/.local/bin
+alias newvenv="mkdir -p ./venv"
 
-# Arch-Specific
-# screenshot() {
-  # RES=$(xdpyinfo | grep 'dimensions:' | awk -F " " '{print $2}')
-  # DT=$(date +'%m-%d-%YT%H-%M-%S')
-  # ffmpeg -f x11grab -video_size $RES -i $DISPLAY -vframes 1 screenshot-$DT.png
-# }
+# Auto activate/deactivate Python venv
+python_venv() {
+  MYVENV=./venv
+  # when you cd into a folder that contains $MYVENV
+  [[ -d $MYVENV ]] && source $MYVENV/bin/activate > /dev/null 2>&1
+  # when you cd into a folder that doesn't
+  [[ ! -d $MYVENV ]] && deactivate > /dev/null 2>&1
+}
+autoload -U add-zsh-hook
+add-zsh-hook chpwd python_venv
+python_venv
 
-## Image Viewing
-# alias open="viewnior"
-
-## Key Repeat
-#xset r rate 190 40
+# Key Repeat
+xset r rate 180 46
