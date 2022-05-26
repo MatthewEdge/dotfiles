@@ -26,10 +26,6 @@ alias ll="ls -alh"
 
 alias update="sudo pacman -Syu"
 
-audio() {
-  $HOME/set-audio-devices.sh
-}
-
 # Code folder
 CODE_DIR=$HOME/code
 mkdir -p $CODE_DIR
@@ -167,7 +163,7 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 alias pip="python -m pip"
 alias pipir="pip install -r requirements.txt"
 export PATH=$PATH:/home/medge/.local/bin
-alias newvenv="mkdir -p ./venv"
+alias newvenv="python -m venv ./venv && python_venv"
 
 # Auto activate/deactivate Python venv
 python_venv() {
