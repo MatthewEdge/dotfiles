@@ -1,19 +1,8 @@
-!/bin/sh
+#!/bin/sh
+# Post-installation process for Manjaro to get all the usual apps and shell
+# setup
 
-# Installation process for Arch system.
-# Should only be run to install a new system, after disk formatting
-
-# lsblk - look for drive
-# dd if=/dev/zero of=/dev/DRIVE_HERE status=progress
-# fdisk > g > n +512M (BIOS part) > t 4 (BIOS) > n > accept defaults (full disk) > w
-# mkfs.ext4 /dev/DRIVE_1
-# mount /dev/DRIVE_1 /mnt
-# pacstrap /mnt base base-devel linux linux-firmware
-# genfstab -U /mnt >> /mnt/etc/fstab
-
-# arch-chroot /mnt archinstall.sh
-
-echo "archbox" > /etc/hostname
+sudo pacman-mirrors --geoip
 sudo pacman -Syu --noconfirm
 
 hwclock --systohc
@@ -24,11 +13,9 @@ echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
-echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# Install and autostart NetworkManager
-sudo pacman -S --noconfirm networkmanager
-sudo systemctl enable NetworkManager.service
+# Git
+sudo pacman -S --noconfirm git openssh
+./git.sh
 
 # Enable AUR through yay
 if [ ! -d "$HOME/yay" ]; then
@@ -40,32 +27,65 @@ if [ ! -d "$HOME/yay" ]; then
   cd $OLD_DIR
 fi
 
-# neovim
-sudo pacman -R vim
-sudo pacman -S --noconfirm vim
-cp ./.vimrc $HOME/.vimrc
-
-# Terminal, clipboard sharing with vim, and font of choice
-sudo pacman -S --noconfirm rxvt-unicode xsel xclip ttf-fira-code
-
 # Firefox
 sudo pacman -S --noconfirm firefox
 
-# Misc. utilities
+# Mouse management for Logitech G600
+pacman -S --noconfirm piper
 
-sudo pacman -S --noconfirm htop
+# Steam
+sudo pacman -S --noconfirm steam
 
-## Radeon Drivers
+## Radeon Drivers if we ever swap back (bloody CUDA...)
 # sudo pacman -S --noconfirm mesa libva-mesa-driver vulkan-radeon
-
-# Audo fix
-#install_pulse
-
-# Configuring default microphone
-#echo "Grab microphone device id:"
-#sudo pacmd list-sources | grep -e device.string -e 'name:'
-#echo "Now paste this at the bottom of /etc/pulse/default.pa:"
-#echo "set-default-source DEVICE-ID-HERE"
 
 # Screen capture
 sudo pacman -S --noconfirm ffmpeg
+
+
+# Shell Setup
+
+# Python (mostly for neovim)
+python -m pip install --upgrade pip
+
+# neovim
+sudo pacman -R --noconfirm vim
+sudo pacman -S --noconfirm neovim xsel xclip
+mkdir -p $HOME/.config/nvim
+mkdir -p $HOME/.config/nvim/snippets
+cp ./nvim/init.vim $HOME/.config/nvim
+cp ./nvim/snippets $HOME/.config/nvim/snippets
+python -m pip install --user pynvim
+
+# Better top
+sudo pacman -S --noconfirm htop
+
+# ZSH
+sudo pacman -S zsh fzf ripgrep
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+cp ./zsh/zshrc $HOME/.zshrc
+
+# Docker
+sudo pacman -S docker
+sudo groupadd docker
+sudo usermod -aG docker $(whoami)
+
+COMPOSE_VER=2.2.3
+curl -L "https://github.com/docker/compose/releases/download/v$COMPOSE_VER/docker-compose-$(uname -s| tr '[:upper:]' '[:lower:]')-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+chown $(whoami): /usr/local/bin/docker-compose
+
+# Golang
+echo "Install Go from the main site. Waiting..."
+read x
+sudo pacman -S protobuf
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+
+# Games and such
+
+# For PoE
+sudo pacman -S --noconfirm lutris
+yay -S awakened-poe-trade-git
