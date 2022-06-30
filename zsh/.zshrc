@@ -20,22 +20,14 @@ export EDITOR='vim'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+alias update="sudo pacman -Syyu"
 
 # ls
 alias ll="ls -alh"
 
-alias update="sudo pacman -Syyu"
-
-audio() {
-  $HOME/set-audio-devices.sh
-}
-
 # Code folder
 CODE_DIR=$HOME/code
 mkdir -p $CODE_DIR
-
-# Prime95
-alias prime95="$HOME/prime95/mprime"
 
 # Git
 
@@ -71,91 +63,13 @@ alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
 alias upvim="vim +PlugUpdate +PlugClean +qall!"
 
-# Note Taking, hosted by Mkdocs
-NOTES_DIR=$CODE_DIR/medgedocs/docs
-if [ ! -d "$NOTES_DIR" ]; then
-  git clone git@github.com:MatthewEdge/medgedocs.git $CODE_DIR/medgedocs
+# Note Taking CLI
+if [ ! -d "$HOME/medgedocs" ]; then
+  git clone git@github.com:MatthewEdge/medgedocs.git $HOME/medgedocs
+  echo "Notes repo cloned to $HOME/medgedocs"
 fi
 
-alias cdnotes="cd $NOTES_DIR"
-
-# CLI for interacting with note files
-note() {
-  DATE=$(date '+%Y-%m-%d')
-  NOTE_NAME=${2:-$DATE}
-
-  # Add extension if missing
-  case "$NOTE_NAME" in
-    *.md) ;;
-    *) NOTE_NAME=$NOTE_NAME.md
-  esac
-
-  NOTE_PATH=$NOTES_DIR/$NOTE_NAME
-
-  case $1 in
-    new|n)
-      $EDITOR $NOTE_PATH
-      ;;
-    cat|c)
-      cat $NOTE_PATH
-      ;;
-    ls|l)
-      ls $NOTES_DIR
-      ;;
-    open|o)
-      $EDITOR $NOTE_PATH
-      ;;
-    del|d)
-      rm $NOTE_PATH
-      ;;
-    rename|r)
-      if [ -z "$2" ]; then echo "Usage: note rename NEW_NAME"; exit 1; fi
-      # TODO allow file > file rename?
-      mv $NOTE_PATH $NOTES_DIR/$2.md
-      ;;
-    *)
-      echo "Usage: note CMD ARGS"
-      echo "  new [NAME] - Create a new note, optionally with a given name"
-      echo "  cat [NAME] - cat the contents of the given / current day's note"
-      echo "  open [NAME] - open the contents of the given / current day's note in the shell EDITOR"
-      echo "  list [NAME] - list notes in the Notes directory"
-      echo "  del [NAME] - delete the given / current day's note"
-      echo "  rename NEW_NAME - rename the current day's note to the given name"
-      ;;
-  esac
-}
-
-alias opennotes="open http://localhost:8000" # Mkdocs Container
-alias todos="$EDITOR $NOTES_DIR/index.md"
-
-## Notes Shell Completion
-_note_completions() {
-  local cur prev notes
-  cur=${COMP_WORDS[COMP_CWORD]}
-  prev=${COMP_WORDS[COMP_CWORD-1]}
-
-  case ${COMP_CWORD} in
-    1)
-      # Complete `note` with subcommands
-      COMPREPLY+=("new")
-      COMPREPLY+=("cat")
-      COMPREPLY+=("open")
-      COMPREPLY+=("list")
-      COMPREPLY+=("del")
-      COMPREPLY+=("rename")
-      ;;
-    2)
-      # Complete subcommands with ls of notes directory
-      notes=$(command ls $NOTES_DIR)
-      COMPREPLY=($(compgen -W "${notes}" -- ${cur}))
-      ;;
-    *)
-      COMPREPLY=()
-      ;;
-  esac
-}
-
-complete -F _note_completions note
+source $HOME/medgedocs/notes.sh
 
 # Kubernetes
 alias k='kubectl'
