@@ -20,18 +20,14 @@ export EDITOR='vim'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+alias update="sudo pacman -Syyu"
 
 # ls
 alias ll="ls -alh"
 
-alias update="sudo pacman -Syu"
-
 # Code folder
 CODE_DIR=$HOME/code
 mkdir -p $CODE_DIR
-
-# Prime95
-alias prime95="$HOME/prime95/mprime"
 
 # Git
 
@@ -67,12 +63,12 @@ alias vimrc="$EDITOR ~/.vimrc"
 alias cocrc="$EDITOR ~/.vim/coc-settings.json"
 alias upvim="vim +PlugUpdate +PlugClean +qall!"
 
-# Note Taking, hosted by Mkdocs
-NOTES_DIR=$CODE_DIR/medgedocs/docs
-if [ ! -d "$NOTES_DIR" ]; then
-  git clone git@github.com:MatthewEdge/medgedocs.git $CODE_DIR/medgedocs
+# Note Taking CLI
+if [ ! -d "$HOME/medgedocs" ]; then
+  git clone git@github.com:MatthewEdge/medgedocs.git $HOME/medgedocs
+  echo "Notes repo cloned to $HOME/medgedocs"
 fi
-source $CODE_DIR/medgedocs/notes.sh
+source $HOME/medgedocs/notes.sh
 
 # Kubernetes
 alias k='kubectl'
