@@ -1,4 +1,8 @@
--- Keymaps
+-----------------------------------------------------------
+-- Key remappings
+-----------------------------------------------------------
+
+-- helper to allow for default options with ability to add extra options
 local function map(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
   if opts then

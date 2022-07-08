@@ -5,7 +5,6 @@
 -- Plugin: nvim-cmp
 -- url: https://github.com/hrsh7th/nvim-cmpa
 
-
 local cmp_status_ok, cmp = pcall(require, 'cmp')
 if not cmp_status_ok then
   return
@@ -24,7 +23,7 @@ cmp.setup {
     end,
   },
 
--- Completion settings
+  -- Completion settings
   completion = {
     --completeopt = 'menu,menuone,noselect'
     keyword_length = 2
@@ -73,3 +72,8 @@ cmp.setup {
   },
 }
 
+-- Load Golang LSP capabilities
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+require('lspconfig')['gopls'].setup {
+  capabilities = capabilities
+}
