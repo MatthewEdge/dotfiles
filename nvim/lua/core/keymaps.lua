@@ -11,8 +11,24 @@ end
 vim.g.mapleader = ' '
 
 -----------------------------------------------------------
--- Neovim shortcuts
+-- General shortcuts
 -----------------------------------------------------------
+
+-- Close all but the current buffer
+map('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>')
+
+-- Move highlighted blocks up/down
+map('v', 'J', ":m '>+1<CR>gv=gv")
+map('v', 'K', ":m '<-2<CR>gv=gv")
+
+-- Window navigation & resizing
+map('n', '<leader>h', ':wincmd h<CR>')
+map('n', '<leader>j', ':wincmd j<CR>')
+map('n', '<leader>k', ':wincmd k<CR>')
+map('n', '<leader>l', ':wincmd l<CR>')
+map('n', '<leader>+', ':vertical resize +5<CR>')
+map('n', '<leader>-', ':vertical resize -5<CR>')
+map('n', '<leader>pv', ':wincmd v<bar> :Ex <bar> :vertical resize 30<CR>')
 
 -- Clear search highlighting with <leader> and c
 map('n', '<leader>c', ':nohl<CR>')
@@ -35,17 +51,16 @@ map('n', '<C-l>', '<C-w>l')
 map('n', '<leader>r', ':so %<CR>')
 
 -----------------------------------------------------------
--- Applications and Plugins shortcuts
+-- Plugins shortcuts
 -----------------------------------------------------------
 
--- Terminal mappings
-map('n', '<C-t>', ':Term<CR>', { noremap = true })  -- open
-map('t', '<Esc>', '<C-\\><C-n>')                    -- exit
-
--- NvimTree
-map('n', '<C-n>', ':NvimTreeToggle<CR>')            -- open/close
-map('n', '<leader>f', ':NvimTreeRefresh<CR>')       -- refresh
-map('n', '<leader>n', ':NvimTreeFindFile<CR>')      -- search file
+-- Open Terminal as a vertical split
+map('n', '<leader>tm', ':Term<CR>', { noremap = true })
 
 -- Tagbar
-map('n', '<leader>z', ':TagbarToggle<CR>')          -- open/close
+-- map('n', '<leader>z', ':TagbarToggle<CR>') -- open/close
+
+-- FZF / Ripgrep
+map('n', '<leader>pf', ':Files<CR>')
+-- map('n', '<leader>fw', ':<C-U>execute "Rg "' . expand("<cword>") . '\| cw<CR>') -- Search for word under cursor with RipGrep
+map('n', '<leader>rg', ':Rg<CR>')

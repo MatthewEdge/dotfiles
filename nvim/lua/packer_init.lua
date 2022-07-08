@@ -36,7 +36,6 @@ return packer.startup(function(use)
   use 'wbthomason/packer.nvim' -- packer can manage itself
 
   -- File explorer
-  use 'kyazdani42/nvim-tree.lua'
   use {
     'junegunn/fzf',
     requires = "junegunn/fzf.vim"
@@ -44,14 +43,6 @@ return packer.startup(function(use)
 
   -- Indent line
   use 'lukas-reineke/indent-blankline.nvim'
-
-  -- Autopair
-  use {
-    'windwp/nvim-autopairs',
-    config = function()
-      require('nvim-autopairs').setup()
-    end
-  }
 
   -- Tag viewer
   --use 'preservim/tagbar'
@@ -68,6 +59,8 @@ return packer.startup(function(use)
   -- Language syntax highlighting
   use 'sheerun/vim-polyglot'
 
+  -- Quick commenting
+  use 'preservim/nerdcommenter'
 
   -- Autocomplete
   use {

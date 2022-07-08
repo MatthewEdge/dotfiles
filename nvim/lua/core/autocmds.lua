@@ -2,31 +2,24 @@
 -- Autocommand functions
 -----------------------------------------------------------
 
--- Define autocommands with Lua APIs
+-- Define autocommands with Lua APIs (mostly)
 -- See: h:api-autocmd, h:augroup
 
 local augroup = vim.api.nvim_create_augroup   -- Create/get autocommand group
 local autocmd = vim.api.nvim_create_autocmd   -- Create autocommand
 
--- Highlight on yank
-augroup('YankHighlight', { clear = true })
-autocmd('TextYankPost', {
-  group = 'YankHighlight',
-  callback = function()
-    vim.highlight.on_yank({ higroup = 'IncSearch', timeout = '1000' })
-  end
-})
+-- Remember cursor position
+vim.cmd[[
+augroup vimrc-remember-cursor-position
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+augroup END
+]]
 
 -- Remove whitespace on save
 autocmd('BufWritePre', {
   pattern = '*',
   command = ":%s/\\s\\+$//e"
-})
-
--- Don't auto commenting new lines
-autocmd('BufEnter', {
-  pattern = '*',
-  command = 'set fo-=c fo-=r fo-=o'
 })
 
 -- Settings for filetypes:
