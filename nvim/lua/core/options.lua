@@ -20,7 +20,8 @@ colorscheme gruvbox
 g.gruvbox_invert_selection = '0'
 
 opt.mouse = 'a'                       -- Enable mouse support
-opt.clipboard = 'unnamedplus'         -- Copy/paste to system clipboard
+opt.clipboard = 'unnamed,unnamedplus' -- Copy/paste to system clipboard
+opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
 opt.swapfile = false                  -- Don't use swapfile
 opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
 opt.hidden = true           -- Enable background buffers

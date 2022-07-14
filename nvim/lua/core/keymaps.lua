@@ -54,14 +54,5 @@ map('n', '<C-l>', '<C-w>l')
 -- Reload configuration without restart nvim
 map('n', '<leader>r', ':so %<CR>')
 
------------------------------------------------------------
--- Plugins shortcuts
------------------------------------------------------------
-
 -- Open Terminal as a vertical split
 map('n', '<leader>tm', ':Term<CR>', { noremap = true })
-
--- FZF / Ripgrep
-map('n', '<leader>pf', ':Files<CR>')
--- map('n', '<leader>fw', ':<C-U>execute "Rg "' . expand("<cword>") . '\| cw<CR>') -- Search for word under cursor with RipGrep
-

@@ -73,7 +73,7 @@ cmp.setup {
 }
 
 -- Load Golang LSP capabilities
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-require('lspconfig')['gopls'].setup {
-  capabilities = capabilities
-}
+-- local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+-- require('lspconfig')['gopls'].setup {
+  -- capabilities = capabilities
+-- }
