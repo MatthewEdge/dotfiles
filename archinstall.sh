@@ -52,9 +52,7 @@ python -m pip install --upgrade pip
 sudo pacman -R --noconfirm vim
 sudo pacman -S --noconfirm neovim xsel xclip
 mkdir -p $HOME/.config/nvim
-mkdir -p $HOME/.config/nvim/snippets
-cp ./nvim/init.vim $HOME/.config/nvim
-cp ./nvim/snippets $HOME/.config/nvim/snippets
+cp -R ./nvim $HOME/.config/nvim
 python -m pip install --user pynvim
 
 # Better top
@@ -64,7 +62,7 @@ sudo pacman -S --noconfirm htop
 sudo pacman -S zsh fzf ripgrep
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-cp ./zsh/zshrc $HOME/.zshrc
+cp ./.zshrc $HOME/.zshrc
 
 # Docker
 sudo pacman -S docker
