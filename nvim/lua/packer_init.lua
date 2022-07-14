@@ -25,14 +25,9 @@ vim.cmd [[
   augroup end
 ]]
 
--- Use a protected call so we don't error out on first use
-local status_ok, packer = pcall(require, 'packer')
-if not status_ok then
-  return
-end
 
 -- Install plugins
-return packer.startup(function(use)
+return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- packer can manage itself
 
   -- File explorer
@@ -40,12 +35,16 @@ return packer.startup(function(use)
     'junegunn/fzf',
     requires = "junegunn/fzf.vim"
   }
+  use {
+      'nvim-telescope/telescope.nvim', tag = '0.1.0',
+      requires = {
+          'nvim-lua/plenary.nvim',
+          -- 'nvim-telescope/nvim-fzf-native.nvim',
+    }
+  }
 
   -- Indent line
-  use 'lukas-reineke/indent-blankline.nvim'
-
-  -- Tag viewer
-  --use 'preservim/tagbar'
+  -- use 'lukas-reineke/indent-blankline.nvim'
 
   -- Treesitter interface
   use 'nvim-treesitter/nvim-treesitter'
@@ -56,9 +55,6 @@ return packer.startup(function(use)
   -- LSP
   use 'neovim/nvim-lspconfig'
 
-  -- Language syntax highlighting
-  use 'sheerun/vim-polyglot'
-
   -- Quick commenting
   use 'preservim/nerdcommenter'
 
@@ -66,10 +62,10 @@ return packer.startup(function(use)
   use {
     'hrsh7th/nvim-cmp',
     requires = {
-      'L3MON4D3/LuaSnip',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-buffer',
+      'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
     },
   }

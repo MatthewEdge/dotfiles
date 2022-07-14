@@ -1,16 +1,3 @@
--- require('lspconfig').gopls.setup {
-  -- filetypes = { 'go', 'gomod' },
-  -- gopls = {
-    -- experimentalPostfixCompletions = true,
-    -- analyses = {
-      -- unusedparams = true,
-      -- shadow = true,
-    -- },
-    -- staticcheck = true,
-  -- },
-  -- on_attach = require('maps').on_attach,
--- }
-
 require('lspconfig').gopls.setup {
 	cmd = {'gopls'},
     filetypes = { 'go', 'gomod' },
@@ -59,3 +46,4 @@ function goimports(timeoutms)
     vim.lsp.buf.execute_command(action)
   end
 end
+

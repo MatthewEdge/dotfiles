@@ -61,10 +61,7 @@ map('n', '<leader>r', ':so %<CR>')
 -- Open Terminal as a vertical split
 map('n', '<leader>tm', ':Term<CR>', { noremap = true })
 
--- Tagbar
--- map('n', '<leader>z', ':TagbarToggle<CR>') -- open/close
-
 -- FZF / Ripgrep
 map('n', '<leader>pf', ':Files<CR>')
 -- map('n', '<leader>fw', ':<C-U>execute "Rg "' . expand("<cword>") . '\| cw<CR>') -- Search for word under cursor with RipGrep
-map('n', '<leader>rg', ':Rg<CR>')
+
