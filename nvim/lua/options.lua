@@ -14,16 +14,13 @@ local opt = vim.opt   -- Set options (global/buffer/windows-scoped)
 -----------------------------------------------------------
 
 -- Color scheme
-vim.cmd[[
-colorscheme gruvbox
-]]
+vim.cmd("colorscheme gruvbox")
 g.gruvbox_invert_selection = '0'
 
 opt.mouse = 'a'                       -- Enable mouse support
 opt.clipboard = 'unnamed,unnamedplus' -- Copy/paste to system clipboard
 opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
 opt.swapfile = false                  -- Don't use swapfile
-opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
 opt.hidden = true           -- Enable background buffers
 opt.history = 100           -- Remember N lines in history
 opt.lazyredraw = true       -- Faster scrolling
@@ -49,17 +46,6 @@ opt.expandtab = true        -- Use spaces instead of tabs
 opt.shiftwidth = 4          -- Shift 4 spaces when tab
 opt.tabstop = 4             -- 1 tab == 4 spaces
 opt.smartindent = true      -- Autoindent new lines
-
------------------------------------------------------------
--- FZF
------------------------------------------------------------
-vim.cmd[[
-let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
-let $FZF_DEFAULT_COMMAND="rg --hidden -l -g '!{.git}' --sort path ."
-let $FZF_DEFAULT_OPTS='--reverse' " Search at top, results below
-]]
-
-g.rg_derive_root = 'true'
 
 -----------------------------------------------------------
 -- Netrw File Browser

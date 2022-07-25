@@ -1,9 +1,9 @@
 -- Package manager
 require('packer_init')
 
-require('core/options')
-require('core/autocmds')
-require('core/keymaps')
+require('options')
+require('autocmds')
+require('keymaps')
 require('term')
 
 require('plugins/nvim-cmp')

@@ -3,10 +3,6 @@
 -----------------------------------------------------------
 
 -- Define autocommands with Lua APIs (mostly)
--- See: h:api-autocmd, h:augroup
-
-local augroup = vim.api.nvim_create_augroup   -- Create/get autocommand group
-local autocmd = vim.api.nvim_create_autocmd   -- Create autocommand
 
 -- Remember cursor position
 vim.cmd[[
@@ -16,17 +12,26 @@ augroup vimrc-remember-cursor-position
 augroup END
 ]]
 
+-- Maybe one day I'll figure out how to do ^ in pure Lua
+-- autocmd('BufReadPost', {
+    -- group = "vimrc-remember-cursor-position",
+    -- callback = function()
+        -- if vim.api.line("'\"") > 1 and vim.api.line("'\"") <= vim.api.line("$") then
+            -- vim.cmd("normal! g`\"")
+        -- end
+    -- end
+-- })
+
 -- Remove whitespace on save
-autocmd('BufWritePre', {
+vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   command = ":%s/\\s\\+$//e"
 })
 
 -- Settings for filetypes:
 -- Disable line length marker
-augroup('setLineLength', { clear = true })
-autocmd('Filetype', {
-  group = 'setLineLength',
+vim.api.nvim_create_autocmd('Filetype', {
+  group = vim.api.nvim_create_augroup('setLineLength', {clear = true}),
   pattern = { 'text', 'markdown', 'html', 'xhtml', 'javascript', 'typescript' },
   command = 'setlocal cc=0'
 })

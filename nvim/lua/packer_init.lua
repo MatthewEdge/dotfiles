@@ -32,19 +32,12 @@ return require('packer').startup(function(use)
 
   -- File explorer
   use {
-    'junegunn/fzf',
-    requires = "junegunn/fzf.vim"
-  }
-  use {
       'nvim-telescope/telescope.nvim', tag = '0.1.0',
       requires = {
           'nvim-lua/plenary.nvim',
           -- 'nvim-telescope/nvim-fzf-native.nvim',
     }
   }
-
-  -- Indent line
-  -- use 'lukas-reineke/indent-blankline.nvim'
 
   -- Treesitter interface
   use 'nvim-treesitter/nvim-treesitter'
@@ -63,22 +56,15 @@ return require('packer').startup(function(use)
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lua',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-buffer',
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+      -- 'L3MON4D3/LuaSnip',
     },
   }
 
   -- Git
   use 'tpope/vim-fugitive'
-  use {
-    'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      require('gitsigns').setup()
-    end
-  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
