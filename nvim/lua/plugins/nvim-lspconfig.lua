@@ -195,13 +195,3 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*.go',
   command = ':lua goimports(1000)'
 })
-
--- Signature help as we type (https://github.com/ray-x/lsp_signature.nvim)
-local lsp_signature = require('lsp_signature')
-lsp_signature.setup {
-  bind = true,
-  hint_prefix = '', -- Panda is cute but kinda distracting :(
-  handler_opts = {
-    border = 'rounded',
-  },
-}
