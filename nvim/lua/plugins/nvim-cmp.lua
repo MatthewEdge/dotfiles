@@ -3,7 +3,7 @@
 -----------------------------------------------------------
 
 -- Plugin: nvim-cmp
--- url: https://github.com/hrsh7th/nvim-cmpa
+-- url: https://github.com/hrsh7th/nvim-cmp
 
 local cmp_status_ok, cmp = pcall(require, 'cmp')
 if not cmp_status_ok then
@@ -15,8 +15,8 @@ if not luasnip_status_ok then
   return
 end
 
-vim.opt.completeopt = {'menuone','noinsert','noselect'}  -- Autocomplete options
-vim.opt.shortmess:append "c"
+vim.opt.completeopt = {'menu', 'menuone','noselect'}  -- Autocomplete options
+vim.opt.shortmess:append 'c'
 
 cmp.setup {
   -- Load snippet support
@@ -28,7 +28,6 @@ cmp.setup {
 
   -- Completion settings
   completion = {
-    --completeopt = 'menu,menuone,noselect'
     keyword_length = 2
   },
 
@@ -44,44 +43,19 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-
-    -- Tab mapping
-    -- ['<Tab>'] = function(fallback)
-      -- if cmp.visible() then
-        -- cmp.select_next_item()
-      -- elseif luasnip.expand_or_jumpable() then
-        -- luasnip.expand_or_jump()
-      -- else
-        -- fallback()
-      -- end
-    -- end,
-    -- ['<S-Tab>'] = function(fallback)
-      -- if cmp.visible() then
-        -- cmp.select_prev_item()
-      -- elseif luasnip.jumpable(-1) then
-        -- luasnip.jump(-1)
-      -- else
-        -- fallback()
-      -- end
-    -- end
   },
 
   -- Load sources, see: https://github.com/topics/nvim-cmp
   sources = {
     { name = 'nvim_lsp' },
+    { name = 'treesitter' },
     { name = 'nvim_lua' },
     { name = 'path' },
     { name = 'buffer' },
-    -- { name = 'luasnip' },
+    { name = 'luasnip' },
   },
 
   experimental = {
       ghost_text = true,
   },
-}
-
--- Load Golang LSP capabilities
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-require('lspconfig')['gopls'].setup {
-  capabilities = capabilities
 }

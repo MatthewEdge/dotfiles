@@ -6,7 +6,7 @@
 -- url: https://github.com/neovim/nvim-lspconfig
 
 -- For configuration see the Wiki: https://github.com/neovim/nvim-lspconfig/wiki
--- Autocompletion settings of "nvim-cmp" are defined in plugins/nvim-cmp.lua
+-- Autocompletion settings of 'nvim-cmp' are defined in plugins/nvim-cmp.lua
 
 local lsp_status_ok, lspconfig = pcall(require, 'lspconfig')
 if not lsp_status_ok then
@@ -28,24 +28,23 @@ vim.cmd([[
 
 -- Add additional capabilities supported by nvim-cmp
 -- See: https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-capabilities.textDocument.completion.completionItem.documentationFormat = { 'markdown', 'plaintext' }
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.preselectSupport = true
-capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
-capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
-capabilities.textDocument.completion.completionItem.deprecatedSupport = true
-capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
-capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalTextEdits',
-  },
-}
+-- capabilities.textDocument.completion.completionItem.documentationFormat = { 'markdown', 'plaintext' }
+-- capabilities.textDocument.completion.completionItem.snippetSupport = true
+-- capabilities.textDocument.completion.completionItem.preselectSupport = true
+-- capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+-- capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
+-- capabilities.textDocument.completion.completionItem.deprecatedSupport = true
+-- capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
+-- capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+-- capabilities.textDocument.completion.completionItem.resolveSupport = {
+  -- properties = {
+    -- 'documentation',
+    -- 'detail',
+    -- 'additionalTextEdits',
+  -- },
+-- }
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -69,7 +68,6 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = { noremap = true, silent = true }
 
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
@@ -138,37 +136,40 @@ end
 
 -- Golang gets some extra config
 lspconfig.gopls.setup {
-    filetypes = { 'go', 'gomod' },
-	-- for postfix snippets and analyzers
-	capabilities = capabilities,
-    settings = {
-      gopls = {
-        experimentalPostfixCompletions = true,
-        analyses = {
-          fieldalignment = true,
-          unusedparams = true,
-          shadow = true,
-       },
-       staticcheck = true,
-      },
+  filetypes = { 'go', 'gomod' },
+  -- for postfix snippets and analyzers
+  capabilities = capabilities,
+  settings = {
+    gopls = {
+      experimentalPostfixCompletions = true,
+      analyses = {
+        fieldalignment = true,
+        unusedparams = true,
+        shadow = true,
+     },
+     staticcheck = true,
     },
-	on_attach = on_attach,
-    flags = {
-      -- default in neovim 0.7+
-      debounce_text_changes = 150,
-    }
+  },
+  on_attach = on_attach,
+  flags = {
+    -- default in neovim 0.7+
+    debounce_text_changes = 150,
+  },
+  init_options = {
+    usePlaceholders = false,
+  },
 }
 
 function goimports(timeoutms)
   local context = { source = { organizeImports = true } }
-  vim.validate { context = { context, "t", true } }
+  vim.validate { context = { context, 't', true } }
 
   local params = vim.lsp.util.make_range_params()
   params.context = context
 
   -- See the implementation of the textDocument/codeAction callback
   -- (lua/vim/lsp/handler.lua) for how to do this properly.
-  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
+  local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, timeout_ms)
   if not result or next(result) == nil then return end
   local actions = result[1].result
   if not actions then return end
@@ -177,11 +178,11 @@ function goimports(timeoutms)
   -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
   -- is a CodeAction, it can have either an edit, a command or both. Edits
   -- should be executed first.
-  if action.edit or type(action.command) == "table" then
+  if action.edit or type(action.command) == 'table' then
     if action.edit then
-      vim.lsp.util.apply_workspace_edit(action.edit, "utf8")
+      vim.lsp.util.apply_workspace_edit(action.edit, 'utf8')
     end
-    if type(action.command) == "table" then
+    if type(action.command) == 'table' then
       vim.lsp.buf.execute_command(action.command)
     end
   else
@@ -192,5 +193,15 @@ end
 -- auto-run goimports on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*.go',
-  command = ":lua goimports(1000)"
+  command = ':lua goimports(1000)'
 })
+
+-- Signature help as we type (https://github.com/ray-x/lsp_signature.nvim)
+local lsp_signature = require('lsp_signature')
+lsp_signature.setup {
+  bind = true,
+  hint_prefix = '', -- Panda is cute but kinda distracting :(
+  handler_opts = {
+    border = 'rounded',
+  },
+}

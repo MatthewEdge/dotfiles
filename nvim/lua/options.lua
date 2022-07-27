@@ -14,10 +14,10 @@ local opt = vim.opt   -- Set options (global/buffer/windows-scoped)
 -----------------------------------------------------------
 
 -- Color scheme
-vim.cmd("colorscheme gruvbox")
+vim.cmd('colorscheme gruvbox')
 g.gruvbox_invert_selection = '0'
 
-opt.mouse = 'a'                       -- Enable mouse support
+opt.mouse = ''                        -- Disable mouse support
 opt.clipboard = 'unnamed,unnamedplus' -- Copy/paste to system clipboard
 opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
 opt.swapfile = false                  -- Don't use swapfile
@@ -55,7 +55,7 @@ g.netrw_browse_split = 4
 g.netrw_altv = 1
 g.netrw_liststyle = 3
 g.netrw_winsize = 75 -- with 25 for netrw split
-g.netrw_list_hide = "netrw_gitignore#Hide()"
+g.netrw_list_hide = 'netrw_gitignore#Hide()'
 
 
 -- NerdCommenter
@@ -66,27 +66,27 @@ g.NERDTrimTrailingWhitespace = 1
 -- Startup
 -----------------------------------------------------------
 -- Disable nvim intro
-opt.shortmess:append "sI"
+opt.shortmess:append 'sI'
 
 -- Disable builtins plugins
 local disabled_built_ins = {
-  "gzip",
-  "zip",
-  "zipPlugin",
-  "tar",
-  "tarPlugin",
-  "getscript",
-  "getscriptPlugin",
-  "vimball",
-  "vimballPlugin",
-  "2html_plugin",
-  "logipat",
-  "rrhelper",
-  "spellfile_plugin",
-  "matchit"
+  'gzip',
+  'zip',
+  'zipPlugin',
+  'tar',
+  'tarPlugin',
+  'getscript',
+  'getscriptPlugin',
+  'vimball',
+  'vimballPlugin',
+  '2html_plugin',
+  'logipat',
+  'rrhelper',
+  'spellfile_plugin',
+  'matchit'
 }
 
 for _, plugin in pairs(disabled_built_ins) do
-  g["loaded_" .. plugin] = 1
+  g['loaded_' .. plugin] = 1
 end
 

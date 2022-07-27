@@ -25,7 +25,7 @@ augroup END
 -- Remove whitespace on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
-  command = ":%s/\\s\\+$//e"
+  command = ':%s/\\s\\+$//e'
 })
 
 -- Settings for filetypes:

@@ -45,11 +45,11 @@ return require('packer').startup(function(use)
   -- Color schemes
   use 'morhetz/gruvbox'
 
-  -- LSP
-  use 'neovim/nvim-lspconfig'
-
   -- Quick commenting
   use 'preservim/nerdcommenter'
+
+  -- LSP
+  use 'neovim/nvim-lspconfig'
 
   -- Autocomplete
   use {
@@ -59,7 +59,9 @@ return require('packer').startup(function(use)
       'hrsh7th/cmp-nvim-lua',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-buffer',
-      -- 'L3MON4D3/LuaSnip',
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
+      'ray-x/lsp_signature.nvim', -- Signature help
     },
   }
 
