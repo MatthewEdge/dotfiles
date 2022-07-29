@@ -1,18 +1,26 @@
 # i3 config file (v4)
+#
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-# CMD button
-set $mod Mod4
+# Mod becomes CMD
+#set $mod Mod4
+
+# Mod becomes Alt
+set $mod Mod1
 
 font pango:monospace 14
+# This font is widely installed, provides lots of unicode glyphs, right-to-left
+# text rendering and scalability on retina/hidpi displays (thanks to pango).
+#font pango:DejaVu Sans Mono 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # Locking the screen
-bindsym $mod+CTRL+q exec i3lock
+bindsym Mod4+CTRL+q exec i3lock
 
 # start a terminal
-bindsym $mod+Return exec terminal
+bindsym $mod+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -53,6 +61,9 @@ bindsym $mod+CTRL+h split h
 # split in vertical orientation
 bindsym $mod+CTRL+v split v
 
+# focus the parent container
+bindsym $mod+a focus parent
+
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
@@ -73,8 +84,8 @@ workspace_auto_back_and_forth yes
 set $terms "1: terms"
 set $web "2: web"
 set $chat "3: chat"
-set $ws4 "4"
-set $ws5 "5"
+set $game "4: game"
+set $gameutils "5: game utils"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
@@ -82,14 +93,18 @@ set $ws9 "9"
 set $scratchpad "10: Scratchpad"
 
 # App assignment to workspace
+assign [class="i3-sensible-terminal"] $terms
 assign [class="firefox" instance="Navigator"] $web
+assign [class="discord"] $chat
+assign [class="Path of Exile"] $game
+assign [class="awakened-poe-trade"] $gameutils
 
 # switch to workspace
 bindsym $mod+1 workspace $terms
 bindsym $mod+2 workspace $web
 bindsym $mod+3 workspace $chat
-bindsym $mod+4 workspace number $ws4
-bindsym $mod+5 workspace number $ws5
+bindsym $mod+4 workspace $game
+bindsym $mod+5 workspace $gameutils
 bindsym $mod+6 workspace number $ws6
 bindsym $mod+7 workspace number $ws7
 bindsym $mod+8 workspace number $ws8
@@ -100,8 +115,8 @@ bindsym $mod+0 workspace $scratchpad
 bindsym $mod+Shift+1 move container to workspace $terms
 bindsym $mod+Shift+2 move container to workspace $web
 bindsym $mod+Shift+3 move container to workspace $chat
-bindsym $mod+Shift+4 move container to workspace number $ws4
-bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+4 move container to workspace $game
+bindsym $mod+Shift+5 move container to workspace $gameutils
 bindsym $mod+Shift+6 move container to workspace number $ws6
 bindsym $mod+Shift+7 move container to workspace number $ws7
 bindsym $mod+Shift+8 move container to workspace number $ws8
@@ -159,4 +174,19 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# The combination of xss-lock, nm-applet and pactl is a popular choice, so
+# they are included here as an example. Modify as you see fit.
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager is the most popular way to manage wireless networks on Linux,
+# and nm-applet is a desktop environment-independent system tray GUI for it.
+exec --no-startup-id nm-applet
 
