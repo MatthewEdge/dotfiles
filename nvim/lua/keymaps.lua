@@ -2,57 +2,46 @@
 -- Key remappings
 -----------------------------------------------------------
 
--- helper to allow for default options with ability to add extra options
-local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true, silent = true }
-  if opts then
-    options = vim.tbl_extend('force', options, opts)
-  end
-  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-
 -- Change leader to spacebar
-vim.g.mapleader = ' '
+vim.g.mapleader = '<Space>'
 
 -----------------------------------------------------------
 -- General shortcuts
 -----------------------------------------------------------
 
+local opts = { noremap = true }
+
+-- Renaming shortcut
+vim.api.nvim_set_keymap('n', '<leader>rr', 'gD:%s/<C-R>///gc<left><left><left>', opts)
+
 -- Close all but the current buffer
-map('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>')
+vim.api.nvim_set_keymap('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>', opts)
 
 -- Move highlighted blocks up/down
-map('v', 'J', ":m '>+1<CR>gv=gv")
-map('v', 'K', ":m '<-2<CR>gv=gv")
+vim.api.nvim_set_keymap('v', 'J', ":m '>+1<CR>gv=gv", opts)
+vim.api.nvim_set_keymap('v', 'K', ":m '<-2<CR>gv=gv", opts)
 
 -- Window navigation & resizing
-map('n', '<leader>h', ':wincmd h<CR>')
-map('n', '<leader>j', ':wincmd j<CR>')
-map('n', '<leader>k', ':wincmd k<CR>')
-map('n', '<leader>l', ':wincmd l<CR>')
-map('n', '<leader>+', ':vertical resize +5<CR>')
-map('n', '<leader>-', ':vertical resize -5<CR>')
-map('n', '<leader>pv', ':wincmd v<bar> :Ex <bar> :vertical resize 30<CR>')
+vim.api.nvim_set_keymap('n', '<leader>h', ':wincmd h<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>j', ':wincmd j<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>k', ':wincmd k<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>l', ':wincmd l<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>+', ':vertical resize +5<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>-', ':vertical resize -5<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>pv', ':wincmd v<bar> :Ex <bar> :vertical resize 30<CR>', opts)
 
 -- Clear search highlighting with <leader> and c
-map('n', '<leader>c', ':nohl<CR>')
-
--- Toggle auto-indenting for code paste
-map('n', '<F2>', ':set invpaste paste?<CR>')
-vim.opt.pastetoggle = '<F2>'
+vim.api.nvim_set_keymap('n', '<leader>c', ':nohl<CR>', opts)
 
 -- Change split orientation
-map('n', '<leader>tk', '<C-w>t<C-w>K') -- change vertical to horizontal
-map('n', '<leader>th', '<C-w>t<C-w>H') -- change horizontal to vertical
+vim.api.nvim_set_keymap('n', '<leader>tk', '<C-w>t<C-w>K', opts) -- change vertical to horizontal
+vim.api.nvim_set_keymap('n', '<leader>th', '<C-w>t<C-w>H', opts) -- change horizontal to vertical
 
 -- Move around splits using Ctrl + {h,j,k,l}
-map('n', '<C-h>', '<C-w>h')
-map('n', '<C-j>', '<C-w>j')
-map('n', '<C-k>', '<C-w>k')
-map('n', '<C-l>', '<C-w>l')
+vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', opts)
+vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', opts)
+vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', opts)
+vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', opts)
 
 -- Reload configuration without restart nvim
-map('n', '<leader>r', ':so %<CR>')
-
--- Open Terminal as a vertical split
-map('n', '<leader>tm', ':Term<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>r', ':so %<CR>', opts)

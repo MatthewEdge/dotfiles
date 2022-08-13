@@ -30,6 +30,9 @@ vim.cmd [[
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- packer can manage itself
 
+  -- Copilot, for fun
+  -- use 'github/copilot.vim'
+
   -- File explorer
   use {
       'nvim-telescope/telescope.nvim', tag = '0.1.0',
@@ -51,6 +54,14 @@ return require('packer').startup(function(use)
   -- LSP
   use 'neovim/nvim-lspconfig'
 
+  -- Debugger
+  use 'mfussenegger/nvim-dap'
+  use 'leoluz/nvim-dap-go'
+  use 'rcarriga/nvim-dap-ui'
+  -- use 'theHamsta/nvim-dap-virtual-text'
+  use 'nvim-telescope/telescope-dap.nvim'
+
+
   -- Autocomplete
   use {
     'hrsh7th/nvim-cmp',
@@ -63,6 +74,14 @@ return require('packer').startup(function(use)
       'saadparwaiz1/cmp_luasnip',
       'hrsh7th/cmp-nvim-lsp-signature-help',
     },
+  }
+
+  -- Diagnostics
+  use {
+      "folke/trouble.nvim",
+      config = function()
+          require("trouble").setup {}
+      end
   }
 
   -- Git
