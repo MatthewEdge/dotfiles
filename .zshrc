@@ -14,16 +14,30 @@ plugins=(git history-substring-search)
 source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
-export EDITOR='vim'
+
+export EDITOR='nvim'
 
 #############################
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
-alias update="sudo pacman -Syyu"
 
 # ls
 alias ll="ls -alh"
+
+alias pacman="sudo pacman"
+alias update="sudo pacman -Syu"
+
+# VIM
+# Old alias rewrites to save my tired brain
+alias vim='nvim'
+vimrc() {
+    # Allows file browsing to be the nvim config folder vs. wherever you call vimrc from
+    OLD_DIR=$(pwd)
+    cd $HOME/.config/nvim
+    $EDITOR init.lua
+    cd $OLD_DIR
+}
 
 # Code folder
 CODE_DIR=$HOME/code
@@ -31,7 +45,7 @@ mkdir -p $CODE_DIR
 
 # Git
 
-# Clone my repos
+## Clone my repos
 medgeclone() {
   REPO=$1
 
@@ -46,7 +60,6 @@ medgeclone() {
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
 alias ga='git add'
-alias gall='git add --all'
 alias gc='git commit'
 alias gcm='git commit -m'
 alias gd='git diff'
@@ -57,30 +70,14 @@ gpocb() {
   git push origin $(git branch --show-current)
 }
 
-# VIM
-export VIM_HOME="$HOME/.vim"
-alias vimrc="$EDITOR ~/.vimrc"
-alias cocrc="$EDITOR ~/.vim/coc-settings.json"
-alias upvim="vim +PlugUpdate +PlugClean +qall!"
-
-# Note Taking CLI
-if [ ! -d "$HOME/medgedocs" ]; then
-  git clone git@github.com:MatthewEdge/medgedocs.git $HOME/medgedocs
-  echo "Notes repo cloned to $HOME/medgedocs"
-fi
-source $HOME/medgedocs/notes.sh
+# Note Taking, hosted by Mkdocs
+# source $HOME/medgedocs/notes.sh
 
 # Kubernetes
 alias k='kubectl'
 alias kgp="kubectl get pods"
 alias kgpan="kubectl get pods --all-namespaces -o wide"
 alias kgs="kubectl get svc"
-alias k8t="$CODE_DIR/stream/lab-kit/k8t/k8t"
-
-# Vault for Local
-# mkdir -p $HOME/vault
-# export VAULT_ADDR='http://127.0.0.1:8200'
-# export VAULT_TOKEN=$(cat $HOME/vault/token)
 
 # Docker
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
