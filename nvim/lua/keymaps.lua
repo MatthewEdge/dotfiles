@@ -3,7 +3,7 @@
 -----------------------------------------------------------
 
 -- Change leader to spacebar
-vim.g.mapleader = '<Space>'
+vim.g.mapleader = ' '
 
 -----------------------------------------------------------
 -- General shortcuts
