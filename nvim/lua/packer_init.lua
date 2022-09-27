@@ -54,35 +54,35 @@ return require('packer').startup(function(use)
   -- LSP
   use 'neovim/nvim-lspconfig'
 
-  -- Debugger
-  use 'mfussenegger/nvim-dap'
-  use 'leoluz/nvim-dap-go'
-  use 'rcarriga/nvim-dap-ui'
-  -- use 'theHamsta/nvim-dap-virtual-text'
-  use 'nvim-telescope/telescope-dap.nvim'
-
-
   -- Autocomplete
   use {
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-nvim-lua',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-buffer',
-      -- 'L3MON4D3/LuaSnip',
-      -- 'saadparwaiz1/cmp_luasnip',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+      'L3MON4D3/LuaSnip',
+      'saadparwaiz1/cmp_luasnip',
     },
   }
 
+  -- Debugger
+  use 'mfussenegger/nvim-dap'
+  use 'leoluz/nvim-dap-go'
+  use 'rcarriga/nvim-dap-ui'
+  use 'nvim-telescope/telescope-dap.nvim'
+  -- use 'theHamsta/nvim-dap-virtual-text'
+
+
   -- Diagnostics
-  use {
-      "folke/trouble.nvim",
-      config = function()
-          require("trouble").setup {}
-      end
-  }
+  -- use {
+      -- "folke/trouble.nvim",
+      -- config = function()
+          -- require("trouble").setup {}
+      -- end
+  -- }
 
   -- Git
   use 'tpope/vim-fugitive'
