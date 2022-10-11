@@ -1,0 +1,6 @@
+-- Autocomplete to upper case
+\set COMP_KEYWORD_CASE upper
+
+-- Output sanity for CLI
+\pset pager off
+\pset null '(null)'
