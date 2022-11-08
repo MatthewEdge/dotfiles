@@ -2,8 +2,6 @@
 -- Autocommand functions
 -----------------------------------------------------------
 
--- Define autocommands with Lua APIs (mostly)
-
 -- Remember cursor position
 vim.cmd[[
 augroup vimrc-remember-cursor-position
@@ -11,16 +9,6 @@ augroup vimrc-remember-cursor-position
   autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
 ]]
-
--- Maybe one day I'll figure out how to do ^ in pure Lua
--- autocmd('BufReadPost', {
-    -- group = "vimrc-remember-cursor-position",
-    -- callback = function()
-        -- if vim.api.line("'\"") > 1 and vim.api.line("'\"") <= vim.api.line("$") then
-            -- vim.cmd("normal! g`\"")
-        -- end
-    -- end
--- })
 
 -- Remove whitespace on save
 vim.api.nvim_create_autocmd('BufWritePre', {
@@ -34,4 +22,13 @@ vim.api.nvim_create_autocmd('Filetype', {
   group = vim.api.nvim_create_augroup('setLineLength', {clear = true}),
   pattern = { 'text', 'markdown', 'html', 'xhtml', 'javascript', 'typescript' },
   command = 'setlocal cc=0'
+})
+
+-- Enable spell checking for doc filetypes
+vim.api.nvim_create_autocmd({'BufRead', 'BufNewFile'}, {
+  pattern = { '*.txt', '*.md', '*.tex' },
+  callback = function()
+      vim.opt.spell = true
+      vim.opt.spelllang = 'en'
+  end,
 })

@@ -17,11 +17,11 @@ if fn.empty(fn.glob(install_path)) > 0 then
   vim.o.runtimepath = vim.fn.stdpath('data') .. '/site/pack/*/start/*,' .. vim.o.runtimepath
 end
 
--- Autocommand that reloads neovim whenever you save the packer_init.lua file
+-- Autocommand that reloads neovim whenever you save the plugins.lua file
 vim.cmd [[
   augroup packer_user_config
     autocmd!
-    autocmd BufWritePost packer_init.lua source <afile> | PackerSync
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
   augroup end
 ]]
 
@@ -32,6 +32,9 @@ return require('packer').startup(function(use)
 
   -- Copilot, for fun
   -- use 'github/copilot.vim'
+  --
+  -- Color schemes
+  use 'morhetz/gruvbox'
 
   -- File explorer
   use {
@@ -45,11 +48,16 @@ return require('packer').startup(function(use)
   -- Treesitter interface
   use 'nvim-treesitter/nvim-treesitter'
 
-  -- Color schemes
-  use 'morhetz/gruvbox'
-
   -- Quick commenting
   use 'preservim/nerdcommenter'
+
+  -- Formatting
+  use {
+      'jose-elias-alvarez/null-ls.nvim',
+      requires = {
+          'nvim-lua/plenary.nvim'
+      },
+  }
 
   -- LSP
   use 'neovim/nvim-lspconfig'
@@ -69,12 +77,15 @@ return require('packer').startup(function(use)
   }
 
   -- Debugger
-  use 'mfussenegger/nvim-dap'
-  use 'leoluz/nvim-dap-go'
-  use 'rcarriga/nvim-dap-ui'
-  use 'nvim-telescope/telescope-dap.nvim'
-  -- use 'theHamsta/nvim-dap-virtual-text'
-
+  use {
+      'mfussenegger/nvim-dap',
+      requires = {
+          'leoluz/nvim-dap-go',
+          'rcarriga/nvim-dap-ui',
+          'nvim-telescope/telescope-dap.nvim',
+          -- 'theHamsta/nvim-dap-virtual-text'
+      },
+  }
 
   -- Diagnostics
   -- use {
@@ -83,6 +94,9 @@ return require('packer').startup(function(use)
           -- require("trouble").setup {}
       -- end
   -- }
+
+  -- Golang
+  use 'ray-x/go.nvim'
 
   -- Git
   use 'tpope/vim-fugitive'

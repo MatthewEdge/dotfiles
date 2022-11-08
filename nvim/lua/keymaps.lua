@@ -11,9 +11,6 @@ vim.g.mapleader = ' '
 
 local opts = { noremap = true }
 
--- Renaming shortcut
-vim.api.nvim_set_keymap('n', '<leader>rr', 'gD:%s/<C-R>///gc<left><left><left>', opts)
-
 -- Close all but the current buffer
 vim.api.nvim_set_keymap('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>', opts)
 

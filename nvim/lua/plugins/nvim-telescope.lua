@@ -1,4 +1,6 @@
--- Telescope
+-----------------------------------------------------------
+-- Telescope config
+----------------------------------------------------------
 ts = require('telescope.builtin')
 
 opts = { noremap = true, silent = true }
