@@ -59,7 +59,7 @@ python -m pip install --user pynvim
 sudo pacman -S --noconfirm htop
 
 # ZSH
-sudo pacman -S zsh fzf ripgrep
+sudo pacman -S --noconfirm zsh fzf ripgrep
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 cp ./.zshrc $HOME/.zshrc
@@ -69,7 +69,7 @@ sudo pacman -S docker
 sudo groupadd docker
 sudo usermod -aG docker $(whoami)
 
-COMPOSE_VER=2.2.3
+COMPOSE_VER=2.12.2
 curl -L "https://github.com/docker/compose/releases/download/v$COMPOSE_VER/docker-compose-$(uname -s| tr '[:upper:]' '[:lower:]')-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 chown $(whoami): /usr/local/bin/docker-compose
