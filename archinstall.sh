@@ -42,6 +42,9 @@ sudo pacman -S --noconfirm steam
 # Screen capture
 sudo pacman -S --noconfirm ffmpeg
 
+# SMB for Gnome Nautilus
+sudo pacman -S --noconfirm gvfs-smb manjaro-settings-samba nautilus-share
+
 
 # Shell Setup
 
