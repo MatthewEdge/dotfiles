@@ -1,92 +1,52 @@
------------------------------------------------------------
--- General Neovim settings and configuration
------------------------------------------------------------
+vim.opt.mouse = ''                        -- Disable mouse support
+vim.opt.guicursor = ''                    -- No need for guicursor manipulation
+vim.opt.clipboard = 'unnamed,unnamedplus' -- Copy/paste to system clipboard
 
--- Default options are not included
--- See: https://neovim.io/doc/user/vim_diff.html
--- [2] Defaults - *nvim-defaults*
+vim.opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
+vim.opt.swapfile = false                  -- Don't use swapfile
+vim.opt.history = 100           -- Remember N lines in history
 
-local g = vim.g       -- Global variables
-local opt = vim.opt   -- Set options (global/buffer/windows-scoped)
+vim.opt.hidden = true           -- Enable background buffers
+vim.opt.scrolloff = 8           -- Keep scroll offset for slightly less eye movement
+vim.opt.lazyredraw = true       -- Faster scrolling
+vim.opt.synmaxcol = 240         -- Max column for syntax highlighting
+vim.opt.updatetime = 50         -- ms to wait for triggering an event
 
------------------------------------------------------------
--- General
------------------------------------------------------------
+vim.opt.number = true           -- Show line number
+vim.opt.relativenumber = true   -- Relative line numbering
+vim.opt.showmatch = true        -- Highlight matching parenthesis
+vim.opt.foldmethod = 'marker'   -- Enable folding(default 'foldmarker')
+vim.opt.colorcolumn = '120'     -- Line length marker
+vim.opt.splitright = true       -- Vertical split to the right
+vim.opt.splitbelow = true       -- Horizontal split to the bottom
 
--- Color scheme
-vim.cmd('colorscheme gruvbox')
-g.gruvbox_invert_selection = '0'
+vim.opt.hlsearch = false        -- Don't highlight all search items at once
+vim.opt.incsearch = true        -- ...but incremental highlighting of one is ok
+vim.opt.ignorecase = true       -- Ignore case letters when searching
+vim.opt.smartcase = true        -- Ignore lowercase for the whole pattern
+vim.opt.linebreak = true        -- Wrap on word boundary
+vim.opt.termguicolors = true    -- Enable 24-bit term colors
+vim.opt.laststatus = 3          -- Set global statusline
+vim.opt.cmdheight = 2           -- Add more space for bottom message
 
-opt.mouse = ''                        -- Disable mouse support
-opt.clipboard = 'unnamed,unnamedplus' -- Copy/paste to system clipboard
-opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
-opt.swapfile = false                  -- Don't use swapfile
-opt.hidden = true           -- Enable background buffers
-opt.history = 100           -- Remember N lines in history
-opt.lazyredraw = true       -- Faster scrolling
-opt.synmaxcol = 240         -- Max column for syntax highlight
-opt.updatetime = 200        -- ms to wait for trigger an event
+vim.opt.tabstop = 4             -- 1 tab == 4 spaces
+vim.opt.softtabstop = 4         -- 1 tab == 4 spaces
+vim.opt.expandtab = true        -- Use spaces instead of tabs
+vim.opt.shiftwidth = 4          -- Shift 4 spaces when tab
+vim.opt.smartindent = true      -- Autoindent new lines
 
------------------------------------------------------------
--- Neovim UI
------------------------------------------------------------
-opt.number = true           -- Show line number
-opt.showmatch = true        -- Highlight matching parenthesis
-opt.foldmethod = 'marker'   -- Enable folding (default 'foldmarker')
-opt.colorcolumn = '120'     -- Line length marker
-opt.splitright = true       -- Vertical split to the right
-opt.splitbelow = true       -- Horizontal split to the bottom
-opt.ignorecase = true       -- Ignore case letters when search
-opt.smartcase = true        -- Ignore lowercase for the whole pattern
-opt.linebreak = true        -- Wrap on word boundary
-opt.termguicolors = true    -- Enable 24-bit RGB colors
-opt.laststatus = 3          -- Set global statusline
-opt.cmdheight = 2           -- Add more space for bottom messages
-opt.expandtab = true        -- Use spaces instead of tabs
-opt.shiftwidth = 4          -- Shift 4 spaces when tab
-opt.tabstop = 4             -- 1 tab == 4 spaces
-opt.smartindent = true      -- Autoindent new lines
-
------------------------------------------------------------
 -- Netrw File Browser
------------------------------------------------------------
-g.netrw_banner = 0
-g.netrw_browse_split = 4
-g.netrw_altv = 1
-g.netrw_liststyle = 3
-g.netrw_winsize = 75 -- with 25 for netrw split
-g.netrw_list_hide = 'netrw_gitignore#Hide()'
+vim.g.netrw_banner = 0
+vim.g.netrw_browse_split = 4
+vim.g.netrw_altv = 1
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 75 -- with 25 for netrw split
+-- vim.g.netrw_list_hide = 'netrw_vim.gitignore#Hide()'
 
 
 -- NerdCommenter
-g.NERDSpaceDelims = 1
-g.NERDTrimTrailingWhitespace = 1
+vim.g.NERDSpaceDelims = 1
+vim.g.NERDTrimTrailingWhitespace = 1
 
------------------------------------------------------------
--- Startup
------------------------------------------------------------
 -- Disable nvim intro
-opt.shortmess:append 'sI'
-
--- Disable builtins plugins
-local disabled_built_ins = {
-  'gzip',
-  'zip',
-  'zipPlugin',
-  'tar',
-  'tarPlugin',
-  'getscript',
-  'getscriptPlugin',
-  'vimball',
-  'vimballPlugin',
-  '2html_plugin',
-  'logipat',
-  'rrhelper',
-  'spellfile_plugin',
-  'matchit'
-}
-
-for _, plugin in pairs(disabled_built_ins) do
-  g['loaded_' .. plugin] = 1
-end
-
+vim.opt.shortmess:append 'sI'

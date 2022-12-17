@@ -1,6 +1,3 @@
--- Plugin manager: packer.nvim
--- url: https://github.com/wbthomason/packer.nvim
-
 -- Automatically install packer
 local fn = vim.fn
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
@@ -30,50 +27,63 @@ vim.cmd [[
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- packer can manage itself
 
+  -- Git
+  use 'tpope/vim-fugitive'
+
   -- Copilot, for fun
-  -- use 'github/copilot.vim'
-  --
+  use 'github/copilot.vim'
+
   -- Color schemes
-  use 'morhetz/gruvbox'
+  use {
+      'morhetz/gruvbox',
+      as = 'gruvbox',
+      config = function()
+          vim.cmd('colorscheme gruvbox')
+          vim.g.gruvbox_invert_selection = false
+      end
+  }
 
   -- File explorer
   use {
       'nvim-telescope/telescope.nvim', tag = '0.1.0',
-      requires = {
-          'nvim-lua/plenary.nvim',
-          -- 'nvim-telescope/nvim-fzf-native.nvim',
-    }
+      requires = { 'nvim-lua/plenary.nvim' }
   }
 
   -- Treesitter interface
-  use 'nvim-treesitter/nvim-treesitter'
+  use('nvim-treesitter/nvim-treesitter', {run = 'TSUpdate'})
 
   -- Quick commenting
   use 'preservim/nerdcommenter'
 
   -- Formatting
-  use {
-      'jose-elias-alvarez/null-ls.nvim',
-      requires = {
-          'nvim-lua/plenary.nvim'
-      },
-  }
+  -- use {
+      -- 'jose-elias-alvarez/null-ls.nvim',
+      -- requires = {
+          -- 'nvim-lua/plenary.nvim'
+      -- },
+  -- }
 
   -- LSP
-  use 'neovim/nvim-lspconfig'
-
-  -- Autocomplete
   use {
-    'hrsh7th/nvim-cmp',
-    requires = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
-      'hrsh7th/cmp-nvim-lua',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-buffer',
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-    },
+	  'VonHeikemen/lsp-zero.nvim',
+	  requires = {
+		  -- LSP Support
+		  {'neovim/nvim-lspconfig'},
+		  {'williamboman/mason.nvim'},
+		  {'williamboman/mason-lspconfig.nvim'},
+
+		  -- Autocompletion
+		  {'hrsh7th/nvim-cmp'},
+		  {'hrsh7th/cmp-buffer'},
+		  {'hrsh7th/cmp-path'},
+		  {'saadparwaiz1/cmp_luasnip'},
+		  {'hrsh7th/cmp-nvim-lsp'},
+		  {'hrsh7th/cmp-nvim-lua'},
+
+		  -- Snippets
+		  {'L3MON4D3/LuaSnip'},
+		  {'rafamadriz/friendly-snippets'},
+	  }
   }
 
   -- Debugger
@@ -96,10 +106,7 @@ return require('packer').startup(function(use)
   -- }
 
   -- Golang
-  use 'ray-x/go.nvim'
-
-  -- Git
-  use 'tpope/vim-fugitive'
+  -- use 'ray-x/go.nvim'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

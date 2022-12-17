@@ -16,7 +16,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   command = ':%s/\\s\\+$//e'
 })
 
--- Settings for filetypes:
 -- Disable line length marker
 vim.api.nvim_create_autocmd('Filetype', {
   group = vim.api.nvim_create_augroup('setLineLength', {clear = true}),
