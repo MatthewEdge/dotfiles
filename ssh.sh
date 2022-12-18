@@ -2,7 +2,7 @@
 EMAIL=${1:-"medge@medgelabs.io"}
 EXPECTED_FILE=$HOME/.ssh/id_ed25519
 
-if [ ! -z "$EXPECTED_FILE" ]; then
+if [ -f "$EXPECTED_FILE" ]; then
   echo "SSH Key already present. Exiting.."
   exit 0
 fi
