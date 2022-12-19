@@ -5,40 +5,46 @@
 -- Change leader to spacebar
 vim.g.mapleader = ' '
 
+-- If, for some reason, autoformat is off
+vim.keymap.set("n", "<leader>f", function()
+    vim.lsp.buf.format()
+end)
+
 -----------------------------------------------------------
 -- General shortcuts
 -----------------------------------------------------------
 
-local opts = { noremap = true }
-
 -- Close all but the current buffer
-vim.api.nvim_set_keymap('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>', opts)
+vim.keymap.set('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>')
 
 -- Move highlighted blocks up/down
-vim.api.nvim_set_keymap('v', 'J', ":m '>+1<CR>gv=gv", opts)
-vim.api.nvim_set_keymap('v', 'K', ":m '<-2<CR>gv=gv", opts)
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
+-- Keep cursor centered while navigating
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 
 -- Window navigation & resizing
-vim.api.nvim_set_keymap('n', '<leader>h', ':wincmd h<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>j', ':wincmd j<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>k', ':wincmd k<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>l', ':wincmd l<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>+', ':vertical resize +5<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>-', ':vertical resize -5<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>pv', ':wincmd v<bar> :Ex <bar> :vertical resize 30<CR>', opts)
+vim.keymap.set('n', '<leader>h', ':wincmd h<CR>')
+vim.keymap.set('n', '<leader>j', ':wincmd j<CR>')
+vim.keymap.set('n', '<leader>k', ':wincmd k<CR>')
+vim.keymap.set('n', '<leader>l', ':wincmd l<CR>')
+vim.keymap.set('n', '<leader>+', ':vertical resize +5<CR>')
+vim.keymap.set('n', '<leader>-', ':vertical resize -5<CR>')
+vim.keymap.set('n', '<leader>pv', ':wincmd v<bar> :Ex <bar> :vertical resize 30<CR>')
 
 -- Clear search highlighting with <leader> and c
-vim.api.nvim_set_keymap('n', '<leader>c', ':nohl<CR>', opts)
-
--- Change split orientation
-vim.api.nvim_set_keymap('n', '<leader>tk', '<C-w>t<C-w>K', opts) -- change vertical to horizontal
-vim.api.nvim_set_keymap('n', '<leader>th', '<C-w>t<C-w>H', opts) -- change horizontal to vertical
+vim.keymap.set('n', '<leader>c', ':nohl<CR>')
 
 -- Move around splits using Ctrl + {h,j,k,l}
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', opts)
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', opts)
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', opts)
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', opts)
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
 
 -- Reload configuration without restart nvim
-vim.api.nvim_set_keymap('n', '<leader>r', ':so %<CR>', opts)
+vim.keymap.set('n', '<leader>r', ':so %<CR>')
+
+-- Auto chmod a file from within vim <3
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
