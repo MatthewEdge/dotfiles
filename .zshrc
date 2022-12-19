@@ -25,8 +25,12 @@ alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 # ls
 alias ll="ls -alh"
 
-alias pacman="sudo pacman"
-alias update="sudo pacman -Syu"
+# alias pacman="sudo pacman"
+# alias update="sudo pacman -Syu"
+
+unalias pacman
+alias apt="sudo apt"
+alias update = "sudo apt update -y && sudo apt upgrade"
 
 # VIM
 # Old alias rewrites to save my tired brain
