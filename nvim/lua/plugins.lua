@@ -1,19 +1,3 @@
--- Automatically install packer
-local fn = vim.fn
-local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-
-if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({
-    'git',
-    'clone',
-    '--depth',
-    '1',
-    'https://github.com/wbthomason/packer.nvim',
-    install_path
-  })
-  vim.o.runtimepath = vim.fn.stdpath('data') .. '/site/pack/*/start/*,' .. vim.o.runtimepath
-end
-
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
 vim.cmd [[
   augroup packer_user_config
@@ -25,92 +9,81 @@ vim.cmd [[
 
 -- Install plugins
 return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim' -- packer can manage itself
+    use 'wbthomason/packer.nvim' -- packer can manage itself
 
-  -- Git
-  use 'tpope/vim-fugitive'
+    -- Git
+    use 'tpope/vim-fugitive'
 
-  -- Copilot, for fun
-  use 'github/copilot.vim'
+    -- Copilot, for fun
+    use 'github/copilot.vim'
 
-  -- Color schemes
-  use {
-      'morhetz/gruvbox',
-      as = 'gruvbox',
-      config = function()
-          vim.cmd('colorscheme gruvbox')
-          vim.g.gruvbox_invert_selection = false
-      end
-  }
+    -- Color schemes
+    use {
+        'rebelot/kanagawa.nvim',
+        config = function()
+            vim.cmd('colorscheme kanagawa')
+        end
+    }
 
-  -- File explorer
-  use {
-      'nvim-telescope/telescope.nvim', tag = '0.1.0',
-      requires = { 'nvim-lua/plenary.nvim' }
-  }
+    -- For the lighter days of dark colorschemes
+    -- use {
+    -- 'olimorris/onedarkpro.nvim',
+    -- config = function()
+    -- vim.cmd('colorscheme onedark')
+    -- end
+    -- }
 
-  -- Treesitter interface
-  use('nvim-treesitter/nvim-treesitter', {run = 'TSUpdate'})
 
-  -- Quick commenting
-  use 'preservim/nerdcommenter'
+    -- File explorer
+    use {
+        'nvim-telescope/telescope.nvim', tag = '0.1.0',
+        requires = { 'nvim-lua/plenary.nvim' }
+    }
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
-  -- Formatting
-  -- use {
-      -- 'jose-elias-alvarez/null-ls.nvim',
-      -- requires = {
-          -- 'nvim-lua/plenary.nvim'
-      -- },
-  -- }
+    -- Treesitter interface
+    use('nvim-treesitter/nvim-treesitter', { run = 'TSUpdate' })
 
-  -- LSP
-  use {
-	  'VonHeikemen/lsp-zero.nvim',
-	  requires = {
-		  -- LSP Support
-		  {'neovim/nvim-lspconfig'},
-		  {'williamboman/mason.nvim'},
-		  {'williamboman/mason-lspconfig.nvim'},
+    -- Quick commenting
+    use 'preservim/nerdcommenter'
 
-		  -- Autocompletion
-		  {'hrsh7th/nvim-cmp'},
-		  {'hrsh7th/cmp-buffer'},
-		  {'hrsh7th/cmp-path'},
-		  {'saadparwaiz1/cmp_luasnip'},
-		  {'hrsh7th/cmp-nvim-lsp'},
-		  {'hrsh7th/cmp-nvim-lua'},
+    -- LSP
+    use {
+        'VonHeikemen/lsp-zero.nvim',
+        requires = {
+            -- LSP Support
+            { 'neovim/nvim-lspconfig' },
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
 
-		  -- Snippets
-		  {'L3MON4D3/LuaSnip'},
-		  {'rafamadriz/friendly-snippets'},
-	  }
-  }
+            -- Autocompletion
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-path' },
+            { 'saadparwaiz1/cmp_luasnip' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-nvim-lua' },
 
-  -- Debugger
-  use {
-      'mfussenegger/nvim-dap',
-      requires = {
-          'leoluz/nvim-dap-go',
-          'rcarriga/nvim-dap-ui',
-          'nvim-telescope/telescope-dap.nvim',
-          -- 'theHamsta/nvim-dap-virtual-text'
-      },
-  }
+            -- Snippets
+            { 'L3MON4D3/LuaSnip' },
+            { 'rafamadriz/friendly-snippets' },
+        }
+    }
 
-  -- Diagnostics
-  -- use {
-      -- "folke/trouble.nvim",
-      -- config = function()
-          -- require("trouble").setup {}
-      -- end
-  -- }
+    -- Debugger
+    use {
+        'mfussenegger/nvim-dap',
+        requires = {
+            'leoluz/nvim-dap-go',
+            'rcarriga/nvim-dap-ui',
+            'nvim-telescope/telescope-dap.nvim',
+            -- 'theHamsta/nvim-dap-virtual-text'
+        },
+    }
 
-  -- Golang
-  -- use 'ray-x/go.nvim'
-
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if packer_bootstrap then
-    require('packer').sync()
-  end
+    -- Automatically set up your configuration after cloning packer.nvim
+    -- Put this at the end after all plugins
+    if packer_bootstrap then
+        require('packer').sync()
+    end
 end)
