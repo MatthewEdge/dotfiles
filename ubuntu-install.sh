@@ -11,12 +11,13 @@ sudo apt install -y git
 
 # Dev Dependencies and tooling
 sudo apt install -y \
-	piper \
-	steam \
-	htop \
-	fzf \
-	ripgrep \
-	neovim
+    piper \
+    steam \
+    htop \
+    fzf \
+    ripgrep \
+    xclip \
+    neovim
 
 # Neovim
 sudo apt remove -y vim
