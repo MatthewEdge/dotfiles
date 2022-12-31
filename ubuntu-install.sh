@@ -31,17 +31,12 @@ sudo apt install -y
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt update -y && sudo apt install -y docker-ce
+sudo apt update -y && sudo apt install -y docker-ce docker-compose-plugin
 sudo usermod -aG docker $(whoami)
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 sudo mv ./ubuntu/etc/docker/daemon.json /etc/docker/daemon.json
 sudo chown docker:docker /etc/docker/daemon.json
-
-COMPOSE_VER=2.12.2
-curl -L "https://github.com/docker/compose/releases/download/v$COMPOSE_VER/docker-compose-$(uname -s| tr '[:upper:]' '[:lower:]')-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-chown $(whoami): /usr/local/bin/docker-compose
 
 # Golang
 echo "Install Go from the main site. Waiting..."
