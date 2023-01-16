@@ -18,11 +18,12 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 })
 
 lsp.set_preferences({
-    sign_icons = {}
+    sign_icons = {},
 })
 
 lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
+    mapping = cmp_mappings,
+    completion = { autocomplete = false }, -- tab or ctrl-e triggers completion
 })
 
 lsp.on_attach(function(client, bufnr)
@@ -111,3 +112,7 @@ lsp.configure('gopls', {
 })
 
 lsp.setup()
+
+vim.diagnostic.config({
+    virtual_text = true
+})
