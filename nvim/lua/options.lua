@@ -1,6 +1,6 @@
 vim.opt.mouse = '' -- Disable mouse support
 vim.opt.guicursor = '' -- No need for guicursor manipulation
-vim.opt.clipboard = 'unnamed,unnamedplus' -- Copy/paste to system clipboard
+vim.opt.clipboard = 'unnamedplus' -- Copy/paste to system clipboard
 
 vim.opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
 vim.opt.swapfile = false -- Don't use swapfile

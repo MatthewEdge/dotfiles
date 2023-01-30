@@ -6,7 +6,7 @@
 vim.g.mapleader = ' '
 
 -- If, for some reason, autoformat is off
-vim.keymap.set("n", "<leader>f", function()
+vim.keymap.set('n', '<leader>f', function()
     vim.lsp.buf.format()
 end)
 
@@ -22,8 +22,8 @@ vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
 -- Keep cursor centered while navigating
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- Window navigation & resizing
 vim.keymap.set('n', '<leader>h', ':wincmd h<CR>')
@@ -46,5 +46,8 @@ vim.keymap.set('n', '<C-l>', '<C-w>l')
 -- Reload configuration without restart nvim
 vim.keymap.set('n', '<leader>r', ':so %<CR>')
 
+-- Open a file in Firefox (mostly for web dev)
+vim.keymap.set('n', '<leader>of', ':!firefox %<CR>')
+
 -- Auto chmod a file from within vim <3
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { silent = true })
