@@ -32,6 +32,9 @@ unalias pacman
 alias apt="sudo apt"
 alias update = "sudo apt update -y && sudo apt upgrade"
 
+# If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
+alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
+
 # VIM
 # Old alias rewrites to save my tired brain
 alias vim='nvim'
