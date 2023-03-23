@@ -15,6 +15,8 @@ source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
 
+# Setup for neovim
+export PATH="$HOME/neovim/bin:$PATH"
 export EDITOR='nvim'
 
 #############################

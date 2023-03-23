@@ -2,6 +2,8 @@
 
 set -ex
 
+ORIG=$(pwd)
+
 sudo apt update -y
 
 # Git / OpenSSH
@@ -17,10 +19,17 @@ sudo apt install -y \
     fzf \
     ripgrep \
     xclip \
-    neovim
-
-# Neovim
+    # for neovim
+    ninja-build gettext libtool-bin cmake g++ pkg-config unzip curl && \
 sudo apt remove -y vim
+
+git clone https://github.com/neovim/neovim.git $HOME/neovim
+cd $HOME/neovim
+rm -r build/  # clear the CMake cache
+make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+make install
+
+cd $ORIG
 
 # Docker && Docker Compose
 sudo apt install -y
