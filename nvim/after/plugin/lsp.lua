@@ -1,52 +1,57 @@
-local lsp = require("lsp-zero")
+-- TODO with v2...is lsp-zero still necessary?
 
+local lsp = require("lsp-zero").preset({})
 lsp.preset("recommended")
+
+-- (Optional) Configure lua language server for neovim
+require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
 lsp.ensure_installed({
     'gopls',
-    'tsserver',
-    'sumneko_lua',
-})
-
-lsp.set_preferences({
-    sign_icons = {},
+    'lua_ls',
 })
 
 -- Allow altering nvim_cmp keymaps
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings()
+local cmp_mappings = lsp.defaults.cmp_mappings() -- TODO defaults.cmp_mappings is deprecated
 cmp_mappings['<C-p>'] = cmp.mapping.select_prev_item(cmp_select)
 cmp_mappings['<C-n>'] = cmp.mapping.select_next_item(cmp_select)
 cmp_mappings['<C-y>'] = cmp.mapping.confirm({ select = true })
 cmp_mappings['<Tab>'] = nil -- disable Tab completion in favor of copilot
 -- ["<C-Space>"] = cmp.mapping.complete(),
 
-lsp.setup_nvim_cmp({
+cmp.setup({
     mapping = cmp_mappings,
-    -- completion = { autocomplete = false }, -- tab or ctrl-e triggers completion
+    -- completion = { autocomplete = false }, -- tab or ctrl-e triggers completion vs. autocomplete
     sources = {
         { name = 'nvim_lsp', keyword_length = 2 },
-        { name = 'buffer', keyword_length = 3 },
-        { name = 'luasnip', keyword_length = 3 },
+        { name = 'buffer',   keyword_length = 3 },
+        { name = 'luasnip',  keyword_length = 3 },
         { name = 'path' },
     },
 })
 
-lsp.on_attach(function(client, bufnr)
-    local opts = { buffer = bufnr, remap = false }
+lsp.on_attach(function(_, bufnr)
+    local nmap = function(keys, func, desc)
+        vim.keymap.set('n', keys, func, { buffer = bufnr, remap = false, desc = desc })
+    end
 
-    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-    vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set("n", "<leader>gr", require('telescope.builtin').lsp_references, opts)
-    vim.keymap.set("n", "<leader>rr", function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+    -- Explicitly set keymaps to keep them consistent
+    nmap("K", vim.lsp.buf.hover, 'Signature hover')
+    nmap("gd", vim.lsp.buf.definition, '[G]oto [D]efinition')
+    nmap("gi", vim.lsp.buf.implementation, '[G]oto [I]mpl')
+    -- nmap("gr", vim.lsp.buf.references, opts) -- Prefer telescope's nicer UI
+    nmap("gr", require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap("go", vim.lsp.buf.type_definition, 'Goto type def')
+    nmap("[d", vim.diagnostic.goto_next, 'Next diagnostic')
+    nmap("]d", vim.diagnostic.goto_prev, 'Prev diagnostic')
+    nmap("<leader>rr", vim.lsp.buf.rename, 'Rename symbol under cursor')
 
-    -- Auto-format on save
+    -- If, for some reason, autoformat is off
+    nmap('<leader>f', vim.lsp.buf.format, 'Manual format')
+
+    -- ..but we like Auto-format on save
     vim.cmd([[
         augroup formatting
             autocmd! * <buffer>
@@ -81,28 +86,9 @@ function OrganizeImports(timeoutms)
 end
 
 -- Make runtime files discoverable to the server
-local runtime_path = vim.split(package.path, ';')
-table.insert(runtime_path, 'lua/?.lua')
-table.insert(runtime_path, 'lua/?/init.lua')
-
-lsp.configure('sumneko_lua', {
-    settings = {
-        Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT)
-                version = 'LuaJIT',
-                -- Setup your lua path
-                path = runtime_path,
-            },
-            diagnostics = {
-                globals = { 'vim' },
-            },
-            workspace = { library = vim.api.nvim_get_runtime_file('', true) },
-            -- Do not send telemetry data containing a randomized but unique identifier
-            telemetry = { enable = false },
-        },
-    },
-})
+-- local runtime_path = vim.split(package.path, ';')
+-- table.insert(runtime_path, 'lua/?.lua')
+-- table.insert(runtime_path, 'lua/?/init.lua')
 
 lsp.configure('gopls', {
     settings = {
@@ -120,6 +106,7 @@ lsp.configure('gopls', {
 
 lsp.setup()
 
+-- TODO do we like virtual_text?
 vim.diagnostic.config({
     virtual_text = true
 })
