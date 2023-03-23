@@ -23,16 +23,12 @@ return require('packer').startup(function(use)
         config = function()
             vim.cmd('colorscheme kanagawa')
         end
+        -- For the lighter days of dark colorschemes
+        -- 'olimorris/onedarkpro.nvim',
+        -- config = function()
+        -- vim.cmd('colorscheme onedark')
+        -- end
     }
-
-    -- For the lighter days of dark colorschemes
-    -- use {
-    -- 'olimorris/onedarkpro.nvim',
-    -- config = function()
-    -- vim.cmd('colorscheme onedark')
-    -- end
-    -- }
-
 
     -- File explorer
     use {
@@ -58,9 +54,9 @@ return require('packer').startup(function(use)
             { 'williamboman/mason-lspconfig.nvim' },
 
             -- Autocompletion
-            { 'hrsh7th/nvim-cmp' }, -- Required
+            { 'hrsh7th/nvim-cmp' },     -- Required
             { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' }, -- Required
+            { 'L3MON4D3/LuaSnip' },     -- Required
             { 'hrsh7th/cmp-buffer' },
             { 'hrsh7th/cmp-path' },
             { 'hrsh7th/cmp-nvim-lua' },
