@@ -8,6 +8,7 @@ require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
 
 lsp.ensure_installed({
     'gopls',
+    'golangci_lint_ls',
     'lua_ls',
 })
 
@@ -39,14 +40,14 @@ lsp.on_attach(function(_, bufnr)
 
     -- Explicitly set keymaps to keep them consistent
     nmap("K", vim.lsp.buf.hover, 'Signature hover')
-    nmap("gd", vim.lsp.buf.definition, '[G]oto [D]efinition')
-    nmap("gi", vim.lsp.buf.implementation, '[G]oto [I]mpl')
+    nmap("<leader>gd", vim.lsp.buf.definition, '[G]oto [D]efinition')
+    nmap("<leader>gi", vim.lsp.buf.implementation, '[G]oto [I]mpl')
     -- nmap("gr", vim.lsp.buf.references, opts) -- Prefer telescope's nicer UI
-    nmap("gr", require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-    nmap("go", vim.lsp.buf.type_definition, 'Goto type def')
+    nmap("<leader>gr", require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap("<leader>go", vim.lsp.buf.type_definition, 'Goto type def')
+    nmap("<leader>rr", vim.lsp.buf.rename, 'Rename symbol under cursor')
     nmap("[d", vim.diagnostic.goto_next, 'Next diagnostic')
     nmap("]d", vim.diagnostic.goto_prev, 'Prev diagnostic')
-    nmap("<leader>rr", vim.lsp.buf.rename, 'Rename symbol under cursor')
 
     -- If, for some reason, autoformat is off
     nmap('<leader>f', vim.lsp.buf.format, 'Manual format')
@@ -101,6 +102,17 @@ lsp.configure('gopls', {
                 fillstruct = true,
             },
         },
+    },
+})
+
+lsp.configure('golangci_lint_ls', {
+    settings = {
+        gopls = {
+            gofumpt = true,
+        },
+    },
+    flags = {
+        debounce_text_changes = 150,
     },
 })
 
