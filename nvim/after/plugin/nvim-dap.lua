@@ -3,16 +3,21 @@
 -----------------------------------------------------------
 
 -- Plugin: nvim-dap + dap-ui and lang-specific dap extensions
+local dap = require('dap')
 
-local opts = { remap = false }
-vim.keymap.set('n', '<F1>', ':lua require("dap").continue()<CR>', opts)
-vim.keymap.set('n', '<leader>bp', ':lua require("dap").toggle_breakpoint()<CR>', opts)
-vim.keymap.set('n', '<F3>', ':lua require("dap").step_over()<CR>', opts)
-vim.keymap.set('n', '<F4>', ':lua require("dap").step_into()<CR>', opts)
-vim.keymap.set('n', '<leader>dt', ':lua require("dap-go").debug_test()<CR>', opts)
-vim.keymap.set('n', '<leader>dui', ':lua require("dapui").toggle()<CR>', opts)
+vim.keymap.set('n', '<F3>', dap.continue)
+vim.keymap.set('n', '<F2>', dap.step_over)
+vim.keymap.set('n', '<F4>', dap.step_into)
+vim.keymap.set('n', '<leader>bp', dap.toggle_breakpoint)
+vim.keymap.set('n', '<leader>bc', function()
+    dap.set_breakpoint(vim.fn.input('Condition: '))
+end)
+vim.keymap.set('n', '<leader>lb', ':Telescope dap list_breakpoints', { desc = '[L]ist [B]reakpoints' })
+vim.keymap.set('n', '<leader>dt', ':lua require("dap-go").debug_test()<CR>', { desc = '[D]ebug [T]est' })
+vim.keymap.set('n', '<leader>dui', ':lua require("dapui").toggle()<CR>', { desc = '[D]ebug [UI]' })
 
 require('dap-go').setup()
+
 require('dapui').setup({
     icons = { expanded = '▾', collapsed = '▸' },
     mappings = {
@@ -70,13 +75,7 @@ require('dapui').setup({
 })
 
 -- Enable opening dap-ui automatically once debugging starts
-local dap, dapui = require('dap'), require('dapui')
-dap.listeners.after.event_initialized['dapui_config'] = function()
-    dapui.open()
-end
-dap.listeners.before.event_terminated['dapui_config'] = function()
-    dapui.close()
-end
-dap.listeners.before.event_exited['dapui_config'] = function()
-    dapui.close()
-end
+local dapui = require('dapui')
+dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+dap.listeners.before.event_exited['dapui_config'] = dapui.close

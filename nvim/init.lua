@@ -1,11 +1,13 @@
--- Set Key remappings before any plugins are installed
-
 -- Change leader to spacebar
 vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
 -----------------------------------------------------------
--- General shortcuts
+-- General keymaps
 -----------------------------------------------------------
+
+-- Prevent space from doing anything sans being the leader key
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Close all but the current buffer
 vim.keymap.set('n', '<leader>bb', ':<c-u>up <bar> %bd <bar> e#<CR>')
@@ -27,7 +29,7 @@ vim.keymap.set('n', '<leader>+', ':vertical resize +5<CR>')
 vim.keymap.set('n', '<leader>-', ':vertical resize -5<CR>')
 vim.keymap.set('n', '<leader>pv', ':wincmd v<bar> :Ex <bar> :vertical resize 30<CR>')
 
--- Clear search highlighting with <leader> and c
+-- Clear search highlighting
 vim.keymap.set('n', '<leader>c', ':nohl<CR>')
 
 -- Move around splits using Ctrl + {h,j,k,l}
@@ -42,7 +44,7 @@ vim.keymap.set('n', '<leader>r', ':so %<CR>')
 -- Open a file in Firefox (mostly for web dev)
 vim.keymap.set('n', '<leader>of', ':!firefox %<CR>')
 
--- Auto chmod a file from within vim <3
+-- Auto chmod a file from within the editor
 vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { silent = true })
 
 -----------------------------------------------------------
@@ -57,13 +59,14 @@ augroup vimrc-remember-cursor-position
 augroup END
 ]]
 
+-- TODO (2023-03-29) - disabled as this was messing with test data as well
 -- Remove whitespace on save
 vim.api.nvim_create_autocmd('BufWritePre', {
     pattern = '*',
     command = ':%s/\\s\\+$//e'
 })
 
--- Disable line length marker
+-- Disable line length marker for typically wide-column editing
 vim.api.nvim_create_autocmd('Filetype', {
     group = vim.api.nvim_create_augroup('setLineLength', { clear = true }),
     pattern = { 'text', 'markdown', 'html', 'xhtml', 'javascript', 'typescript' },
@@ -79,5 +82,60 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
     end,
 })
 
+-----------------------------------------------------------
+-- Editor options
+-----------------------------------------------------------
+vim.opt.mouse = ''                        -- Disable mouse support
+vim.opt.guicursor = ''                    -- No need for guicursor manipulation
+vim.opt.clipboard = 'unnamedplus'         -- Copy/paste to system clipboard
+
+vim.opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
+vim.opt.swapfile = false                  -- Don't use swapfile
+vim.opt.history = 100                     -- Remember N lines in history
+
+vim.opt.hidden = true                     -- Enable background buffers
+vim.opt.scrolloff = 8                     -- Keep scroll offset for slightly less eye movement
+vim.opt.lazyredraw = true                 -- Faster scrolling
+vim.opt.synmaxcol = 240                   -- Max column for syntax highlighting
+vim.opt.updatetime = 50                   -- ms to wait for triggering an event
+
+vim.opt.number = true                     -- Show line number
+vim.opt.relativenumber = true             -- Relative line numbering
+vim.opt.showmatch = true                  -- Highlight matching parenthesis
+vim.opt.foldmethod = 'marker'             -- Enable folding(default 'foldmarker')
+vim.opt.colorcolumn = '120'               -- Line length marker
+vim.opt.splitright = true                 -- Vertical split to the right
+vim.opt.splitbelow = true                 -- Horizontal split to the bottom
+
+vim.opt.hlsearch = false                  -- Don't highlight all search items at once
+vim.opt.incsearch = true                  -- ...but incremental highlighting of one is ok
+vim.opt.ignorecase = true                 -- Ignore case letters when searching
+vim.opt.smartcase = true                  -- Ignore lowercase for the whole pattern
+vim.opt.linebreak = true                  -- Wrap on word boundary
+vim.opt.termguicolors = true              -- Enable 24-bit term colors
+vim.opt.laststatus = 3                    -- Set global statusline
+vim.opt.cmdheight = 2                     -- Add more space for bottom message
+
+vim.opt.tabstop = 4                       -- 1 tab == 4 spaces
+vim.opt.softtabstop = 4                   -- 1 tab == 4 spaces
+vim.opt.expandtab = true                  -- Use spaces instead of tabs
+vim.opt.shiftwidth = 4                    -- Shift 4 spaces when tab
+vim.opt.smartindent = true                -- Autoindent new lines
+
+-- Netrw File Browser
+vim.g.netrw_banner = 0
+vim.g.netrw_browse_split = 4
+vim.g.netrw_altv = 1
+vim.g.netrw_liststyle = 3
+vim.g.netrw_winsize = 75 -- with 25 for netrw split
+-- vim.g.netrw_list_hide = 'netrw_vim.gitignore#Hide()'
+
+-- NerdCommenter
+vim.g.NERDSpaceDelims = 1
+vim.g.NERDTrimTrailingWhitespace = 1
+
+-- Disable nvim intro
+-- vim.opt.shortmess:append 'sI'
+
+-- Require plugins last
 require('plugins')
-require('options')

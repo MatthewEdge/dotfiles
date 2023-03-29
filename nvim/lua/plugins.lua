@@ -15,7 +15,7 @@ return require('packer').startup(function(use)
     use 'tpope/vim-fugitive'
 
     -- Copilot, for fun
-    use 'github/copilot.vim'
+    -- use 'github/copilot.vim'
 
     -- Color schemes
     use {
@@ -30,7 +30,7 @@ return require('packer').startup(function(use)
         -- end
     }
 
-    -- File explorer
+    -- Fuzzy Finder
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         requires = { 'nvim-lua/plenary.nvim' }
@@ -60,6 +60,9 @@ return require('packer').startup(function(use)
             { 'hrsh7th/cmp-buffer' },
             { 'hrsh7th/cmp-path' },
             { 'hrsh7th/cmp-nvim-lua' },
+
+            -- Make Neovim conf editing better
+            { 'folke/neodev.nvim' },
         }
     }
 

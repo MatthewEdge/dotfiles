@@ -116,6 +116,8 @@ lsp.configure('golangci_lint_ls', {
     },
 })
 
+require('neodev').setup({})
+
 lsp.setup()
 
 -- TODO do we like virtual_text?

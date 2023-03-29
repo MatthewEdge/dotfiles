@@ -99,11 +99,6 @@ _G.packer_plugins = {
     path = "/home/medge/.local/share/nvim/site/pack/packer/start/cmp-path",
     url = "https://github.com/hrsh7th/cmp-path"
   },
-  ["copilot.vim"] = {
-    loaded = true,
-    path = "/home/medge/.local/share/nvim/site/pack/packer/start/copilot.vim",
-    url = "https://github.com/github/copilot.vim"
-  },
   ["kanagawa.nvim"] = {
     config = { "\27LJ\2\n8\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0\25colorscheme kanagawa\bcmd\bvim\0" },
     loaded = true,
@@ -124,6 +119,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/medge/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
+  },
+  ["neodev.nvim"] = {
+    loaded = true,
+    path = "/home/medge/.local/share/nvim/site/pack/packer/start/neodev.nvim",
+    url = "https://github.com/folke/neodev.nvim"
   },
   nerdcommenter = {
     loaded = true,
