@@ -134,8 +134,5 @@ vim.g.netrw_winsize = 75 -- with 25 for netrw split
 vim.g.NERDSpaceDelims = 1
 vim.g.NERDTrimTrailingWhitespace = 1
 
--- Disable nvim intro
--- vim.opt.shortmess:append 'sI'
-
 -- Require plugins last
 require('plugins')
