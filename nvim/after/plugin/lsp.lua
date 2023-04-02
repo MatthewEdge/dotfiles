@@ -15,23 +15,31 @@ lsp.ensure_installed({
 -- Allow altering nvim_cmp keymaps
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings() -- TODO defaults.cmp_mappings is deprecated
-cmp_mappings['<C-p>'] = cmp.mapping.select_prev_item(cmp_select)
-cmp_mappings['<C-n>'] = cmp.mapping.select_next_item(cmp_select)
-cmp_mappings['<C-y>'] = cmp.mapping.confirm({ select = true })
-cmp_mappings['<Tab>'] = nil -- disable Tab completion in favor of copilot
--- ["<C-Space>"] = cmp.mapping.complete(),
-
-cmp.setup({
-    mapping = cmp_mappings,
-    -- completion = { autocomplete = false }, -- tab or ctrl-e triggers completion vs. autocomplete
-    sources = {
-        { name = 'nvim_lsp', keyword_length = 2 },
-        { name = 'buffer',   keyword_length = 3 },
-        { name = 'luasnip',  keyword_length = 3 },
-        { name = 'path' },
-    },
+local cmp_mappings = lsp.defaults.cmp_mappings({ -- TODO defaults.cmp_mappings is deprecated
+    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+    ["<C-Space>"] = cmp.mapping.complete(),
 })
+
+-- Disable tab completion in favor of Copilor
+cmp_mappings['<Tab>'] = nil
+cmp_mappings['<S-Tab>'] = nil
+
+lsp.setup_nvim_cmp({
+  mapping = cmp_mappings
+})
+
+-- cmp.setup({
+    -- mapping = cmp_mappings,
+    -- -- completion = { autocomplete = false }, -- tab or ctrl-e triggers completion vs. autocomplete
+    -- sources = {
+        -- { name = 'nvim_lsp', keyword_length = 2 },
+        -- { name = 'buffer',   keyword_length = 3 },
+        -- { name = 'luasnip',  keyword_length = 3 },
+        -- { name = 'path' },
+    -- },
+-- })
 
 lsp.on_attach(function(_, bufnr)
     local nmap = function(keys, func, desc)
@@ -53,38 +61,21 @@ lsp.on_attach(function(_, bufnr)
     nmap('<leader>f', vim.lsp.buf.format, 'Manual format')
 
     -- ..but we like Auto-format on save
-    vim.cmd([[
-        augroup formatting
-            autocmd! * <buffer>
-            autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
-        augroup END
-    ]])
-
-    -- Import organization for Go files
-    vim.cmd([[
-        augroup goimports
-            autocmd! * <buffer>
-            autocmd BufWritePre *.go lua OrganizeImports(1000)
-        augroup END
-    ]])
-end)
-
--- organize imports
--- https://github.com/neovim/nvim-lspconfig/issues/115#issuecomment-902680058
-function OrganizeImports(timeoutms)
-    local params = vim.lsp.util.make_range_params()
-    params.context = { only = { "source.organizeImports" } }
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeoutms)
-    for _, res in pairs(result or {}) do
-        for _, r in pairs(res.result or {}) do
-            if r.edit then
-                vim.lsp.util.apply_workspace_edit(r.edit, "UTF-8")
-            else
-                vim.lsp.buf.execute_command(r.command)
-            end
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = {'*.go', '*.py'},
+        callback = function()
+            vim.lsp.buf.format()
         end
-    end
-end
+    })
+
+    -- Organize imports as well for Go files
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = '*.go',
+        callback = function()
+            vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+        end
+    })
+end)
 
 -- Make runtime files discoverable to the server
 -- local runtime_path = vim.split(package.path, ';')
@@ -94,13 +85,14 @@ end
 lsp.configure('gopls', {
     settings = {
         gopls = {
-            gofumpt = true,
+            -- gofumpt = true,
             -- usePlaceholders = true,
             analyses = {
                 unusedparams = true,
                 shadow = true,
                 fillstruct = true,
             },
+            staticcheck = true,
         },
     },
 })
