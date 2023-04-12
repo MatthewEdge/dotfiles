@@ -61,10 +61,10 @@ augroup END
 
 -- TODO (2023-03-29) - disabled as this was messing with test data as well
 -- Remove whitespace on save
-vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = '*',
-    command = ':%s/\\s\\+$//e'
-})
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+    -- pattern = '*',
+    -- command = ':%s/\\s\\+$//e'
+-- })
 
 -- Disable line length marker for typically wide-column editing
 vim.api.nvim_create_autocmd('Filetype', {
@@ -97,7 +97,7 @@ vim.opt.hidden = true                     -- Enable background buffers
 vim.opt.scrolloff = 8                     -- Keep scroll offset for slightly less eye movement
 vim.opt.lazyredraw = true                 -- Faster scrolling
 vim.opt.synmaxcol = 240                   -- Max column for syntax highlighting
-vim.opt.updatetime = 50                   -- ms to wait for triggering an event
+vim.opt.updatetime = 80                   -- ms to wait for triggering an event
 
 vim.opt.number = true                     -- Show line number
 vim.opt.relativenumber = true             -- Relative line numbering
