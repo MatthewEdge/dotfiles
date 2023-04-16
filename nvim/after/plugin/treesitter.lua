@@ -2,7 +2,8 @@ require('nvim-treesitter.configs').setup {
     -- A list of parser names, or 'all'
     ensure_installed = {
         'bash', 'c', 'css', 'dockerfile', 'go', 'hcl', 'html', 'json',
-        'lua', 'make', 'markdown', 'python', 'typescript', 'yaml'
+        'lua', 'make', 'markdown', 'proto', 'python', 'typescript', 'vim',
+        'yaml',
     },
 
     auto_install = true,
