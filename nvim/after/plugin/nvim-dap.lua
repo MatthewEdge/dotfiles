@@ -8,6 +8,7 @@ local dap = require('dap')
 vim.keymap.set('n', '<F3>', dap.continue)
 vim.keymap.set('n', '<F2>', dap.step_over)
 vim.keymap.set('n', '<F4>', dap.step_into)
+vim.keymap.set('n', '<F5>', dap.step_out)
 vim.keymap.set('n', '<leader>bp', dap.toggle_breakpoint)
 vim.keymap.set('n', '<leader>bc', function()
     dap.set_breakpoint(vim.fn.input('Condition: '))
@@ -77,5 +78,5 @@ require('dapui').setup({
 -- Enable opening dap-ui automatically once debugging starts
 local dapui = require('dapui')
 dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-dap.listeners.before.event_exited['dapui_config'] = dapui.close
+-- dap.listeners.before.event_terminated['dapui_config'] = dapui.close -- prefer keeping these up after completion
+-- dap.listeners.before.event_exited['dapui_config'] = dapui.close

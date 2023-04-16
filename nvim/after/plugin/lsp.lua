@@ -53,7 +53,20 @@ local servers = {
         },
     },
     golangci_lint_ls = {},
-    pyright = {},
+    pylsp = {
+        settings = {
+            pylsp = {
+                plugins = {
+                    autopep8 = {
+                        enabled = true,
+                    },
+                    jedi_completion = {
+                        include_params = true,
+                    },
+                },
+            },
+        },
+    },
     marksman = {},
     lua_ls = {
         Lua = {
