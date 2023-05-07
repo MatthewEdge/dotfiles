@@ -1,5 +1,6 @@
 #!/bin/sh
-# Variation of the Desktop install for Ubuntu Homelab setups
+# Variation of the Desktop install for Ubuntu Homelab setups.
+# Run from $HOME
 
 set -ex
 
@@ -38,6 +39,9 @@ rm -rf ~/.config/nvim
 ln -s $(pwd)/nvim ~/.config/nvim
 
 # OhMyZSH
+# Custom Theme
+cp ./server.zsh-theme $ZSH_CUSTOM/themes/server.zsh-theme
+echo "Make sure to change theme in .zshrc to 'server'"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
 cp ./.zshrc $HOME/.zshrc
+
