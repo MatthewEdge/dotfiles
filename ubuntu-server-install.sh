@@ -1,6 +1,6 @@
 #!/bin/sh
 # Variation of the Desktop install for Ubuntu Homelab setups.
-# Run from $HOME
+# Run from dotfiles directory
 
 set -ex
 
@@ -36,12 +36,14 @@ make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
 make install
 # Ensure neovim config link
 rm -rf ~/.config/nvim
-ln -s $(pwd)/nvim ~/.config/nvim
+mkdir -p ~/.config/nvim
+cd $ORIG
+ln -s $ORIG/nvim ~/.config/nvim
 
 # OhMyZSH
 # Custom Theme
-cp ./server.zsh-theme $ZSH_CUSTOM/themes/server.zsh-theme
 echo "Make sure to change theme in .zshrc to 'server'"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 cp ./.zshrc $HOME/.zshrc
+cp ./server.zsh-theme $HOME/.oh-my-zsh/custom/themes/server.zsh-theme
 
