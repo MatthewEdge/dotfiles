@@ -136,3 +136,4 @@ vim.g.NERDTrimTrailingWhitespace = 1
 
 -- Require plugins last
 require('plugins')
+require('test-runner')
