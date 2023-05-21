@@ -688,7 +688,10 @@ live_config_reload: true
 #    A `~` operator can be used before a mode to apply the binding whenever
 #    the mode is *not* active, e.g. `~Alt`.
 #
-#key_bindings:
+key_bindings:
+  - { key: C, mods: Control, action: Copy }
+  - { key: V, mods: Control, action: Paste }
+  - { key: T, mods: Control, action: CreateNewWindow }
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }
   #- { key: L,         mods: Control,                    action: ClearLogNotice }
@@ -829,3 +832,5 @@ live_config_reload: true
 
   # Highlight window damage information.
   #highlight_damage: false
+  #
+

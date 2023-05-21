@@ -29,6 +29,7 @@ fpath+=${ZDOTDIR:-~}/.zsh_functions
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+alias alacrc="$EDITOR $HOME/.config/alacritty/alacritty.yml"
 
 # ls
 alias ll="ls -alh"
