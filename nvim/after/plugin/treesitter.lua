@@ -15,4 +15,18 @@ require('nvim-treesitter.configs').setup {
         enable = true,
         additional_vim_regex_highlighting = false,
     },
+
+    playground = {
+        enable = true,
+        disable = {},
+        updatetime = 25,
+    },
+    query_linter = {
+        enable = true,
+        use_virtual_text = true,
+        lint_events = {'BufWrite', 'CursorHold'},
+    },
 }
+
+-- To see Treesitter node for what's under the cursor
+vim.keymap.set('n', '<space>tsn', '<cmd>TSNodeUnderCursor<cr>')

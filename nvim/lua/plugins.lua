@@ -43,7 +43,10 @@ return require('packer').startup(function(use)
     }
 
     -- Treesitter interface
-    use('nvim-treesitter/nvim-treesitter', { run = 'TSUpdate' })
+    use {
+        'nvim-treesitter/nvim-treesitter', { run = 'TSUpdate' }
+    }
+    use 'nvim-treesitter/playground'
 
     use {
         'stevearc/aerial.nvim',
