@@ -19,6 +19,12 @@ export LANG=en_US.UTF-8
 export PATH="$HOME/neovim/bin:$PATH"
 export EDITOR='nvim'
 
+# Alacritty completions
+echo PATH=$PATH:$HOME/.cargo/bin
+mkdir -p ${ZDOTDIR:-~}/.zsh_functions
+fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+
 #############################
 #  USER FUNCTION HELPERS
 #############################
@@ -177,3 +183,4 @@ python_venv
 
 # Key Repeat
 xset r rate 180 46
+
