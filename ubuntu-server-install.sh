@@ -40,6 +40,9 @@ mkdir -p ~/.config/nvim
 cd $ORIG
 ln -s $ORIG/nvim ~/.config/nvim
 
+# For Packer
+git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
 # OhMyZSH
 # Custom Theme
 echo "Make sure to change theme in .zshrc to 'server'"
