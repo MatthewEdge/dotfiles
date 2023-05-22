@@ -139,9 +139,6 @@ M.get_test_line = function(bufnr, name)
     return -1
 end
 
-M.get_test_at_cursor = function(bufnr)
-end
-
 -- Return all nodes associated to cursor location
 M.nodes_at_cursor = function(query, default, bufnr, ntype)
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
