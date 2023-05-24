@@ -22,7 +22,7 @@ cmp.setup({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
         },
-        -- ["<C-Space>"] = cmp.mapping.complete(),
+        -- ['<C-Space>'] = cmp.mapping.complete(),
 
         -- Disable tab completion in favor of Copilot
         ['<Tab>'] = nil,
@@ -86,17 +86,17 @@ local on_attach = function(_, bufnr)
     end
 
     -- Explicitly set keymaps to keep them consistent
-    nmap("K", vim.lsp.buf.hover, 'Signature hover')
+    nmap('K', vim.lsp.buf.hover, 'Signature hover')
     nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-    nmap("<leader>gd", vim.lsp.buf.definition, '[G]oto [D]efinition')
-    nmap("<leader>gi", vim.lsp.buf.implementation, '[G]oto [I]mpl')
-    -- nmap("gr", vim.lsp.buf.references, opts) -- Prefer telescope's nicer UI
-    nmap("<leader>gr", require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-    nmap("<leader>go", vim.lsp.buf.type_definition, 'Goto type def')
-    nmap("<leader>rn", vim.lsp.buf.rename, '[R]e[n]ame symbol under cursor')
-    nmap("<leader>ca", vim.lsp.buf.code_action, '[C]ode [A]ctions like auto-fix')
-    nmap("[d", vim.diagnostic.goto_next, 'Next diagnostic')
-    nmap("]d", vim.diagnostic.goto_prev, 'Prev diagnostic')
+    nmap('<leader>gd', vim.lsp.buf.definition, 'Goto Definition')
+    nmap('<leader>gi', vim.lsp.buf.implementation, 'Goto Impl')
+    -- nmap('gr', vim.lsp.buf.references, opts) -- Prefer telescope's nicer UI
+    nmap('<leader>gr', require('telescope.builtin').lsp_references, 'Goto References')
+    nmap('<leader>go', vim.lsp.buf.type_definition, 'Goto type def')
+    nmap('<leader>rn', vim.lsp.buf.rename, 'Rename symbol under cursor')
+    nmap('<leader>ca', vim.lsp.buf.code_action, 'Code Actions like auto-fix')
+    nmap('[d', vim.diagnostic.goto_next, 'Next diagnostic')
+    nmap(']d', vim.diagnostic.goto_prev, 'Prev diagnostic')
 
     -- If, for some reason, autoformat is off
     nmap('<leader>f', vim.lsp.buf.format, 'Manual format')
@@ -142,12 +142,12 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 -- https://github.com/neovim/nvim-lspconfig/issues/115#issuecomment-902680058
 function OrganizeImports(timeoutms)
     local params = vim.lsp.util.make_range_params()
-    params.context = { only = { "source.organizeImports" } }
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeoutms)
+    params.context = { only = { 'source.organizeImports' } }
+    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, timeoutms)
     for _, res in pairs(result or {}) do
         for _, r in pairs(res.result or {}) do
             if r.edit then
-                vim.lsp.util.apply_workspace_edit(r.edit, "UTF-8")
+                vim.lsp.util.apply_workspace_edit(r.edit, 'UTF-8')
             else
                 vim.lsp.buf.execute_command(r.command)
             end

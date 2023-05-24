@@ -13,9 +13,9 @@ vim.keymap.set('n', '<leader>bp', dap.toggle_breakpoint)
 vim.keymap.set('n', '<leader>bc', function()
     dap.set_breakpoint(vim.fn.input('Condition: '))
 end)
-vim.keymap.set('n', '<leader>lb', ':Telescope dap list_breakpoints', { desc = '[L]ist [B]reakpoints' })
-vim.keymap.set('n', '<leader>dt', ':lua require("dap-go").debug_test()<CR>', { desc = '[D]ebug [T]est' })
-vim.keymap.set('n', '<leader>dui', ':lua require("dapui").toggle()<CR>', { desc = '[D]ebug [UI]' })
+vim.keymap.set('n', '<leader>lb', ':Telescope dap list_breakpoints', { desc = 'List Breakpoints' })
+vim.keymap.set('n', '<leader>dt', ':lua require("dap-go").debug_test()<CR>', { desc = 'Debug Test' })
+vim.keymap.set('n', '<leader>dui', ':lua require("dapui").toggle()<CR>', { desc = 'Debug UI' })
 
 require('dap-go').setup()
 
