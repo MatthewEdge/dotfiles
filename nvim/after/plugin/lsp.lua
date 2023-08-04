@@ -88,7 +88,6 @@ local on_attach = function(_, bufnr)
     -- Explicitly set keymaps to keep them consistent
     nmap('K', vim.lsp.buf.hover, 'Signature hover')
     nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-    nmap('<leader>gd', vim.lsp.buf.definition, 'Goto Definition')
     nmap('<leader>gi', vim.lsp.buf.implementation, 'Goto Impl')
     -- nmap('gr', vim.lsp.buf.references, opts) -- Prefer telescope's nicer UI
     nmap('<leader>gr', require('telescope.builtin').lsp_references, 'Goto References')
