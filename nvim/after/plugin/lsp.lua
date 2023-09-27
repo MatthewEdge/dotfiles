@@ -89,11 +89,12 @@ local on_attach = function(_, bufnr)
     nmap('K', vim.lsp.buf.hover, 'Signature hover')
     nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
     nmap('<leader>gi', vim.lsp.buf.implementation, 'Goto Impl')
-    -- nmap('gr', vim.lsp.buf.references, opts) -- Prefer telescope's nicer UI
+    nmap('<leader>gd', vim.lsp.buf.definition, 'Goto Impl')
     nmap('<leader>gr', require('telescope.builtin').lsp_references, 'Goto References')
     nmap('<leader>go', vim.lsp.buf.type_definition, 'Goto type def')
     nmap('<leader>rn', vim.lsp.buf.rename, 'Rename symbol under cursor')
     nmap('<leader>ca', vim.lsp.buf.code_action, 'Code Actions like auto-fix')
+    nmap('<leader>dn', vim.diagnostic.open_float, 'Open Diagnostic float')
     nmap('[d', vim.diagnostic.goto_next, 'Next diagnostic')
     nmap(']d', vim.diagnostic.goto_prev, 'Prev diagnostic')
 
