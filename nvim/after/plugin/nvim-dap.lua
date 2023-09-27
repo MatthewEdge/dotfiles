@@ -17,7 +17,37 @@ vim.keymap.set('n', '<leader>lb', ':Telescope dap list_breakpoints', { desc = 'L
 vim.keymap.set('n', '<leader>dt', ':lua require("dap-go").debug_test()<CR>', { desc = 'Debug Test' })
 vim.keymap.set('n', '<leader>dui', ':lua require("dapui").toggle()<CR>', { desc = 'Debug UI' })
 
-require('dap-go').setup()
+-- Imported from dap-go, altered to accept a Test Regex instead
+local function get_arguments()
+    local args = {"-test.run"}
+    local co = coroutine.running()
+    if co then
+        return coroutine.create(function()
+            vim.ui.input({ prompt = "Test Regex: " }, function(input)
+                table.insert(args, input)
+            end)
+            coroutine.resume(co, args)
+        end)
+    else
+        vim.ui.input({ prompt = "test Regex: " }, function(input)
+            table.insert(args, input)
+        end)
+        return args
+    end
+end
+
+require('dap-go').setup({
+  dap_configurations = {
+    {
+      type = "go",
+      name = "Debug test (Individual)",
+      mode = "test",
+      request = "launch",
+      args = get_arguments,
+      program = "./${relativeFileDirname}",
+    },
+  }
+})
 
 require('dapui').setup({
     icons = { expanded = '▾', collapsed = '▸' },
