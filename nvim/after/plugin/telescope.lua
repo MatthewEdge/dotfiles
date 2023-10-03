@@ -10,4 +10,4 @@ vim.keymap.set('n', '<leader>fh', ts.help_tags, { desc = 'Find Help Tags' })
 vim.keymap.set('n', '<leader>km', ts.keymaps, { desc = 'Key Mappings' })
 vim.keymap.set('n', '<leader>pd', ts.diagnostics, { desc = 'Project Diagnostics' })
 
-require('telescope').load_extension('fzf')
+-- require('telescope').load_extension('fzf')
