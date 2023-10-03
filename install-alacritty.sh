@@ -32,6 +32,8 @@ fi
 
 cd $HOME/alacritty
 
+# If this fails, make sure PATH is updated correctly
+
 rustup override set stable
 rustup update stable
 cargo build --release
