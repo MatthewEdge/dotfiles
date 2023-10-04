@@ -20,7 +20,7 @@ export PATH="$HOME/neovim/bin:$PATH"
 export EDITOR='nvim'
 
 # Alacritty completions
-echo PATH=$PATH:$HOME/.cargo/bin
+export PATH=$PATH:$HOME/.cargo/bin
 mkdir -p ${ZDOTDIR:-~}/.zsh_functions
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 
@@ -164,24 +164,5 @@ awstf-destroy() {
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
-# Python
-alias pip="python -m pip"
-alias pipir="pip install -r requirements.txt"
-export PATH=$PATH:/home/medge/.local/bin
-alias newvenv="python -m venv ./venv && python_venv"
-
-# Auto activate/deactivate Python venv
-python_venv() {
-  MYVENV=./venv
-  # when you cd into a folder that contains $MYVENV
-  [[ -d $MYVENV ]] && source $MYVENV/bin/activate > /dev/null 2>&1
-  # when you cd into a folder that doesn't
-  [[ ! -d $MYVENV ]] && deactivate > /dev/null 2>&1
-}
-autoload -U add-zsh-hook
-add-zsh-hook chpwd python_venv
-python_venv
-
 # Key Repeat
 xset r rate 180 46
-
