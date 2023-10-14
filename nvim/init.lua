@@ -20,6 +20,9 @@ vim.g.maplocalleader = ' '
 -- General keymaps
 -----------------------------------------------------------
 
+-- Quick-activate ZenMode
+vim.keymap.set('n', '<leader>zm', ':ZenMode<CR>', { silent = true })
+
 -- Prevent space from doing anything sans being the leader key
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
