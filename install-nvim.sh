@@ -6,9 +6,9 @@ ORIG=$(pwd)
 
 # Dev Dependencies and tooling that, sadly, change between distros
 if [ "$PACKMGR" == "pacman" ]; then
-    sudo $INSTALL base-devel cmake unzip ninja curl
+    sudo $INSTALL base-devel cmake unzip ninja curl wl-clipboard
 elif [ "$PACKMGR" == "apt" ]; then
-    sudo $INSTALL ninja-build gettext libtool-bin cmake g++ pkg-config unzip curl
+    sudo $INSTALL ninja-build gettext libtool-bin cmake g++ pkg-config unzip curl xclip
 else
     echo "Unknown package manager: $PACKMGR"
     exit 1
