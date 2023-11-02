@@ -1,6 +1,5 @@
 #!/bin/sh
 # Variation of the Desktop install for Ubuntu Homelab setups.
-# Run from dotfiles directory
 
 set -ex
 
@@ -39,9 +38,6 @@ rm -rf ~/.config/nvim
 mkdir -p ~/.config/nvim
 cd $ORIG
 ln -s $ORIG/nvim ~/.config/nvim
-
-# For Packer
-git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 # OhMyZSH
 # Custom Theme

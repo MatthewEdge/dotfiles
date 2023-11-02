@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+# export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -11,7 +11,7 @@ export UPDATE_ZSH_DAYS=7
 plugins=(git history-substring-search)
 
 # User configuration
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
 
@@ -19,23 +19,14 @@ export LANG=en_US.UTF-8
 export PATH="$HOME/neovim/bin:$PATH"
 export EDITOR='nvim'
 
-# Alacritty completions
-export PATH=$PATH:$HOME/.cargo/bin
-mkdir -p ${ZDOTDIR:-~}/.zsh_functions
-fpath+=${ZDOTDIR:-~}/.zsh_functions
-
-
 #############################
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
-alias alacrc="$EDITOR $HOME/.config/alacritty/alacritty.yml"
+alias dotfiles="cd $HOME/code/dotfiles"
 
 # ls
 alias ll="ls -alh"
-
-alias apt="sudo apt"
-alias update="sudo apt update -y && sudo apt upgrade"
 
 # If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
 alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
@@ -47,7 +38,7 @@ vimrc() {
     # Allows file browsing to be the nvim config folder vs. wherever you call vimrc from
     OLD_DIR=$(pwd)
     cd $HOME/.config/nvim
-    $EDITOR init.lua
+    $EDITOR ./
     cd $OLD_DIR
 }
 
@@ -165,4 +156,4 @@ alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
 # Key Repeat
-xset r rate 180 46
+# xset r rate 180 46
