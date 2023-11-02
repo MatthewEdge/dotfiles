@@ -1,10 +1,13 @@
 #!/bin/sh
 # Symlink config folders to ~/.config for a better dev experience
 
+# ZSH config
+rm -f $HOME/.zshrc
+ln -s $(pwd)/.zshrc $HOME/.zshrc
+
 # Sway WM
 rm -rf ~/.config/sway
 ln -s $(pwd)/swaywm $HOME/.config/sway
-rm -rf $HOME/.config/sway/etc
 
 # NVIM
 rm -rf $HOME/.config/nvim
