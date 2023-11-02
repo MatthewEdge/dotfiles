@@ -42,16 +42,18 @@ sudo $INSTALL fzf ripgrep git curl unzip
 # Golang
 echo "Install Go from the main site. Waiting..."
 read x
+echo "Go expected in /usr/local/bin/go as site describes..."
 
 if [ "$PACKMGR" == "pacman" ]; then
     sudo $INSTALL protobuf
 elif ["$PACKMGR" == "apt" ]; then
     sudo $INSTALL protobuf-compiler
 fi
-# go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+/usr/local/go/bin/go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 #go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-#go install golang.org/x/tools/gopls@latest
-#go install golang.org/x/tools/cmd/goimports@latest
+
+# TODO keep this version updated somehow?
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.55.1
 
 # AWS CLI
 # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscli.zip"
@@ -61,7 +63,7 @@ fi
 # rm -f awscli.zip
 
 # Lastly - shell customizations
-cp ./.zshrc $HOME/.zshrc
+./symlink-config.sh
 
 if [ "$PACKMGR" == "pacman" ]; then
     echo 'alias pacman="sudo pacman"' >> $HOME/.zshrc
@@ -71,6 +73,5 @@ elif [ "$PACKMGR" == "apt" ]; then
     echo 'alias update="sudo apt update -y && sudo apt upgrade"' >> $HOME/.zshrc
 fi
 
-./symlink-config.sh
 # TODO - foot install
 echo "Restart shell for changes to take effect"

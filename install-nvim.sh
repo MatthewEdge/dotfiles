@@ -5,8 +5,9 @@ set -ex
 ORIG=$(pwd)
 
 # Dev Dependencies and tooling that, sadly, change between distros
+# TODO Wayland-only environments still require wl-clipboard? Never got that working
 if [ "$PACKMGR" == "pacman" ]; then
-    sudo $INSTALL base-devel cmake unzip ninja curl wl-clipboard
+    sudo $INSTALL base-devel cmake unzip ninja curl xclip
 elif [ "$PACKMGR" == "apt" ]; then
     sudo $INSTALL ninja-build gettext libtool-bin cmake g++ pkg-config unzip curl xclip
 else
