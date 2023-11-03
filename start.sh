@@ -43,13 +43,14 @@ sudo $INSTALL fzf ripgrep git curl unzip
 echo "Install Go from the main site. Waiting..."
 read x
 echo "Go expected in /usr/local/bin/go as site describes..."
+export PATH=$PATH:/usr/local/go/bin
 
 if [ "$PACKMGR" == "pacman" ]; then
     sudo $INSTALL protobuf
 elif ["$PACKMGR" == "apt" ]; then
     sudo $INSTALL protobuf-compiler
 fi
-/usr/local/go/bin/go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 #go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 # TODO keep this version updated somehow?
