@@ -3,6 +3,7 @@
 
 # ZSH config
 rm -f $HOME/.zshrc
+rm -f $HOME/.zshenv # since SwayWM Arch pre-populates this and it screws up this setup
 ln -s $(pwd)/.zshrc $HOME/.zshrc
 
 # Sway WM
