@@ -84,6 +84,7 @@ alias kgs="kubectl get svc"
 
 # Docker
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
+alias dkrm='docker rm -f $(docker ps -aq)'
 alias dcs="docker compose stop"
 alias dcb="docker compose build --parallel"
 alias dcu="docker compose up"
