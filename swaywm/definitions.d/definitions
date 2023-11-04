@@ -87,11 +87,10 @@ set $screen_timeout 600
 set $sleep_timeout 900
 set $sleep_delay 2
 
-
 set $swayidle swayidle -w \
     timeout $idle_timeout 'light -G > /tmp/brightness && light -S 10' resume 'light -S $([ -f /tmp/brightness ] && cat /tmp/brightness || echo 100%)' \
     timeout $locking_timeout 'exec $locking' \
-    timeout $screen_timeout 'swaymsg "output * dpms off"' \
+    timeout $screen_timeout '' \
     resume 'swaymsg "output * dpms on"' \
     timeout $sleep_timeout '' \
     before-sleep 'playerctl pause' \
