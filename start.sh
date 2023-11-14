@@ -45,6 +45,8 @@ read x
 echo "Go expected in /usr/local/bin/go as site describes..."
 export PATH=$PATH:/usr/local/go/bin
 
+# Note: this may fail on some systems for...calendar dependencies. wat
+# update deps should resolve this issue
 if [ "$PACKMGR" == "pacman" ]; then
     sudo $INSTALL protobuf
 elif ["$PACKMGR" == "apt" ]; then
