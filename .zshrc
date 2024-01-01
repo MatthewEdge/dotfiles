@@ -19,23 +19,14 @@ export LANG=en_US.UTF-8
 export PATH="$HOME/neovim/bin:$PATH"
 export EDITOR='nvim'
 
-# Alacritty completions
-export PATH=$PATH:$HOME/.cargo/bin
-mkdir -p ${ZDOTDIR:-~}/.zsh_functions
-fpath+=${ZDOTDIR:-~}/.zsh_functions
-
-
 #############################
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
-alias alacrc="$EDITOR $HOME/.config/alacritty/alacritty.yml"
+alias dotfiles="cd $HOME/code/dotfiles"
 
 # ls
 alias ll="ls -alh"
-
-alias apt="sudo apt"
-alias update="sudo apt update -y && sudo apt upgrade"
 
 # If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
 alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
@@ -47,7 +38,7 @@ vimrc() {
     # Allows file browsing to be the nvim config folder vs. wherever you call vimrc from
     OLD_DIR=$(pwd)
     cd $HOME/.config/nvim
-    $EDITOR init.lua
+    $EDITOR ./
     cd $OLD_DIR
 }
 
@@ -93,12 +84,13 @@ alias kgs="kubectl get svc"
 
 # Docker
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
-alias dcs="docker-compose stop"
-alias dcb="docker-compose build --parallel"
-alias dcu="docker-compose up"
-alias dcl="docker-compose logs -f"
-alias dcd="docker-compose down"
-alias dcrm="docker-compose rm -f"
+alias dkrm='docker rm -f $(docker ps -aq)'
+alias dcs="docker compose stop"
+alias dcb="docker compose build --parallel"
+alias dcu="docker compose up"
+alias dcl="docker compose logs -f"
+alias dcd="docker compose down"
+alias dcrm="docker compose rm -f"
 dkrmac() {
   docker rm -f $(docker ps -aq)
 }
@@ -165,4 +157,4 @@ alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
 # Key Repeat
-xset r rate 180 46
+# xset r rate 180 46
