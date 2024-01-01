@@ -30,10 +30,10 @@ require("lazy").setup({
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
 
-    -- {
-        -- 'nvim-telescope/telescope-fzf-native.nvim',
-        -- build = 'make',
-    -- },
+    {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
+    },
 
     {
         'ThePrimeagen/harpoon',
