@@ -10,6 +10,10 @@ if [ "$PACKMGR" == "pacman" ]; then
     sudo $INSTALL base-devel cmake unzip ninja curl xclip
 elif [ "$PACKMGR" == "apt" ]; then
     sudo $INSTALL ninja-build gettext libtool-bin cmake g++ pkg-config unzip curl xclip
+elif [ "$PACKMGR" == "brew" ]; then
+    # Building from source _sucks_ on Mac right now so just brew install and yeet
+    brew install neovim
+    exit 0
 else
     echo "Unknown package manager: $PACKMGR"
     exit 1

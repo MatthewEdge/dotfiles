@@ -33,6 +33,7 @@ alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --acce
 
 # VIM
 # Old alias rewrites to save my tired brain
+alias v='nvim'
 alias vim='nvim'
 vimrc() {
     # Allows file browsing to be the nvim config folder vs. wherever you call vimrc from

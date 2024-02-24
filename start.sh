@@ -22,6 +22,10 @@ elif [ -x "$(command -v pacman)" ]; then
     PACKMGR="pacman"
     INSTALL="pacman -Sy --noconfirm"
     REMOVE="pacman -R"
+elif [ -x "$(command -v brew)" ]; then
+    PACKMGR="brew"
+    INSTALL="brew install"
+    REMOVE="brew uninstall"
 else
     echo "Unknown package manager"
     exit 1
@@ -40,9 +44,9 @@ sudo $INSTALL fzf ripgrep git curl unzip
 )
 
 # Golang
-echo "Install Go from the main site. Waiting..."
+echo "Install Go from the main site."
+echo "Go expected in /usr/local/bin/go as site describes."
 read x
-echo "Go expected in /usr/local/bin/go as site describes..."
 export PATH=$PATH:/usr/local/go/bin
 
 # Note: this may fail on some systems for...calendar dependencies. wat
@@ -54,9 +58,10 @@ elif ["$PACKMGR" == "apt" ]; then
 fi
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 #go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+go install github.com/go-delve/delve/cmd/dlv@latest
 
 # TODO keep this version updated somehow?
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.55.1
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2
 
 # AWS CLI
 # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscli.zip"

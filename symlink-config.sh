@@ -15,6 +15,6 @@ rm -rf $HOME/.config/nvim
 ln -s $(pwd)/nvim $HOME/.config/nvim
 
 # Foot term
-mkdir -p $HOME/.config/foot
-rm -f $HOME/.config/foot/foot.ini
-ln -s $(pwd)/foot.ini $HOME/.config/foot/foot.ini
+# mkdir -p $HOME/.config/foot
+# rm -f $HOME/.config/foot/foot.ini
+# ln -s $(pwd)/foot.ini $HOME/.config/foot/foot.ini
