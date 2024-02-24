@@ -84,5 +84,5 @@ require("lazy").setup({
             'nvim-telescope/telescope-dap.nvim',
             -- 'theHamsta/nvim-dap-virtual-text'
         },
-    }
+    },
 })
