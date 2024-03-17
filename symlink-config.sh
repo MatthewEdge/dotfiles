@@ -6,13 +6,17 @@ rm -f $HOME/.zshrc
 rm -f $HOME/.zshenv # since SwayWM Arch pre-populates this and it screws up this setup
 ln -s $(pwd)/.zshrc $HOME/.zshrc
 
-# Sway WM
-rm -rf ~/.config/sway
-ln -s $(pwd)/swaywm $HOME/.config/sway
+# TMUX
+rm -f $HOME/.tmux.conf
+ln -s $(pwd)/.tmux.conf $HOME/.tmux.conf
 
 # NVIM
 rm -rf $HOME/.config/nvim
 ln -s $(pwd)/nvim $HOME/.config/nvim
+
+# Sway WM
+# rm -rf ~/.config/sway
+# ln -s $(pwd)/swaywm $HOME/.config/sway
 
 # Foot term
 # mkdir -p $HOME/.config/foot
