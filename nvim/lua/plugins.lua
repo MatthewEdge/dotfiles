@@ -4,7 +4,7 @@ require("lazy").setup({
     'tpope/vim-fugitive',
 
     -- Copilot, for fun
-    -- 'github/copilot.vim',
+    'github/copilot.vim',
 
     -- Color schemes
     {

@@ -67,6 +67,7 @@ local servers = {
             -- },
         -- },
     -- },
+    htmx = {},
     marksman = {},
     lua_ls = {
         Lua = {
