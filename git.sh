@@ -6,6 +6,7 @@ git config --global user.email "medge@medgelabs.io"
 git config --global core.pager 'cat'
 git config --global init.defaultBranch main
 git config --global pull.rebase true
+git config --global push.autoSetupRemote true
 
 cp .gitignore_global $HOME/.gitignore_global
 git config --global core.excludesfile $HOME/.gitignore_global
