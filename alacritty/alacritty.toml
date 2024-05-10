@@ -1,0 +1,22 @@
+import = ["~/.config/alacritty/catpuccin-mocha.toml"]
+live_config_reload = true
+
+[window]
+dimensions = { columns = 120, lines = 80 }
+opacity = 1.0
+
+
+[keyboard]
+bindings=[
+    { key = "c", mods = "Control", action = "Copy" },
+    { key = "v", mods = "Control", action = "Paste" },
+    { key = "=", mods = "Control", action = "IncreaseFontSize" },
+    { key = "-", mods = "Control", action = "DecreaseFontSize" },
+    { key = "n", mods = "Control", action = "CreateNewWindow" },
+    { key = "p", mods = "Control|Shift", action = "SearchForward" },
+    { key = "o", mods = "Control|Shift", action = "SearchBackward" },
+
+    # They claim these are macOS only?
+    { key = "{", mods = "Control", action = "SelectPreviousTab" },
+    { key = "}", mods = "Control", action = "SelectNextTab" },
+]
