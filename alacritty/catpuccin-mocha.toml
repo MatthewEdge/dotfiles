@@ -1,3 +1,6 @@
+# Built from catppuccin. Any changes are commented out & followed immediately
+# by the change
+
 [colors.primary]
 background = "#1e1e2e"
 foreground = "#cdd6f4"
@@ -37,14 +40,15 @@ text = "#1e1e2e"
 background = "#f5e0dc"
 
 [colors.normal]
-black = "#45475a"
+black = "#7c7e8b"
 red = "#f38ba8"
 green = "#a6e3a1"
 yellow = "#f9e2af"
 blue = "#89b4fa"
 magenta = "#f5c2e7"
 cyan = "#94e2d5"
-white = "#bac2de"
+# white = "#bac2de"
+white = "#e6e9f3"
 
 [colors.bright]
 black = "#585b70"

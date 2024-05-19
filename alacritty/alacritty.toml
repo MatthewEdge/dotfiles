@@ -6,10 +6,14 @@ dimensions = { columns = 120, lines = 80 }
 opacity = 1.0
 
 
+[font]
+size = 14
+
 [keyboard]
 bindings=[
     { key = "c", mods = "Control", action = "Copy" },
     { key = "v", mods = "Control", action = "Paste" },
+    { key = "c", mods = "Control|Shift", chars = "\u0003" }, # SIGINT
     { key = "=", mods = "Control", action = "IncreaseFontSize" },
     { key = "-", mods = "Control", action = "DecreaseFontSize" },
     { key = "n", mods = "Control", action = "CreateNewWindow" },
