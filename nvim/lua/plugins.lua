@@ -19,6 +19,12 @@ require("lazy").setup({
         -- end,
     },
 
+    -- Color viewer
+    {
+        'rrethy/vim-hexokinase',
+        build = 'make hexokinase',
+    },
+
     -- Zen mode
     {
         'folke/zen-mode.nvim',

@@ -165,3 +165,6 @@ alias cdlab="cd $HOME/code/jettlabs"
 labclone() {
     git clone git@github.com:jettlabs/$@
 }
+
+# Rust setup for HTMX
+source "$HOME/.cargo/env"
