@@ -2,6 +2,7 @@
 -- Telescope config
 ----------------------------------------------------------
 require('telescope').setup({
+    file_ignore_patterns = { "node_modules", ".obsidian" },
     pickers = {
         find_files = {
             find_command = {
