@@ -159,3 +159,9 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 
 # Key Repeat
 # xset r rate 180 46
+
+# Jettlabs
+alias cdlab="cd $HOME/code/jettlabs"
+labclone() {
+    git clone git@github.com:jettlabs/$@
+}
