@@ -52,6 +52,35 @@ local mark_status = function(state, entry)
     state.tests[make_key(entry)].success = (entry.Action == 'pass')
 end
 
+-- run_tests_raw is a simpler version of run_tests that simply pops test output
+-- into a new buf window, as is. No processing or extmarks.
+-- Output is immediately shown
+local run_tests_raw = function(bufnr, ns, tests)
+    local command = { 'go', 'test', '-v' }
+    if tests then
+        local tests_regex = table.concat(tests, "|")
+        table.insert(command, '-run')
+        table.insert(command, tests_regex)
+    end
+    table.insert(command, "./...")
+
+    -- Create a split for the output
+    vim.cmd('botright vertical new')
+    vim.fn.jobstart(command, {
+        -- stdout_buffered = true, -- only send full lines on_stdout = function(_, data)
+        on_stdout = function(_, data)
+            local buf = vim.api.nvim_get_current_buf()
+            vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+            vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+        end,
+        on_stderr = function(_, data)
+            local buf = vim.api.nvim_get_current_buf()
+            vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+            vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+        end,
+    })
+end
+
 -- run_tests calls out to go test, parses the output, and stores results in given state
 -- tests param can be omitted to run all tests
 local run_tests = function(bufnr, ns, state, tests)
@@ -59,12 +88,13 @@ local run_tests = function(bufnr, ns, state, tests)
     vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 
     -- TODO allow for no test to be passed
-    local command = { 'go', 'test', '-v', '-json', './...'}
+    local command = { 'go', 'test', '-v', '-json'}
     if tests then
         local tests_regex = table.concat(tests, "|")
         table.insert(command, '-run')
         table.insert(command, tests_regex)
     end
+    table.insert(command, "./...")
 
     vim.fn.jobstart(command, {
         stdout_buffered = true, -- only send full lines on_stdout = function(_, data)
@@ -98,7 +128,7 @@ local run_tests = function(bufnr, ns, state, tests)
                         vim.api.nvim_buf_set_extmark(bufnr, ns, test.line, 0, { virt_text = {{ "x" }}})
                     end
                 else
-                    print('Skipping unknown line: ' .. vim.inspect(data))
+                    print('unknown line: ' .. vim.inspect(data))
                 end
             end
         end,
@@ -140,11 +170,13 @@ local attach_to_buffer = function(bufnr, ns)
     vim.api.nvim_buf_create_user_command(bufnr, 'TestFunc', function(_)
         local n = ts.get_func_method_node_at_pos(bufnr)
         if n == nil then
-            print('No test func found')
+            print('No test func found. Running all')
+            run_tests_raw(bufnr, ns, {})
             return
         end
 
-        run_tests(bufnr, ns, state, {n.name})
+        -- run_tests(bufnr, ns, state, {n.name})
+        run_tests_raw(bufnr, ns, {n.name})
     end, { desc = 'Run test under cursor' })
 
     -- TODO need to fix this one's args
