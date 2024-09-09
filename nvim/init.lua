@@ -76,12 +76,11 @@ augroup vimrc-remember-cursor-position
 augroup END
 ]]
 
--- TODO (2023-03-29) - disabled as this was messing with test data as well
--- Remove whitespace on save
--- vim.api.nvim_create_autocmd('BufWritePre', {
-    -- pattern = '*',
-    -- command = ':%s/\\s\\+$//e'
--- })
+-- Remove whitespace on save for select files
+vim.api.nvim_create_autocmd('BufWritePre', {
+    pattern = {'*.md'},
+    command = ':%s/\\s\\+$//e'
+})
 
 -- Disable line length marker for typically wide-column editing
 vim.api.nvim_create_autocmd('Filetype', {
