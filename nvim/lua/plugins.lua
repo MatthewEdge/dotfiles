@@ -3,9 +3,6 @@ require("lazy").setup({
     -- Git
     'tpope/vim-fugitive',
 
-    -- Copilot, for fun
-    'github/copilot.vim',
-
     -- Color schemes
     {
         'rebelot/kanagawa.nvim',
