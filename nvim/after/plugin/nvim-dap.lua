@@ -49,6 +49,20 @@ require('dap-go').setup({
   }
 })
 
+-- Note: this expects a pyenv environment
+require('dap-python').setup('python')
+require('dap-python').test_runner = 'pytest'
+vim.api.nvim_create_autocmd('Filetype', {
+    group = vim.api.nvim_create_augroup('pydap', { clear = true }),
+    pattern = { 'python', 'py' },
+    callback = function()
+        vim.keymap.set('n', '<F3>', require('dap-python').test_method)
+        vim.keymap.set('n', '<leader>dbm', require('dap-python').test_method)
+        vim.keymap.set('n', '<leader>dbc', require('dap-python').test_class)
+        vim.keymap.set('n', '<leader>dbs', require('dap-python').debug_selection)
+    end
+})
+
 require('dapui').setup({
     icons = { expanded = '▾', collapsed = '▸' },
     mappings = {

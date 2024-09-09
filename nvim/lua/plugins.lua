@@ -29,7 +29,7 @@ require("lazy").setup({
 
     -- Fuzzy Finder
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.4',
+        'nvim-telescope/telescope.nvim', tag = '0.1.8',
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
 
@@ -84,8 +84,10 @@ require("lazy").setup({
         dependencies = {
             'nvim-neotest/nvim-nio',
             'leoluz/nvim-dap-go',
+            'mfussenegger/nvim-dap-python',
             'rcarriga/nvim-dap-ui',
             'nvim-telescope/telescope-dap.nvim',
+            'nvim-neotest/nvim-nio',
             -- 'theHamsta/nvim-dap-virtual-text'
         },
     },
