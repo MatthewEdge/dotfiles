@@ -13,10 +13,10 @@ sudo apt install -y git
 
 # Dev Dependencies and tooling
 sudo apt install -y \
+    make \
     htop \
     fzf \
     ripgrep \
-    xclip \
     # for neovim
     ninja-build gettext libtool-bin cmake g++ pkg-config unzip curl && \
 sudo apt remove -y vim
