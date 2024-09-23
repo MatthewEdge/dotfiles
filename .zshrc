@@ -15,7 +15,6 @@ source $ZSH/oh-my-zsh.sh
 
 export LANG=en_US.UTF-8
 
-# Setup for neovim
 export PATH="$HOME/neovim/bin:$PATH"
 export EDITOR='nvim'
 
@@ -23,24 +22,38 @@ export EDITOR='nvim'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
-alias dotfiles="cd $HOME/code/dotfiles"
+
+alias md5sum='md5 -r'
+alias dotfiles='cd $HOME/code/dotfiles'
 
 # ls
-alias ll="ls -alh"
+alias ls="ls --color=auto"
+alias ll="ls -lahG"
 
-# If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
-alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
+alias update="brew update && brew upgrade"
+
+alias ports="lsof -i -P | grep -i 'listen'"
 
 # VIM
 # Old alias rewrites to save my tired brain
-alias v='nvim'
 alias vim='nvim'
 vimrc() {
     # Allows file browsing to be the nvim config folder vs. wherever you call vimrc from
     OLD_DIR=$(pwd)
     cd $HOME/.config/nvim
-    $EDITOR ./
+    $EDITOR init.lua
     cd $OLD_DIR
+}
+
+forEachDir() {
+    ORIG=$(pwd)
+    for d in */ ; do
+        [ -L "${d%/}" ] && continue
+        echo "cd $d"
+        cd $d
+        eval $@
+        cd $ORIG
+    done
 }
 
 # Code folder
@@ -70,8 +83,13 @@ alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
+alias glog='git log -n'
 gpocb() {
   git push origin $(git branch --show-current)
+}
+gsetb() {
+    BRANCH=$(git branch --show-current)
+    git branch --set-upstream-to=origin/$BRANCH $BRANCH
 }
 
 # Note Taking, hosted by Mkdocs
@@ -85,7 +103,6 @@ alias kgs="kubectl get svc"
 
 # Docker
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
-alias dkrm='docker rm -f $(docker ps -aq)'
 alias dcs="docker compose stop"
 alias dcb="docker compose build --parallel"
 alias dcu="docker compose up"
@@ -123,6 +140,18 @@ export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 alias gotest="go test ./..."
 
+pprof() {
+    if [ -z "$1" ]; then
+        echo "Usage: $0 TARGET"
+        exit 1
+    fi
+    curl http://$1/debug/pprof/cpu -o cpu.profile
+}
+
+diffpprof() {
+    echo "Not Implemented"
+}
+
 ## Protobuf
 export PROTOPATH=$HOME/protobuf
 export PATH=$PATH:$PROTOPATH/bin
@@ -157,14 +186,13 @@ awstf-destroy() {
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
-# Key Repeat
-# xset r rate 180 46
-
-# Jettlabs
 alias cdlab="cd $HOME/code/jettlabs"
 labclone() {
     git clone git@github.com:jettlabs/$@
 }
 
-# Rust setup for HTMX
-source "$HOME/.cargo/env"
+# Python
+alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
+
+# If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
+alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
