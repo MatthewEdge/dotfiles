@@ -26,6 +26,8 @@ alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 alias md5sum='md5 -r'
 alias dotfiles='cd $HOME/code/dotfiles'
 
+alias apt="sudo apt"
+
 # ls
 alias ls="ls --color=auto"
 alias ll="ls -lahG"
@@ -196,3 +198,12 @@ alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
 
 # If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
 alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
+
+# Rust setup for HTMX
+source "$HOME/.cargo/env"
+
+# Python
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
