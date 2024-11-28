@@ -188,13 +188,13 @@ awstf-destroy() {
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
-alias cdlab="cd $HOME/code/jettlabs"
+alias cdlab="cd $HOME/code/medgelabs"
 labclone() {
-    git clone git@github.com:jettlabs/$@
+    git clone git@github.com:medgelabs/$@
 }
 
 # Python
-alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
+# alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
 
 # If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
 alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
