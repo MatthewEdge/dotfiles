@@ -53,8 +53,8 @@ local servers = {
         },
     },
     golangci_lint_ls = {},
-    pyright = {},
-    htmx = {},
+    -- pyright = {},
+    -- htmx = {},
     marksman = {},
     lua_ls = {
         Lua = {
@@ -62,29 +62,7 @@ local servers = {
             telemetry = { enable = false },
         },
     },
-    rust_analyzer = {
-        settings = {
-            rust_analyzer = {
-                checkOnSave = {
-                    command = "clippy",
-                },
-                imports = {
-                    granularity = {
-                        group = "module",
-                    },
-                    prefix = "self",
-                },
-                cargo = {
-                    buildScripts = {
-                        enable = true,
-                    },
-                },
-                procMacro = {
-                    enable = true,
-                },
-            },
-        },
-    },
+    zls = {},
 }
 
 -- Needed for lua_ls for Neovim dev. Must come before lua_ls server setup
