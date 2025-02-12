@@ -79,6 +79,7 @@ medgeclone() {
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
 alias ga='git add'
+alias gb='git branch'
 alias gc='git commit'
 alias gcm='git commit -m'
 alias gd='git diff'
