@@ -22,22 +22,21 @@ export EDITOR='nvim'
 #  USER FUNCTION HELPERS
 #############################
 alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+alias rc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 
 alias md5sum='md5 -r'
 alias dotfiles='cd $HOME/code/dotfiles'
-
-alias apt="sudo apt"
 
 # ls
 alias ls="ls --color=auto"
 alias ll="ls -lahG"
 
-alias update="brew update && brew upgrade"
-
 alias ports="lsof -i -P | grep -i 'listen'"
 
 # VIM
 # Old alias rewrites to save my tired brain
+alias v='nvim'
+alias vi='nvim'
 alias vim='nvim'
 vimrc() {
     # Allows file browsing to be the nvim config folder vs. wherever you call vimrc from
@@ -76,12 +75,18 @@ medgeclone() {
   git clone git@github.com:MatthewEdge/$REPO.git
 }
 
+alias cdlab="cd $HOME/code/medgelabs"
+labclone() {
+    git clone git@github.com:medgelabs/$@
+}
+
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
 alias ga='git add'
 alias gb='git branch'
 alias gc='git commit'
 alias gcm='git commit -m'
+alias gco='git checkout'
 alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
@@ -120,11 +125,11 @@ dkrmac() {
 dcre() {
   CONTAINERS=$1
 
-  docker-compose stop ${CONTAINERS} && \
-  docker-compose kill ${CONTAINERS} && \
-  docker-compose rm -f ${CONTAINERS} && \
-  docker-compose build --parallel --no-cache ${CONTAINERS} && \
-  docker-compose up -d ${CONTAINERS}
+  docker compose stop ${CONTAINERS} && \
+  docker compose kill ${CONTAINERS} && \
+  docker compose rm -f ${CONTAINERS} && \
+  docker compose build --parallel --no-cache ${CONTAINERS} && \
+  docker compose up -d ${CONTAINERS}
 }
 
 # REST Helpers
@@ -189,11 +194,6 @@ awstf-destroy() {
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
-alias cdlab="cd $HOME/code/medgelabs"
-labclone() {
-    git clone git@github.com:medgelabs/$@
-}
-
 # Python
 # alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
 
@@ -201,10 +201,10 @@ labclone() {
 alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
 
 # Rust setup for HTMX
-source "$HOME/.cargo/env"
+# source "$HOME/.cargo/env"
 
 # Python
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
