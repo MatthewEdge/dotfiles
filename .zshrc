@@ -8,6 +8,9 @@ ZSH_THEME="robbyrussell"
 DISABLE_UPDATE_PROMPT="true"
 export UPDATE_ZSH_DAYS=7
 
+# Ghostty
+export PATH="$HOME/.local/bin:$PATH"
+
 plugins=(git history-substring-search)
 
 # User configuration

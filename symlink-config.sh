@@ -5,6 +5,10 @@
 rm -rf $HOME/.config/alacritty
 ln -s $(pwd)/alacritty $HOME/.config/alacritty
 
+# Ghostty
+rm -rf $HOME/.config/ghostty
+ln -s $(pwd)/ghostty $HOME/.config/ghostty
+
 # ZSH config
 rm -f $HOME/.zshrc
 rm -f $HOME/.zshenv # since SwayWM Arch pre-populates this and it screws up this setup

@@ -1,0 +1,5 @@
+keybind = ctrl+c=copy_to_clipboard
+keybind = ctrl+v=paste_from_clipboard
+keybind = ctrl+t=new_tab
+keybind = ctrl+]=next_tab
+keybind = ctrl+[=previous_tab
