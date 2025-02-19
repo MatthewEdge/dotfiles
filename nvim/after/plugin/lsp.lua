@@ -24,7 +24,6 @@ cmp.setup({
         },
         -- ['<C-Space>'] = cmp.mapping.complete(),
 
-        -- Disable tab completion in favor of Copilot
         ['<Tab>'] = nil,
         ['<S-Tab>'] = nil,
     }),
