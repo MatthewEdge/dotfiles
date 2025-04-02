@@ -30,6 +30,8 @@ alias rc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
 alias md5sum='md5 -r'
 alias dotfiles='cd $HOME/code/dotfiles'
 
+alias open='nautilus'
+
 # ls
 alias ls="ls --color=auto"
 alias ll="ls -lahG"
@@ -211,3 +213,6 @@ alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --acce
 # [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
+
+# Zig
+export PATH=$PATH:$HOME/zig-0.14

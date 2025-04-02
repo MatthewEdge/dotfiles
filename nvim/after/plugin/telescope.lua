@@ -15,6 +15,7 @@ require('telescope').setup({
                 '--smart-case',
                 '--files',
                 '--hidden',
+                '--ignore-file', '.gitignore',
                 '-g',
                 '!**/.git/*',
             },
