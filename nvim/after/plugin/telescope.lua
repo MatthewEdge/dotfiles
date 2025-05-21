@@ -1,8 +1,32 @@
 -----------------------------------------------------------
 -- Telescope config
 ----------------------------------------------------------
+local actions = require("telescope.actions")
 require('telescope').setup({
     file_ignore_patterns = { "node_modules", ".obsidian" },
+    defaults = {
+        -- affects live_grep results
+        vimgrep_arguments = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+            '--files',
+            '--hidden',
+            '--ignore-file', '.gitignore',
+            '-g',
+            '!**/.git/*',
+        },
+        mappings = {
+            -- makes esc not drop to normal mode and just exit
+            i = {
+                ["<esc>"] = actions.close,
+            },
+        },
+    },
     pickers = {
         find_files = {
             find_command = {
