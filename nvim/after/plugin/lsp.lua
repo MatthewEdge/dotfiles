@@ -51,7 +51,7 @@ local servers = {
             },
         },
     },
-    -- golangci_lint_ls = {},
+    -- golangci_lint_ls = {}, -- TODO currently broke itself on --output.json.path not being valid
     -- pyright = {},
     -- htmx = {},
     marksman = {},
@@ -61,7 +61,15 @@ local servers = {
             telemetry = { enable = false },
         },
     },
-    zls = {},
+    -- zls = {},
+    ols = {
+        init_options = {
+            checker_args = "-strict-style",
+            collections = {
+                -- { name = "shared", path = vim.fn.expand('$HOME/odin-lib') }
+            },
+        },
+    },
 }
 
 -- Needed for lua_ls for Neovim dev. Must come before lua_ls server setup
@@ -96,22 +104,16 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Mason to ensure/install LSP Servers
 require('mason').setup()
-local mason_lspconfig = require('mason-lspconfig')
-
-mason_lspconfig.setup {
+require('mason-lspconfig').setup({
     ensure_installed = vim.tbl_keys(servers),
-}
-
-mason_lspconfig.setup_handlers({
-    function(server_name)
-        require('lspconfig')[server_name].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = servers[server_name],
-        })
-    end
+    automatic_installation = true,
+    automatic_enable = true,
 })
 
+vim.lsp.config("*", {
+    on_attach = on_attach,
+    capabilities = capabilities,
+})
 
 -- TODO do we like virtual_text?
 vim.diagnostic.config({
@@ -120,38 +122,32 @@ vim.diagnostic.config({
 
 -- we like Auto-format on save, generally
 vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = {'*.go', '*.py'},
+    pattern = {'*.py'},
     callback = function()
         vim.lsp.buf.format()
     end
 })
 
--- Organize imports as well for Go files
--- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports-and-formatting
-function OrganizeImports()
-   local params = vim.lsp.util.make_range_params()
-    params.context = {only = {"source.organizeImports"}}
-    -- buf_request_sync defaults to a 1000ms timeout. Depending on your
-    -- machine and codebase, you may want longer. Add an additional
-    -- argument after params if you find that you have to write the file
-    -- twice for changes to be saved.
-    -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
-    for cid, res in pairs(result or {}) do
-      for _, r in pairs(res.result or {}) do
-        if r.edit then
-          local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
-          vim.lsp.util.apply_workspace_edit(r.edit, enc)
-        end
-      end
-    end
-    vim.lsp.buf.format({async = false})
-end
-
+-- Go needs special setup for autoformat
 vim.api.nvim_create_autocmd('BufWritePre', {
     pattern = '*.go',
     callback = function()
-        OrganizeImports()
-        -- vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+        local params = vim.lsp.util.make_range_params()
+        params.context = {only = {"source.organizeImports"}}
+        -- buf_request_sync defaults to a 1000ms timeout. Depending on your
+        -- machine and codebase, you may want longer. Add an additional
+        -- argument after params if you find that you have to write the file
+        -- twice for changes to be saved.
+        -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+        local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+        for cid, res in pairs(result or {}) do
+            for _, r in pairs(res.result or {}) do
+                if r.edit then
+                    local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+                    vim.lsp.util.apply_workspace_edit(r.edit, enc)
+                end
+            end
+        end
+        vim.lsp.buf.format({async = false})
     end
 })
