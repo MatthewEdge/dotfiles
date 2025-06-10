@@ -28,8 +28,8 @@ cmp.setup({
         ['<S-Tab>'] = nil,
     }),
     sources = {
+        { name = 'nvim_lsp_signature_help' },
         { name = 'nvim_lsp' },
-        { name = 'nvim-lsp-signature-help' },
         { name = 'buffer',   keyword_length = 3 },
         { name = 'luasnip', keyword_length = 99 }, -- it's annoying that this is required
     }
