@@ -139,7 +139,7 @@ vim.opt.shiftwidth = 4                    -- Shift 4 spaces when tab
 vim.opt.smartindent = true                -- Autoindent new lines
 
 -- Netrw File Browser
-vim.g.netrw_banner = 0
+vim.g.netrw_banner = 1                    -- on Fedora, 0 makes the terminal freak out. See https://github.com/neovim/neovim/issues/23650
 vim.g.netrw_browse_split = 4
 vim.g.netrw_altv = 1
 vim.g.netrw_liststyle = 3
