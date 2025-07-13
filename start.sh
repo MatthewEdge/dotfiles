@@ -61,7 +61,7 @@ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install github.com/go-delve/delve/cmd/dlv@latest
 
 # TODO keep this version updated somehow?
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2
+#curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2
 
 # AWS CLI
 # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscli.zip"
