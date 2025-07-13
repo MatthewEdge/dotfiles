@@ -1,21 +1,5 @@
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-ZSH_THEME="robbyrussell"
-
-DISABLE_UPDATE_PROMPT="true"
-export UPDATE_ZSH_DAYS=7
-
 # Ghostty
 export PATH="$HOME/.local/bin:$PATH"
-
-plugins=(git history-substring-search)
-
-# User configuration
-source $ZSH/oh-my-zsh.sh
-
 export LANG=en_US.UTF-8
 
 export PATH="$HOME/neovim/bin:$PATH"
@@ -24,8 +8,8 @@ export EDITOR='nvim'
 #############################
 #  USER FUNCTION HELPERS
 #############################
-alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
-alias rc="$EDITOR $HOME/.zshrc && source $HOME/.zshrc"
+alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.bashrc"
+alias rc="$EDITOR $HOME/.zshrc && source $HOME/.bashrc"
 
 alias md5sum='md5 -r'
 alias dotfiles='cd $HOME/code/dotfiles'
@@ -36,10 +20,12 @@ alias open='nautilus'
 alias ls="ls --color=auto"
 alias ll="ls -lahG"
 
-alias ports="lsof -i -P | grep -i 'listen'"
+alias ..="cd .."
+alias ...="cd ..."
 
 # VIM
 # Old alias rewrites to save my tired brain
+alias nv='nvim'
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
@@ -215,4 +201,7 @@ alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --acce
 # eval "$(pyenv virtualenv-init -)"
 
 # Zig
-export PATH=$PATH:$HOME/zig-0.14
+# export PATH=$PATH:$HOME/zig-0.14
+
+# Odin
+export PATH=$PATH:$HOME/odin

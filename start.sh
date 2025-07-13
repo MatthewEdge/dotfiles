@@ -81,5 +81,7 @@ elif [ "$PACKMGR" == "apt" ]; then
     echo 'alias update="sudo apt update -y && sudo apt upgrade"' >> $HOME/.zshrc
 fi
 
-# TODO - foot install
+# Nowadays Experiment: let it all be Bash
+echo 'source $HOME/.zshrc' >> $HOME/.bashrc
+
 echo "Restart shell for changes to take effect"
