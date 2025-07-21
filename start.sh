@@ -8,31 +8,18 @@ set -ex
 # Pre-conf sudo 
 sudo -v
 
-PACKMGR=""
-INSTALL=""
-REMOVE=""
-
-if [ -x "$(command -v apt)" ]; then
-    echo "apt environment"
-    PACKMGR="apt"
-    INSTALL="apt install -y"
-    REMOVE="apt remove -y"
-elif [ -x "$(command -v pacman)" ]; then
-    echo "pacman environment"
-    PACKMGR="pacman"
-    INSTALL="pacman -Sy --noconfirm"
-    REMOVE="pacman -R"
-elif [ -x "$(command -v brew)" ]; then
-    PACKMGR="brew"
-    INSTALL="brew install"
-    REMOVE="brew uninstall"
-else
-    echo "Unknown package manager"
-    exit 1
-fi
+# Current: deb based
+PACKMGR="apt"
+INSTALL="$PACKMGR install -y"
+REMOVE="$PACKMGR remove -y"
 
 # Base dependencies
-sudo $INSTALL fzf ripgrep git curl unzip
+sudo $INSTALL \
+    fzf ripgrep \
+    git \
+    curl \
+    unzip \
+    exfalse # media meta editing
 
 ( export PACKMGR=$PACKMGR; export INSTALL=$INSTALL; export REMOVE=$REMOVE; \
     # Git / SSH base setup
@@ -60,9 +47,6 @@ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 #go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 go install github.com/go-delve/delve/cmd/dlv@latest
 
-# TODO keep this version updated somehow?
-#curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.56.2
-
 # AWS CLI
 # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscli.zip"
 # unzip awscli.zip
@@ -72,14 +56,6 @@ go install github.com/go-delve/delve/cmd/dlv@latest
 
 # Lastly - shell customizations
 ./symlink-config.sh
-
-if [ "$PACKMGR" == "pacman" ]; then
-    echo 'alias pacman="sudo pacman"' >> $HOME/.zshrc
-    echo 'alias update="sudo pacman -Syu"' >> $HOME/.zshrc
-elif [ "$PACKMGR" == "apt" ]; then
-    echo 'alias apt="sudo apt"' >> $HOME/.zshrc
-    echo 'alias update="sudo apt update -y && sudo apt upgrade"' >> $HOME/.zshrc
-fi
 
 # Nowadays Experiment: let it all be Bash
 echo 'source $HOME/.zshrc' >> $HOME/.bashrc

@@ -5,4 +5,4 @@ keybind = ctrl+]=next_tab
 keybind = ctrl+[=previous_tab
 
 font-feature = -calt
-font-size = 16
+font-size = 14
