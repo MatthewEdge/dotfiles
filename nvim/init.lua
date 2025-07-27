@@ -20,9 +20,6 @@ vim.g.maplocalleader = ' '
 -- General keymaps
 -----------------------------------------------------------
 
--- Quick-activate ZenMode
-vim.keymap.set('n', '<leader>zm', ':ZenMode<CR>', { silent = true })
-
 -- Prevent space from doing anything sans being the leader key
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
@@ -61,9 +58,6 @@ vim.keymap.set('n', '<leader>r', ':so %<CR>')
 -- Open a file in Firefox (mostly for web dev)
 vim.keymap.set('n', '<leader>of', ':!firefox %<CR>')
 
--- Auto chmod a file from within the editor
-vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { silent = true })
-
 -----------------------------------------------------------
 -- Autocommand functions
 -----------------------------------------------------------
@@ -82,61 +76,56 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     command = ':%s/\\s\\+$//e'
 })
 
--- Disable line length marker for typically wide-column editing
-vim.api.nvim_create_autocmd('Filetype', {
-    group = vim.api.nvim_create_augroup('setLineLength', { clear = true }),
-    pattern = { 'text', 'markdown', 'html', 'xhtml', 'javascript', 'typescript' },
-    command = 'setlocal cc=0'
-})
-
 -- Enable spell checking for doc filetypes
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
     pattern = { '*.txt', '*.md', '*.tex' },
     callback = function()
-        vim.opt.spell = true
-        vim.opt.spelllang = 'en'
+        vim.o.spell = true
+        vim.o.spelllang = 'en'
     end,
 })
 
 -----------------------------------------------------------
 -- Editor options
 -----------------------------------------------------------
-vim.opt.mouse = ''                        -- Disable mouse support
-vim.opt.guicursor = ''                    -- No need for guicursor manipulation
-vim.opt.clipboard = 'unnamedplus'         -- Copy/paste to system clipboard
+vim.o.mouse = ''                        -- Disable mouse support
+vim.o.guicursor = ''                    -- No need for guicursor manipulation
+vim.o.clipboard = 'unnamedplus'         -- Copy/paste to system clipboard
+-- TODO "+y mapped to <leader>y instead?
 
-vim.opt.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
-vim.opt.swapfile = false                  -- Don't use swapfile
-vim.opt.history = 100                     -- Remember N lines in history
+vim.o.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
+vim.o.swapfile = false                  -- Don't use swapfile
+vim.o.history = 100                     -- Remember N lines in history
 
-vim.opt.hidden = true                     -- Enable background buffers
-vim.opt.scrolloff = 8                     -- Keep scroll offset for slightly less eye movement
-vim.opt.lazyredraw = true                 -- Faster scrolling
-vim.opt.synmaxcol = 240                   -- Max column for syntax highlighting
-vim.opt.updatetime = 80                   -- ms to wait for triggering an event
+vim.o.hidden = true                     -- Enable background buffers
+vim.o.scrolloff = 8                     -- Keep scroll offset for slightly less eye movement
+vim.o.lazyredraw = true                 -- Faster scrolling
+vim.o.synmaxcol = 240                   -- Max column for syntax highlighting
+vim.o.updatetime = 80                   -- ms to wait for triggering an event
 
-vim.opt.number = true                     -- Show line number
-vim.opt.relativenumber = true             -- Relative line numbering
-vim.opt.showmatch = true                  -- Highlight matching parenthesis
-vim.opt.foldmethod = 'marker'             -- Enable folding(default 'foldmarker')
-vim.opt.colorcolumn = '120'               -- Line length marker
-vim.opt.splitright = true                 -- Vertical split to the right
-vim.opt.splitbelow = true                 -- Horizontal split to the bottom
+vim.o.number = true                     -- Show line number
+vim.o.relativenumber = true             -- Relative line numbering
+vim.o.showmatch = true                  -- Highlight matching parenthesis
+vim.o.foldmethod = 'marker'             -- Enable folding(default 'foldmarker')
+vim.o.colorcolumn = '120'               -- Line length marker
+vim.o.splitright = true                 -- Vertical split to the right
+vim.o.splitbelow = true                 -- Horizontal split to the bottom
 
-vim.opt.hlsearch = false                  -- Don't highlight all search items at once
-vim.opt.incsearch = true                  -- ...but incremental highlighting of one is ok
-vim.opt.ignorecase = true                 -- Ignore case letters when searching
-vim.opt.smartcase = true                  -- Ignore lowercase for the whole pattern
-vim.opt.linebreak = true                  -- Wrap on word boundary
-vim.opt.termguicolors = true              -- Enable 24-bit term colors
-vim.opt.laststatus = 3                    -- Set global statusline
-vim.opt.cmdheight = 2                     -- Add more space for bottom message
+vim.o.hlsearch = false                  -- Don't highlight all search items at once
+vim.o.incsearch = true                  -- ...but incremental highlighting of one is ok
+vim.o.ignorecase = true                 -- Ignore case letters when searching
+vim.o.smartcase = true                  -- Ignore lowercase for the whole pattern
+vim.o.linebreak = true                  -- Wrap on word boundary
+vim.o.termguicolors = true              -- Enable 24-bit term colors
+vim.o.laststatus = 3                    -- Set global statusline
+vim.o.cmdheight = 2                     -- Add more space for bottom message
 
-vim.opt.tabstop = 4                       -- 1 tab == 4 spaces
-vim.opt.softtabstop = 4                   -- 1 tab == 4 spaces
-vim.opt.expandtab = true                  -- Use spaces instead of tabs
-vim.opt.shiftwidth = 4                    -- Shift 4 spaces when tab
-vim.opt.smartindent = true                -- Autoindent new lines
+vim.o.tabstop = 4                       -- 1 tab == 4 spaces
+vim.o.softtabstop = 4                   -- 1 tab == 4 spaces
+vim.o.expandtab = true                  -- Use spaces instead of tabs
+vim.o.shiftwidth = 4                    -- Shift 4 spaces when tab
+vim.o.smartindent = true                -- Autoindent new lines
+vim.o.winborder = "rounded"               -- More distinct floating windows
 
 -- Netrw File Browser
 vim.g.netrw_banner = 1                    -- on Fedora, 0 makes the terminal freak out. See https://github.com/neovim/neovim/issues/23650

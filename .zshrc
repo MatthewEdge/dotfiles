@@ -82,6 +82,7 @@ alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
+alias grbmas='git fetch origin && git rebase origin/master'
 alias glog='git log -n'
 gpocb() {
   git push origin $(git branch --show-current)
@@ -189,7 +190,7 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 # alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
 
 # If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
-alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
+# alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
 
 # Rust setup for HTMX
 # source "$HOME/.cargo/env"
