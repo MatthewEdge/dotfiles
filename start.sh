@@ -57,7 +57,4 @@ go install github.com/go-delve/delve/cmd/dlv@latest
 # Lastly - shell customizations
 ./symlink-config.sh
 
-# Nowadays Experiment: let it all be Bash
-echo 'source $HOME/.zshrc' >> $HOME/.bashrc
-
 echo "Restart shell for changes to take effect"

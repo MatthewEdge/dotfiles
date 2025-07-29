@@ -5,10 +5,9 @@
 rm -rf $HOME/.config/ghostty
 ln -s $(pwd)/ghostty $HOME/.config/ghostty
 
-# ZSH config
-rm -f $HOME/.zshrc
-rm -f $HOME/.zshenv # since SwayWM Arch pre-populates this and it screws up this setup
-ln -s $(pwd)/.zshrc $HOME/.zshrc
+# Bash config
+rm -f $HOME/.bashrc
+ln -s $(pwd)/.bashrc $HOME/.bashrc
 
 # TMUX
 rm -f $HOME/.tmux.conf
@@ -21,7 +20,3 @@ ln -s $(pwd)/nvim $HOME/.config/nvim
 # Input Remapper for Linux
 # rm -rf $HOME/.config/input-remapper-2/presets
 # ln -s $(pwd)/input-remapper/presets $HOME/.config/input-remapper-2/presets
-
-# Sway WM
-# rm -rf ~/.config/sway
-# ln -s $(pwd)/swaywm $HOME/.config/sway

@@ -30,13 +30,6 @@ sh git.sh
 # SSH
 sh ssh.sh
 
-# ZSH
-brew install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-
-## Fix for oh-my-zsh folder for .zshrc
-mv $HOME/.oh-my-zsh $HOME/oh-my-zsh
-
 # Commonly used casks
 brew install --cask iterm2 flux rectangle
 
@@ -49,11 +42,4 @@ brew install ripgrep
 # Github CLI
 brew install hub
 
-cp ./zsh/.zshrc ~/.zshrc
-cp ./zsh/.zshenv ~/.zshenv
-cp ./.vimrc ~/.vimrc
-
-# Vim
-brew install vim node yarn fzf
-vim +PlugInstall +qall!
-
+cp ./.bashrc ~/.bashrc

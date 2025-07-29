@@ -1,5 +1,43 @@
-# Ghostty
-export PATH="$HOME/.local/bin:$PATH"
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+
+function customp {
+    GREEN="\[$(tput setaf 2)\]"
+    WHITE="\[$(tput setaf 7)\]"
+    local BRANCH=$(git branch --show-current 2>/dev/null)
+    local SUFFIX=""
+    if [ ! -z "$BRANCH" ]; then
+        SUFFIX="($BRANCH) "
+    fi
+    PS1="$GREEN\W$WHITE $SUFFIX"
+}
+
+PROMPT_COMMAND=customp
+
+# User specific environment and startup programs
 export LANG=en_US.UTF-8
 
 export PATH="$HOME/neovim/bin:$PATH"
@@ -8,24 +46,20 @@ export EDITOR='nvim'
 #############################
 #  USER FUNCTION HELPERS
 #############################
-alias zshrc="$EDITOR $HOME/.zshrc && source $HOME/.bashrc"
-alias rc="$EDITOR $HOME/.zshrc && source $HOME/.bashrc"
+alias rc="$EDITOR $HOME/.bashrc && source $HOME/.bashrc"
+
+alias ..="cd ../"
+alias ...="cd ../../"
 
 alias md5sum='md5 -r'
 alias dotfiles='cd $HOME/code/dotfiles'
 
-alias open='nautilus'
-
 # ls
 alias ls="ls --color=auto"
-alias ll="ls -lahG"
-
-alias ..="cd .."
-alias ...="cd ..."
+alias ll="ls -lahGtr"
 
 # VIM
 # Old alias rewrites to save my tired brain
-alias nv='nvim'
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
@@ -75,14 +109,13 @@ alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
 alias ga='git add'
 alias gb='git branch'
+alias gco='git checkout'
 alias gc='git commit'
 alias gcm='git commit -m'
-alias gco='git checkout'
 alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
-alias grbmas='git fetch origin && git rebase origin/master'
 alias glog='git log -n'
 gpocb() {
   git push origin $(git branch --show-current)
@@ -92,16 +125,9 @@ gsetb() {
     git branch --set-upstream-to=origin/$BRANCH $BRANCH
 }
 
-# Note Taking, hosted by Mkdocs
-# source $HOME/medgedocs/notes.sh
-
-# Kubernetes
-alias k='kubectl'
-alias kgp="kubectl get pods"
-alias kgpan="kubectl get pods --all-namespaces -o wide"
-alias kgs="kubectl get svc"
-
 # Docker
+alias docker='podman'
+
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
 alias dcs="docker compose stop"
 alias dcb="docker compose build --parallel"
@@ -152,10 +178,6 @@ diffpprof() {
     echo "Not Implemented"
 }
 
-## Protobuf
-export PROTOPATH=$HOME/protobuf
-export PATH=$PATH:$PROTOPATH/bin
-
 # Terraform
 awstf-dry() {
   export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
@@ -189,20 +211,16 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 # Python
 # alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
 
-# If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
-# alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
-
-# Rust setup for HTMX
-# source "$HOME/.cargo/env"
-
-# Python
 # export PYENV_ROOT="$HOME/.pyenv"
 # [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 
-# Zig
-# export PATH=$PATH:$HOME/zig-0.14
+# If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
+#alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
+
+# Rust setup for HTMX
+#source "$HOME/.cargo/env"
 
 # Odin
 export PATH=$PATH:$HOME/odin

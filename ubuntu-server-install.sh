@@ -38,11 +38,3 @@ rm -rf ~/.config/nvim
 mkdir -p ~/.config/nvim
 cd $ORIG
 ln -s $ORIG/nvim ~/.config/nvim
-
-# OhMyZSH
-# Custom Theme
-echo "Make sure to change theme in .zshrc to 'server'"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-cp ./.zshrc $HOME/.zshrc
-cp ./server.zsh-theme $HOME/.oh-my-zsh/custom/themes/server.zsh-theme
-
