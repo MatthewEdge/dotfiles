@@ -20,6 +20,10 @@ vim.g.maplocalleader = ' '
 -- General keymaps
 -----------------------------------------------------------
 
+--- "ZenMode" with screen folding for the larger monitors. Toggle by reversed keymap
+vim.keymap.set('n', '<leader>zm', ':setlocal foldcolumn=9 signcolumn=yes:9<CR>')
+vim.keymap.set('n', '<leader>mz', ':setlocal foldcolumn=1 signcolumn=yes:1<CR>')
+
 -- Prevent space from doing anything sans being the leader key
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 

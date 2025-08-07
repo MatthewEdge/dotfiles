@@ -22,11 +22,6 @@ require("lazy").setup({
         build = 'make hexokinase',
     },
 
-    -- Zen mode
-    {
-        'folke/zen-mode.nvim',
-    },
-
     -- Fuzzy Finder
     {
         'nvim-telescope/telescope.nvim', tag = '0.1.8',
