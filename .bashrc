@@ -166,7 +166,7 @@ export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
 alias gotest="go test ./..."
 
-pprof() {
+profile() {
     if [ -z "$1" ]; then
         echo "Usage: $0 TARGET"
         exit 1
@@ -174,8 +174,25 @@ pprof() {
     curl http://$1/debug/pprof/cpu -o cpu.profile
 }
 
+pprof() {
+    SOURCE=$1
+    if [ -z "$SOURCE" ]; then
+        echo "Usage: $0 SOURCE_PPROF"
+        exit 1
+    fi
+
+    go tool pprof -trim_path=/go/src -source_path=. $SOURCE
+}
+
 diffpprof() {
-    echo "Not Implemented"
+    BASE=$1
+    LATEST=$2
+    if [ -z "$BASE" ] || [ -z "$LATEST" ]; then
+        echo "Usage: $0 BASE_PROFILE LATEST_PROFILE"
+        exit 1
+    fi
+
+    go tool pprof -trim_path=/go/src -source_path=. -diff_base=$BASE $LATEST
 }
 
 # Terraform
@@ -223,4 +240,4 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 #source "$HOME/.cargo/env"
 
 # Odin
-export PATH=$PATH:$HOME/odin
+export PATH=$PATH:$HOME/odin-2025-07
