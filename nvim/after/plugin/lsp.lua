@@ -35,6 +35,8 @@ cmp.setup({
     }
 })
 
+local home_dir = os.getenv('HOME')
+
 -- LSP Servers to be installed automatically
 local servers = {
     gopls = {
@@ -61,10 +63,20 @@ local servers = {
             telemetry = { enable = false },
         },
     },
-    -- zls = {},
+    zls = {
+        cmd = {'/home/medge/zig-0.14.1/zls'},
+        settings = {
+            -- semantic_tokens = 'partial',
+            zig_exe_path = '/home/medge/zig-0.14.1',
+        },
+    },
     ols = {
         init_options = {
             checker_args = "-strict-style",
+            -- enable_document_symbols = true,
+            -- enable_hover = true,
+            -- enable_snippets = true,
+            -- enable_references = true,
             collections = {
                 -- { name = "shared", path = vim.fn.expand('$HOME/odin-lib') }
             },
@@ -77,6 +89,7 @@ require('neodev').setup({})
 
 -- Configuration for each LSP once attached
 local on_attach = function(_, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
     local nmap = function(keys, func, desc)
         vim.keymap.set('n', keys, func, { buffer = bufnr, remap = false, desc = desc })
     end
@@ -151,3 +164,19 @@ vim.api.nvim_create_autocmd('BufWritePre', {
         vim.lsp.buf.format({async = false})
     end
 })
+
+-- Zig setup
+vim.g.zig_fmt_parse_errors = 0
+vim.g.zig_fmt_autosave = 0
+vim.api.nvim_create_autocmd('BufWritePre', {
+    pattern = {"*.zig", "*.zon"},
+    callback = function()
+        vim.lsp.buf.format()
+
+        vim.lsp.buf.code_action({
+            context = { only = { 'source.organizeImports' }},
+            apply = true,
+        })
+    end
+})
+

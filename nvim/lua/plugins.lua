@@ -73,6 +73,11 @@ require("lazy").setup({
         }
     },
 
+    -- Zig
+    {
+        'ziglang/zig.vim',
+    },
+
     -- Debugger
     {
         'mfussenegger/nvim-dap',

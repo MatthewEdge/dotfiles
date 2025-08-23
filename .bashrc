@@ -241,3 +241,9 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 
 # Odin
 export PATH=$PATH:$HOME/odin-2025-07
+
+# Zig
+export PATH=$PATH:$HOME/zig-0.15.1
+
+# Tiled Editor
+alias tiled="$HOME/Tiled-1.11.2.AppImage"
