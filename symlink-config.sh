@@ -1,6 +1,10 @@
 #!/bin/sh
 # Symlink config folders to ~/.config for a better dev experience
 
+# Alacritty
+rm -rf ~/.config/alacritty
+ln -s $(pwd)/alacritty $HOME/.config/alacritty
+
 # Bash config
 rm -f $HOME/.bashrc
 ln -s $(pwd)/.bashrc $HOME/.bashrc

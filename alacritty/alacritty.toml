@@ -1,13 +1,21 @@
-import = ["~/.config/alacritty/catpuccin-mocha.toml"]
 live_config_reload = true
 
-[window]
-dimensions = { columns = 120, lines = 80 }
-opacity = 1.0
+# If on Omarchy
+#general.import = [ "~/.config/omarchy/current/theme/alacritty.toml" ]
 
+[env]
+TERM = "xterm-256color"
+
+[window]
+padding.x = 14
+padding.y = 14
+decorations = "None"
 
 [font]
-size = 14
+normal = { family = "CaskaydiaMono Nerd Font", style = "Regular" }
+bold = { family = "CaskaydiaMono Nerd Font", style = "Bold" }
+italic = { family = "CaskaydiaMono Nerd Font", style = "Italic" }
+size = 11
 
 [keyboard]
 bindings=[
@@ -19,6 +27,7 @@ bindings=[
     { key = "n", mods = "Control", action = "CreateNewWindow" },
     { key = "p", mods = "Control|Shift", action = "SearchForward" },
     { key = "o", mods = "Control|Shift", action = "SearchBackward" },
+    { key = "F11", action = "ToggleFullscreen" }
 
     # They claim these are macOS only?
     { key = "{", mods = "Control", action = "SelectPreviousTab" },
