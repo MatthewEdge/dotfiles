@@ -100,7 +100,7 @@ medgeclone() {
   git clone git@github.com:MatthewEdge/$REPO.git
 }
 
-alias cdlab="cd $HOME/code/medgelabs"
+alias cdlab="cd $HOME/code/labs"
 labclone() {
     git clone git@github.com:medgelabs/$@
 }

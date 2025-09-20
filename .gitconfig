@@ -1,0 +1,18 @@
+[core]
+    pager = cat
+    excludesfile = /home/medge/.gitignore_global
+[init]
+    defaultBranch = main
+[pull]
+    rebase = true
+[push]
+    autoSetupRemote = true
+[fetch]
+    prune = true
+    pruneTags = true
+    all = true
+[rebase]
+    autoSquash = true
+[diff]
+    algorithm = histogram
+    mnemonicPrefix = true
