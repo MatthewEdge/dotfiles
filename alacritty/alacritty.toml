@@ -1,7 +1,8 @@
-live_config_reload = true
 
 # If on Omarchy
-general.import = [ "~/.config/alacritty/matteblack.toml" ]
+[general]
+import = [ "~/.config/alacritty/kanagawa.toml" ]
+live_config_reload = true
 
 [env]
 TERM = "xterm-256color"
@@ -12,9 +13,9 @@ padding.y = 14
 decorations = "None"
 
 [font]
-normal = { family = "CaskaydiaMono Nerd Font", style = "Regular" }
-bold = { family = "CaskaydiaMono Nerd Font", style = "Bold" }
-italic = { family = "CaskaydiaMono Nerd Font", style = "Italic" }
+# normal = { family = "CaskaydiaMono Nerd Font", style = "Regular" }
+# bold = { family = "CaskaydiaMono Nerd Font", style = "Bold" }
+# italic = { family = "CaskaydiaMono Nerd Font", style = "Italic" }
 size = 11
 
 [keyboard]
@@ -27,7 +28,7 @@ bindings=[
     { key = "n", mods = "Control", action = "CreateNewWindow" },
     { key = "p", mods = "Control|Shift", action = "SearchForward" },
     { key = "o", mods = "Control|Shift", action = "SearchBackward" },
-    { key = "F11", action = "ToggleFullscreen" }
+    { key = "F11", action = "ToggleFullscreen" },
 
     # They claim these are macOS only?
     { key = "{", mods = "Control", action = "SelectPreviousTab" },
