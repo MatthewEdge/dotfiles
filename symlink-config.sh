@@ -17,9 +17,9 @@ ln -s $(pwd)/.tmux.conf $HOME/.tmux.conf
 rm -rf $HOME/.config/nvim
 ln -s $(pwd)/nvim $HOME/.config/nvim
 
-# Hyperland, if on Omarchy
-# rm -rf $HOME/.config/hypr
-# ln -s $(pwd)/hypr $HOME/.config/hypr
+# Hyperland
+rm -rf $HOME/.config/hypr
+ln -s $(pwd)/hypr $HOME/.config/hypr
 
 # Input Remapper for Linux
 # rm -rf $HOME/.config/input-remapper-2/presets
