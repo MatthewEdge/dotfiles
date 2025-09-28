@@ -1,5 +1,3 @@
-
-# If on Omarchy
 [general]
 import = [ "~/.config/alacritty/kanagawa.toml" ]
 live_config_reload = true
