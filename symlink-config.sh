@@ -20,6 +20,8 @@ ln -s $(pwd)/nvim $HOME/.config/nvim
 # Hyperland
 rm -rf $HOME/.config/hypr
 ln -s $(pwd)/hypr $HOME/.config/hypr
+rm -rf $HOME/.config/waybar
+ln -s $(pwd)/waybar $HOME/.config/waybar
 
 # Input Remapper for Linux
 # rm -rf $HOME/.config/input-remapper-2/presets
