@@ -8,7 +8,7 @@ TERM = "xterm-256color"
 [window]
 padding.x = 14
 padding.y = 14
-decorations = "None"
+#decorations = "None"
 
 [font]
 # normal = { family = "CaskaydiaMono Nerd Font", style = "Regular" }
