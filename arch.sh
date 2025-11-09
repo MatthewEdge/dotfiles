@@ -5,4 +5,4 @@ pacman -S yay firefox alacritty fuzzel
 yay -S niri noctalia-shell
 
 # nvim
-pacman -S fzf ripgrep clang neovim
+pacman -S fzf ripgrep clang wl-clipboard neovim
