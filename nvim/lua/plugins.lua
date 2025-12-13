@@ -16,12 +16,6 @@ require("lazy").setup({
         -- end,
     },
 
-    -- Color viewer
-    {
-        'rrethy/vim-hexokinase',
-        build = 'make hexokinase',
-    },
-
     -- Fuzzy Finder
     {
         'nvim-telescope/telescope.nvim', tag = '0.1.8',
