@@ -6,8 +6,8 @@ rm -rf ~/.config/alacritty
 ln -s $(pwd)/alacritty $HOME/.config/alacritty
 
 # Bash config
-#rm -f $HOME/.bashrc
-#ln -s $(pwd)/.bashrc $HOME/.bashrc
+mv $HOME/.bashrc $HOME/.bashrc.bk
+ln -s $(pwd)/.bashrc $HOME/.bashrc
 
 # TMUX
 rm -f $HOME/.tmux.conf
