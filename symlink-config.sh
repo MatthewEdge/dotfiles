@@ -17,6 +17,9 @@ ln -s $(pwd)/.tmux.conf $HOME/.tmux.conf
 rm -rf $HOME/.config/nvim
 ln -s $(pwd)/nvim $HOME/.config/nvim
 
+# Sway WM
+ln -s $(pwd)/sway $HOME/.config/sway
+
 # Hyperland
 #rm -rf $HOME/.config/hypr
 #ln -s $(pwd)/hypr $HOME/.config/hypr
