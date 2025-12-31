@@ -7,11 +7,20 @@ include $HOME/.config/sway/definitions.d/theme.conf
 # Global sway conf
 include /etc/sway/definitions
 include /etc/sway/inputs/*
-include /etc/sway/modes/*
+# include /etc/sway/modes/*
 
 ### Output configuration
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+# Read `man 5 sway-output` for more information about this section.
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output eDP-1 {
+    # pos 0,0
+    scale 2
+}
+output DP-9 {
+    # pos 5960,0
+    scale 1.75
+}
 #
 
 gaps inner 0
@@ -34,6 +43,10 @@ input type:touchpad {
 
 input type:touch {
   events disabled
+}
+
+input type:pointer {
+    natural_scroll enabled
 }
 
 # Example configuration:
