@@ -23,7 +23,7 @@ input type:keyboard {
   repeat_delay 150
 
   xkb_layout us
-  xkb_options caps:swapescape
+  xkb_options caps:escape
 }
 
 input type:touchpad {
@@ -64,8 +64,8 @@ set $power rofi -show powermenu
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
-bindsym $mod+b exec $browser
-bindsym $mod+p exec $power
+bindsym $mod+Shift+b exec $browser
+bindsym $mod+Shift+p exec $power
 
 # Drag floating windows by holding down $mod and left mouse button.
 # Resize them with right mouse button + $mod.
@@ -194,7 +194,7 @@ bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ t
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 # Special key to take a screenshot with grim
-bindsym Print exec grim
+# bindsym Print exec grim # TODO conflicts with Sway mode for screenshot?
 
 # Status Bar:
 # Read `man 5 sway-bar` for more information about this section.
