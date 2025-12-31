@@ -35,6 +35,7 @@ require("lazy").setup({
     -- Treesitter interface
     {
         'nvim-treesitter/nvim-treesitter',
+        branch = 'master',
         cmd = 'TSUpdate',
     },
 
