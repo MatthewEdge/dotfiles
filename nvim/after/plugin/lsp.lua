@@ -70,18 +70,18 @@ local servers = {
             zig_exe_path = '/home/medge/zig-0.14.1',
         },
     },
-    ols = {
-        init_options = {
-            checker_args = "-strict-style",
-            -- enable_document_symbols = true,
-            -- enable_hover = true,
-            -- enable_snippets = true,
-            -- enable_references = true,
-            collections = {
-                -- { name = "shared", path = vim.fn.expand('$HOME/odin-lib') }
-            },
-        },
-    },
+    -- ols = {
+        -- init_options = {
+            -- checker_args = "-strict-style",
+            -- -- enable_document_symbols = true,
+            -- -- enable_hover = true,
+            -- -- enable_snippets = true,
+            -- -- enable_references = true,
+            -- collections = {
+                -- -- { name = "shared", path = vim.fn.expand('$HOME/odin-lib') }
+            -- },
+        -- },
+    -- },
 }
 
 -- Needed for lua_ls for Neovim dev. Must come before lua_ls server setup
