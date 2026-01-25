@@ -1,10 +1,9 @@
-
 [env]
 TERM = "xterm-256color"
 
 [window]
-padding.x = 14
-padding.y = 14
+padding.x = 5
+padding.y = 5
 #decorations = "None"
 
 [font]
@@ -29,5 +28,4 @@ bindings=[
 
 [general]
 live_config_reload = true
-# [general]
 import = [ "~/.config/alacritty/kanagawa.toml" ]
