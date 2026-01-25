@@ -1,6 +1,7 @@
 # Full userspace sway config
 include $HOME/.config/sway/autostart
 include $HOME/.config/sway/definitions
+# include $HOME/.config/sway/modes/resize
 
 # Manjaro theming
 set $theme /usr/share/sway/themes/matcha-green
