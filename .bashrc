@@ -45,7 +45,6 @@ alias rc="$EDITOR $HOME/.bashrc && source $HOME/.bashrc"
 alias ..="cd ../"
 alias ...="cd ../../"
 
-alias md5sum='md5 -r'
 alias dotfiles='cd $HOME/code/dotfiles'
 
 # ls
@@ -189,33 +188,6 @@ diffpprof() {
     go tool pprof -trim_path=/go/src -source_path=. -diff_base=$BASE $LATEST
 }
 
-# Terraform
-awstf-dry() {
-  export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
-  export SECRET_KEY=$(cat ~/.aws/credentials| grep aws_secret_access_key | cut -d '=' -f2 | cut -d ' ' -f2)
-
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light init
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light fmt
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light plan
-  # docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light apply -auto-approve
-}
-
-awstf-apply() {
-  export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
-  export SECRET_KEY=$(cat ~/.aws/credentials| grep aws_secret_access_key | cut -d '=' -f2 | cut -d ' ' -f2)
-
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light init
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light apply -auto-approve
-}
-
-awstf-destroy() {
-  export ACCESS_KEY=$(cat ~/.aws/credentials| grep aws_access_key_id | cut -d '=' -f2 | cut -d ' ' -f2)
-  export SECRET_KEY=$(cat ~/.aws/credentials| grep aws_secret_access_key | cut -d '=' -f2 | cut -d ' ' -f2)
-
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light init
-  docker run --rm -it -e AWS_ACCESS_KEY_ID="${ACCESS_KEY}" -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" -v $PWD:/src -w /src hashicorp/terraform:light destroy
-}
-
 alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
 alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
 
@@ -240,53 +212,9 @@ export PATH=$PATH:$HOME/code/odin-dev-2026-07a
 export PATH=$PATH:$HOME/zig-0.14.1
 # export PATH=$PATH:$HOME/zig-0.15.1
 
-# Tiled Editor
-alias tiled="$HOME/Tiled-1.11.2.AppImage"
-
 # Compression
 compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
 alias decompress="tar -xzf"
-
-# Write iso file to sd card
-iso2sd() {
-  if [ $# -ne 2 ]; then
-    echo "Usage: iso2sd <input_file> <output_device>"
-    echo "Example: iso2sd ~/Downloads/ubuntu-25.04-desktop-amd64.iso /dev/sda"
-    echo -e "\nAvailable SD cards:"
-    lsblk -d -o NAME | grep -E '^sd[a-z]' | awk '{print "/dev/"$1}'
-  else
-    sudo dd bs=4M status=progress oflag=sync if="$1" of="$2"
-    sudo eject $2
-  fi
-}
-
-# Format an entire drive for a single partition using exFAT
-format-drive() {
-  if [ $# -ne 2 ]; then
-    echo "Usage: format-drive <device> <name>"
-    echo "Example: format-drive /dev/sda 'My Stuff'"
-    echo -e "\nAvailable drives:"
-    lsblk -d -o NAME -n | awk '{print "/dev/"$1}'
-  else
-    echo "WARNING: This will completely erase all data on $1 and label it '$2'."
-    read -rp "Are you sure you want to continue? (y/N): " confirm
-
-    if [[ "$confirm" =~ ^[Yy]$ ]]; then
-      sudo wipefs -a "$1"
-      sudo dd if=/dev/zero of="$1" bs=1M count=100 status=progress
-      sudo parted -s "$1" mklabel gpt
-      sudo parted -s "$1" mkpart primary 1MiB 100%
-
-      partition="$([[ $1 == *"nvme"* ]] && echo "${1}p1" || echo "${1}1")"
-      sudo partprobe "$1" || true
-      sudo udevadm settle || true
-
-      sudo mkfs.exfat -n "$2" "$partition"
-
-      echo "Drive $1 formatted as exFAT and labeled '$2'."
-    fi
-  fi
-}
 
 # Transcode a video to a good-balance 1080p that's great for sharing online
 transcode-video-1080p() {
@@ -330,29 +258,25 @@ img2png() {
 set meta-flag on
 set input-meta on
 set output-meta on
+set convert-meta off
+
 # bind 'set convert-meta off'
-bind 'set completion-ignore-case on'
+bind 'set completion-ignore-case on' # case-insensitive completion
 bind 'set completion-prefix-display-length 2'
 bind 'set show-all-if-ambiguous on'
 bind 'set show-all-if-unmodified on'
 
-# Arrow keys match what you've typed so far against your command history
-# "\e[A": history-search-backward
-# "\e[B": history-search-forward
-# "\e[C": forward-char
-# "\e[D": backward-char
-
 # Immediately add a trailing slash when autocompleting symlinks to directories
-set mark-symlinked-directories on
+# set mark-symlinked-directories on
 
 # Do not autocomplete hidden files unless the pattern explicitly begins with a dot
 set match-hidden-files off
 
 # Show all autocomplete results at once
-set page-completions off
+# set page-completions off
 
 # If there are more than 200 possible completions for a word, ask to show them all
-set completion-query-items 200
+bind 'set completion-query-items 200'
 
 # Show extra file information when completing, like `ls -F` does
 set visible-stats on
@@ -362,10 +286,10 @@ set visible-stats on
 # the cursor is on the "z", pressing Tab will not autocomplete it to "cd
 # ~/src/mozillail", but to "cd ~/src/mozilla". (This is supported by the
 # Readline used by Bash 4.)
-set skip-completed-text on
+bind 'set skip-completed-text on'
 
 # Coloring for Bash 4 tab completions.
-set colored-stats on
+bind 'set colored-stats on'
 
 # History control
 shopt -s histappend
@@ -380,7 +304,6 @@ fi
 
 # Ensure command hashing is off for mise
 set +h
-
 
 cdcode() {
     cd $HOME/code/$1
