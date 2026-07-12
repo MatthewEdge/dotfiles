@@ -22,7 +22,6 @@ else
 fi
 cd $HOME/neovim
 
-# Current: release 0.12
 git checkout release-0.12
 
 rm -rf build/  # clear the CMake cache
