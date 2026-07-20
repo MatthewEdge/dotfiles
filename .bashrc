@@ -234,7 +234,7 @@ alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light de
 #source "$HOME/.cargo/env"
 
 # Odin
-export PATH=$PATH:$HOME/odin-2025-07
+export PATH=$PATH:$HOME/code/odin-dev-2026-07a
 
 # Zig
 export PATH=$PATH:$HOME/zig-0.15.1
@@ -336,10 +336,10 @@ set show-all-if-ambiguous on
 set show-all-if-unmodified on
 
 # Arrow keys match what you've typed so far against your command history
-"\e[A": history-search-backward
-"\e[B": history-search-forward
-"\e[C": forward-char
-"\e[D": backward-char
+# "\e[A": history-search-backward
+# "\e[B": history-search-forward
+# "\e[C": forward-char
+# "\e[D": backward-char
 
 # Immediately add a trailing slash when autocompleting symlinks to directories
 set mark-symlinked-directories on
