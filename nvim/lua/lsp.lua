@@ -113,6 +113,9 @@ vim.lsp.config('zls', {
 vim.lsp.enable('zls')
 
 vim.lsp.config('ols', {
+    cmd = {home_dir .. '/odin/ols/ols'},
+    filetypes = {'odin'},
+    root_markers = {'.git'},
     init_options = {
         checker_args = "-strict-style",
         -- enable_document_symbols = true,
