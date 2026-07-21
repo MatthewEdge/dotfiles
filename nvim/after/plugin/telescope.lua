@@ -1,6 +1,11 @@
------------------------------------------------------------
--- Telescope config
-----------------------------------------------------------
+-- Ensure autocomplete doesn't run in Telescope windows. It's distracting
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = {'TelescopePrompt'},
+    callback = function()
+        vim.o.autocomplete = false
+    end
+})
+
 local actions = require("telescope.actions")
 local additional_rg_args = { "--hidden", "--glob", "!**/.git/*", "--glob", "!**/node_modules/*" }
 require('telescope').setup({
