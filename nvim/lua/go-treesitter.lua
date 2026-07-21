@@ -459,5 +459,4 @@ M.count_parents = function(node)
     return count
 end
 
-
 return M

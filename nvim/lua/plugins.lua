@@ -1,89 +1,41 @@
--- Install plugins
-require("lazy").setup({
-    -- Git
-    'tpope/vim-fugitive',
+vim.pack.add({
+    -- Color scheme
+    {src = 'https://github.com/rebelot/kanagawa.nvim'},
 
-    -- Color schemes
-    {
-        'rebelot/kanagawa.nvim',
-        config = function()
-            vim.cmd('colorscheme kanagawa')
-        end,
-        -- For the lighter days of dark colorschemes
-        -- 'olimorris/onedarkpro.nvim',
-        -- config = function()
-        -- vim.cmd('colorscheme onedark')
-        -- end,
-    },
+    -- Git helpers
+    -- TODO is Git blame necessary anymore?
+    {src = 'https://github.com/tpope/vim-fugitive'},
 
     -- Fuzzy Finder
-    {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
-        dependencies = { 'nvim-lua/plenary.nvim' }
-    },
+    {src = 'https://github.com/nvim-lua/plenary.nvim'},
+    {src = 'https://github.com/nvim-telescope/telescope.nvim', version = 'v0.2.1'},
 
-    {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-    },
+    {src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim'},
 
-    {
-        'ThePrimeagen/harpoon',
-        dependencies = { 'nvim-lua/plenary.nvim' }
-    },
+    -- Treesitter interface - forked save
+    {src = 'https://github.com/MatthewEdge/nvim-treesitter'},
 
-    -- Treesitter interface
-    {
-        'nvim-treesitter/nvim-treesitter',
-        branch = 'master',
-        cmd = 'TSUpdate',
-    },
-
-    {
-        'stevearc/aerial.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    },
+    -- Symbol explore in Telescope
+    {src = 'https://github.com/stevearc/aerial.nvim'},
 
     -- Quick commenting
-    'preservim/nerdcommenter',
+    {src = 'https://github.com/preservim/nerdcommenter'},
 
-    -- LSP
-    {
-        'neovim/nvim-lspconfig',
-        dependencies = {
-            -- LSP Server auto-install
-            { 'mason-org/mason.nvim' },
-            { 'mason-org/mason-lspconfig.nvim' },
-
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },     -- Required
-            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' },     -- Required
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-nvim-lua' },
-            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
-
-            -- Make Neovim conf editing better
-            { 'folke/neodev.nvim' },
-        }
-    },
-
-    -- Zig
-    {
-        'ziglang/zig.vim',
-    },
+    -- LSP server installations
+    {src = 'https://github.com/mason-org/mason.nvim'},
 
     -- Debugger
-    {
-        'mfussenegger/nvim-dap',
-        dependencies = {
-            'nvim-neotest/nvim-nio',
-            'leoluz/nvim-dap-go',
-            'mfussenegger/nvim-dap-python',
-            'rcarriga/nvim-dap-ui',
-            'nvim-telescope/telescope-dap.nvim',
-            'nvim-neotest/nvim-nio',
-            -- 'theHamsta/nvim-dap-virtual-text'
-        },
-    },
+    {src = 'https://github.com/mfussenegger/nvim-dap'},
+    {src = 'https://github.com/nvim-neotest/nvim-nio'},
+    {src = 'https://github.com/leoluz/nvim-dap-go'},
+    {src = 'https://github.com/mfussenegger/nvim-dap-python'},
+    {src = 'https://github.com/rcarriga/nvim-dap-ui'},
+    {src = 'https://github.com/nvim-telescope/telescope-dap.nvim'},
+    {src = 'https://github.com/nvim-neotest/nvim-nio'},
+
+    -- Zig
+    -- {src = 'https://github.com/ziglang/zig.vim'},
 })
+
+-- Colorscheme after plugins for operational ordering
+vim.cmd('colorscheme kanagawa')
