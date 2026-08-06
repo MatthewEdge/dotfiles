@@ -5,24 +5,15 @@ vim.o.autocomplete = true
 -- Enable LSP keybinds on LspAttach only
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('lsp_completion', { clear = true }),
-    callback = function (args)
-        -- TODO needed?
-        -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-        local client_id = args.data.client_id
-        if not client_id then
-            return
-        end
-        local client = vim.lsp.get_client_by_id(client_id)
-        if client and client:supports_method("textDocument/completion") then
-            vim.lsp.completion.enable(true, client_id, args.buf, {
-                autotrigger = true,
-                -- Or: to trigger manually with <C-x><C-o> if autotrigger = false
-            })
-        end
+    callback = function (ev)
+        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if client ~= nil and client:supports_method("textDocument/completion") then
+            -- Or: to trigger manually with <C-x><C-o> if autotrigger = false
+			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+		end
 
         local nmap = function(keys, func, desc)
-            vim.keymap.set('n', keys, func, { buffer = args.buf, remap = false, desc = desc })
+            vim.keymap.set('n', keys, func, { buffer = ev.buf, remap = false, desc = desc })
         end
 
         -- Explicitly set keymaps to keep them consistent
@@ -40,7 +31,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         nmap(']d', vim.diagnostic.goto_prev, 'Prev diagnostic')
 
         -- If, for some reason, autoformat is off
-        nmap('<leader>f', vim.lsp.buf.format, 'Manual format')
+        nmap('<leader>fb', vim.lsp.buf.format, 'Manual format')
     end
 })
 
