@@ -1,22 +1,21 @@
 vim.pack.add({
     -- Color scheme
-    {src = 'https://github.com/rebelot/kanagawa.nvim'},
+    -- {src = 'https://github.com/rebelot/kanagawa.nvim'},
 
     -- Git helpers
     -- TODO is Git blame necessary anymore?
     {src = 'https://github.com/tpope/vim-fugitive'},
 
     -- Fuzzy Finder
-    {src = 'https://github.com/nvim-lua/plenary.nvim'},
-    {src = 'https://github.com/nvim-telescope/telescope.nvim', version = 'v0.2.1'},
+    -- {src = 'https://github.com/nvim-lua/plenary.nvim'},
+    -- {src = 'https://github.com/nvim-telescope/telescope.nvim', version = 'v0.2.1'},
+    -- {src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim'},
 
-    {src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim'},
-
-    -- Treesitter interface - forked save
+    -- Treesitter interface - forked save for the test-runner
     {src = 'https://github.com/MatthewEdge/nvim-treesitter'},
 
     -- Symbol explore in Telescope
-    {src = 'https://github.com/stevearc/aerial.nvim'},
+    -- {src = 'https://github.com/stevearc/aerial.nvim'},
 
     -- Quick commenting
     {src = 'https://github.com/preservim/nerdcommenter'},
@@ -30,12 +29,9 @@ vim.pack.add({
     {src = 'https://github.com/leoluz/nvim-dap-go'},
     {src = 'https://github.com/mfussenegger/nvim-dap-python'},
     {src = 'https://github.com/rcarriga/nvim-dap-ui'},
-    {src = 'https://github.com/nvim-telescope/telescope-dap.nvim'},
-    {src = 'https://github.com/nvim-neotest/nvim-nio'},
-
-    -- Zig
-    -- {src = 'https://github.com/ziglang/zig.vim'},
+    -- {src = 'https://github.com/nvim-telescope/telescope-dap.nvim'},
 })
 
--- Colorscheme after plugins for operational ordering
-vim.cmd('colorscheme kanagawa')
+-- Nerdcommenter
+vim.g.NERDSpaceDelims = 1
+vim.g.NERDTrimTrailingWhitespace = 1
