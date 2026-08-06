@@ -128,7 +128,7 @@ require('test-runner')
 vim.g.netrw_banner = 1        -- Hide banner now that we are on deb
 vim.g.netrw_browse_split = 0  -- open files in previous window
 vim.g.netrw_liststyle = 3     -- tree view
-vim.g.netrw_winsize = 75      -- with 25 left for netrw split
+vim.g.netrw_winsize = 25      -- 25% for netrw split
 vim.g.netrw_altv = 1          -- enable to right-split instead
 vim.g.netrw_altfile = 1       -- keep the alternate file correct
 
