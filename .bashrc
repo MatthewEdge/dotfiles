@@ -329,11 +329,11 @@ img2png() {
 set meta-flag on
 set input-meta on
 set output-meta on
-set convert-meta off
-set completion-ignore-case on
-set completion-prefix-display-length 2
-set show-all-if-ambiguous on
-set show-all-if-unmodified on
+# bind 'set convert-meta off'
+bind 'set completion-ignore-case on'
+bind 'set completion-prefix-display-length 2'
+bind 'set show-all-if-ambiguous on'
+bind 'set show-all-if-unmodified on'
 
 # Arrow keys match what you've typed so far against your command history
 # "\e[A": history-search-backward
