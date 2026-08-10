@@ -38,7 +38,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local home_dir = os.getenv('HOME')
 
 -- Register Mason for LSP install within nvim
-require('mason').setup()
+-- require('mason').setup()
 
 -- LSP Server config
 vim.lsp.config('gopls', {
@@ -213,17 +213,16 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 })
 
 -- Zig setup
-vim.g.zig_fmt_parse_errors = 0
-vim.g.zig_fmt_autosave = 0
-vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = {"*.zig", "*.zon"},
-    callback = function()
-        vim.lsp.buf.format()
+-- vim.g.zig_fmt_parse_errors = 0
+-- vim.g.zig_fmt_autosave = 0
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+    -- pattern = {"*.zig", "*.zon"},
+    -- callback = function()
+        -- vim.lsp.buf.format()
 
-        vim.lsp.buf.code_action({
-            context = { only = { 'source.organizeImports' }},
-            apply = true,
-        })
-    end
-})
-
+        -- vim.lsp.buf.code_action({
+            -- context = { only = { 'source.organizeImports' }},
+            -- apply = true,
+        -- })
+    -- end
+-- })

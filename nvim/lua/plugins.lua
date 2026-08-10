@@ -12,7 +12,8 @@ vim.pack.add({
     -- {src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim'},
 
     -- Treesitter interface - forked save for the test-runner
-    {src = 'https://github.com/MatthewEdge/nvim-treesitter'},
+    -- {src = 'https://github.com/MatthewEdge/nvim-treesitter'},
+    -- {src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main'},
 
     -- Symbol explore in Telescope
     -- {src = 'https://github.com/stevearc/aerial.nvim'},
@@ -21,7 +22,7 @@ vim.pack.add({
     {src = 'https://github.com/preservim/nerdcommenter'},
 
     -- LSP server installations
-    {src = 'https://github.com/mason-org/mason.nvim'},
+    -- {src = 'https://github.com/mason-org/mason.nvim'},
 
     -- Debugger
     {src = 'https://github.com/mfussenegger/nvim-dap'},
