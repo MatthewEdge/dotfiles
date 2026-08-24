@@ -2,6 +2,21 @@
 -- and marks each test accordingly
 local ts = require('go-treesitter')
 
+-- The last output buffer created for test output.
+-- Allows the keybind to auto-close an existing buffer
+-- already shown
+local last_output_buf = nil
+
+local close_last_output = function()
+    if last_output_buf and vim.api.nvim_buf_is_valid(last_output_buf) then
+        for _, win in ipairs(vim.fn.win_findbuf(last_output_buf)) do
+            pcall(vim.api.nvim_win_close, win, true)
+        end
+        pcall(win.api.nvim_buf_delete, last_output_buf, { force = true })
+    end
+    last_output_buf = nil
+end
+
 -- make_key is a simple helper to create keys for test state
 local make_key = function(entry)
     assert(entry.Package, 'Must have Package key: ' .. vim.inspect(entry))
@@ -52,9 +67,23 @@ local mark_status = function(state, entry)
     state.tests[make_key(entry)].success = (entry.Action == 'pass')
 end
 
+local append_output = function(buf, data)
+    vim.schedule(function()
+        if not vim.api.nvim_buf_is_valid(buf) then
+            return
+        end
+        vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+        local win = vim.fn.win_findbuf(buf)[1]
+        if win then
+            local line_count = vim.api.nvim_buf_line_count(buf)
+            vim.api.nvim_win_set_cursor(win, {line_count, 0})
+        end
+    end)
+end
+
 -- run_tests_raw is a simpler version of run_tests that simply pops test output
 -- into a new buf window, as is. No processing or extmarks.
--- Output is immediately shown
+-- Output is async written to the given buffer
 local run_tests_raw = function(bufnr, ns, tests)
     local command = { 'go', 'test', '-v' }
     if tests then
@@ -64,19 +93,22 @@ local run_tests_raw = function(bufnr, ns, tests)
     end
     table.insert(command, "./...")
 
-    -- Create a split for the output
+    -- Create the output buf as a right split but ensure
+    -- we keep focus on the existing buf for convenience
+    close_last_output()
+    local orig_win = vim.api.nvim_get_current_win()
     vim.cmd('botright vertical new')
+    local out_buf = vim.api.nvim_get_current_buf()
+    vim.api.nvim_buf_set_option(out_buf, 'buftype', 'nofile')
+    vim.api.nvim_set_current_win(orig_win)
+    last_output_buf = out_buf
+
     vim.fn.jobstart(command, {
-        -- stdout_buffered = true, -- only send full lines on_stdout = function(_, data)
         on_stdout = function(_, data)
-            local buf = vim.api.nvim_get_current_buf()
-            vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-            vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+            append_output(out_buf, data)
         end,
         on_stderr = function(_, data)
-            local buf = vim.api.nvim_get_current_buf()
-            vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-            vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
+            append_output(out_buf, data)
         end,
     })
 end
