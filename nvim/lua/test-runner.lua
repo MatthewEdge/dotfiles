@@ -2,243 +2,80 @@
 -- and marks each test accordingly
 local ts = require('go-treesitter')
 
--- The last output buffer created for test output.
--- Allows the keybind to auto-close an existing buffer
--- already shown
-local last_output_buf = nil
+-- out owns the test-output split so a new run reuses and clears it instead
+-- of stacking splits to the right
+local out = require('output-buf').new()
 
-local close_last_output = function()
-    if last_output_buf and vim.api.nvim_buf_is_valid(last_output_buf) then
-        for _, win in ipairs(vim.fn.win_findbuf(last_output_buf)) do
-            pcall(vim.api.nvim_win_close, win, true)
-        end
-        pcall(win.api.nvim_buf_delete, last_output_buf, { force = true })
+-- run_tests streams `go test -json` into the output buffer as it arrives and
+-- collects diagnostics for any failures. tests can be omitted to run all.
+local run_tests = function(bufnr, ns, tests)
+    vim.diagnostic.reset(ns, bufnr)
+
+    local command = { 'go', 'test', '-v', '-json' }
+    if tests and #tests > 0 then
+        table.insert(command, '-run')
+        table.insert(command, table.concat(tests, '|'))
     end
-    last_output_buf = nil
-end
+    table.insert(command, './...')
 
--- make_key is a simple helper to create keys for test state
-local make_key = function(entry)
-    assert(entry.Package, 'Must have Package key: ' .. vim.inspect(entry))
-    assert(entry.Test, 'Must have Test key: ' .. vim.inspect(entry))
-    return string.format('%s/%s', entry.Package, entry.Test)
-end
+    local failed = {}
+    local seen = {}
 
--- split_tests identifies and separates sub-tests from root tests
-local split_tests = function (test)
-    local parts = {}
-    local n = 1
-    for w in test:gmatch('([^/]*)') do
-        parts[n] = parts[n] or w -- to skip the blanks
-        if w == "" then
-            n = n + 1
-        end
-    end
-    return parts
-end
-
--- add_test upserts a test to the table. If the test spawns subtests then
--- the line number will be set to the parent test
-local add_test = function(state, entry)
-    local parts = split_tests(entry.Test)
-    local parent = entry.Test
-    if table.maxn(parts) > 1 then
-        -- Sub-test identified. Use the parent for extmarks
-        parent = parts[1]
-    end
-
-    local key = make_key(entry)
-    state.tests[key] = {
-        name = entry.Test,
-        line = ts.get_test_line(state.bufnr, parent),
-        output = {},
-    }
-end
-
--- add_test_output collects output lines for the given test
-local add_test_output = function(state, entry)
-    assert(state.tests, vim.inspect(state))
-    table.insert(state.tests[make_key(entry)].output, vim.trim(entry.Output))
-end
-
--- mark_status marks whether the test passed or failed
-local mark_status = function(state, entry)
-    assert(state.tests, vim.inspect(state))
-    state.tests[make_key(entry)].success = (entry.Action == 'pass')
-end
-
-local append_output = function(buf, data)
-    vim.schedule(function()
-        if not vim.api.nvim_buf_is_valid(buf) then
+    -- add_failure records a diagnostic for the failing test, keyed by line so
+    -- a failing sub-test doesn't stack a second marker on its parent
+    local add_failure = function(name)
+        local parent = name:match('^[^/]+')
+        local line = ts.get_test_line(bufnr, parent)
+        if not line or line < 0 or seen[line] then
             return
         end
-        vim.api.nvim_buf_set_lines(buf, -1, -1, false, data)
-        local win = vim.fn.win_findbuf(buf)[1]
-        if win then
-            local line_count = vim.api.nvim_buf_line_count(buf)
-            vim.api.nvim_win_set_cursor(win, {line_count, 0})
-        end
-    end)
-end
+        seen[line] = true
 
--- run_tests_raw is a simpler version of run_tests that simply pops test output
--- into a new buf window, as is. No processing or extmarks.
--- Output is async written to the given buffer
-local run_tests_raw = function(bufnr, ns, tests)
-    local command = { 'go', 'test', '-v' }
-    if tests then
-        local tests_regex = table.concat(tests, "|")
-        table.insert(command, '-run')
-        table.insert(command, tests_regex)
+        table.insert(failed, {
+            bufnr = bufnr,
+            lnum = line,
+            col = 0,
+            severity = vim.diagnostic.severity.ERROR,
+            source = 'go-test',
+            message = 'Test Failed: ' .. name,
+            user_data = {},
+        })
     end
-    table.insert(command, "./...")
 
-    -- Create the output buf as a right split but ensure
-    -- we keep focus on the existing buf for convenience
-    close_last_output()
-    local orig_win = vim.api.nvim_get_current_win()
-    vim.cmd('botright vertical new')
-    local out_buf = vim.api.nvim_get_current_buf()
-    vim.api.nvim_buf_set_option(out_buf, 'buftype', 'nofile')
-    vim.api.nvim_set_current_win(orig_win)
-    last_output_buf = out_buf
+    -- partial holds the tail of a chunk that ended mid-line, since streaming
+    -- means json objects can be split across two callbacks
+    local partial = ''
 
-    vim.fn.jobstart(command, {
-        on_stdout = function(_, data)
-            append_output(out_buf, data)
-        end,
-        on_stderr = function(_, data)
-            append_output(out_buf, data)
-        end,
-    })
-end
-
--- run_tests calls out to go test, parses the output, and stores results in given state
--- tests param can be omitted to run all tests
-local run_tests = function(bufnr, ns, state, tests)
-    -- clear previous extmarks & test state
-    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-
-    -- TODO allow for no test to be passed
-    local command = { 'go', 'test', '-v', '-json'}
-    if tests then
-        local tests_regex = table.concat(tests, "|")
-        table.insert(command, '-run')
-        table.insert(command, tests_regex)
-    end
-    table.insert(command, "./...")
-
-    vim.fn.jobstart(command, {
-        stdout_buffered = true, -- only send full lines on_stdout = function(_, data)
-        on_stdout = function(_, data)
-            if not data then
+    out.run(command, {
+        on_stdout = function(data)
+            if not data or #data == 0 then
                 return
             end
+
+            data[1] = partial .. data[1]
+            partial = table.remove(data)
+
+            local lines = {}
             for _, line in ipairs(data) do
-                local d = vim.json.decode(line)
-                if d == nil then return end
-
-                if d.Action == 'run' then
-                    add_test(state, d)
-                elseif d.Action == 'output' then
-                    if not d.Test then
-                        return
+                local ok, d = pcall(vim.json.decode, line)
+                if ok and type(d) == 'table' then
+                    if d.Action == 'output' and d.Output then
+                        table.insert(lines, (d.Output:gsub('\n$', '')))
+                    elseif d.Action == 'fail' and d.Test then
+                        add_failure(d.Test)
                     end
-                    add_test_output(state, d)
-                elseif d.Action == 'pass' or d.Action == 'fail' then
-                    mark_status(state, d)
-
-                    -- Add extmark for test status
-                    local test = state.tests[make_key(d)]
-                    if not test.line or test.line < 0 then
-                        -- No line number found? Don't fail miserably
-                        return
-                    end
-                    if test.success then
-                        vim.api.nvim_buf_set_extmark(bufnr, ns, test.line, 0, { virt_text = {{ "✓" }}})
-                    elseif not test.success then
-                        vim.api.nvim_buf_set_extmark(bufnr, ns, test.line, 0, { virt_text = {{ "x" }}})
-                    end
-                else
-                    print('unknown line: ' .. vim.inspect(data))
                 end
+            end
+
+            if #lines > 0 then
+                out.append(lines)
             end
         end,
         on_exit = function()
             -- Add diagnostics for failed tests so we see them in Telescope
-            local failed = {}
-            for _, test in pairs(state.tests) do
-                if test.line then
-                    if not test.success then
-                        table.insert(failed, {
-                            bufnr = bufnr,
-                            lnum = test.line,
-                            col = 0,
-                            severity = vim.diagnostic.severity.ERROR,
-                            source = "go-test",
-                            message = "Test Failed",
-                            user_data = {},
-                        })
-                    end
-                end
-            end
-
             vim.diagnostic.set(ns, bufnr, failed, {})
         end,
     })
-end
-
-
-local state = {
-    -- bufnr = bufnr,
-    tests = {},
-}
-
--- attach_to_buffer manages test state and registering user commands
-local attach_to_buffer = function(bufnr, ns)
-    state.bufnr = bufnr
-
-    -- Run only the test under the cursor
-    vim.api.nvim_buf_create_user_command(bufnr, 'TestFunc', function(_)
-        local n = ts.get_func_method_node_at_pos(bufnr)
-        if n == nil then
-            print('No test func found. Running all')
-            run_tests_raw(bufnr, ns, {})
-            return
-        end
-
-        -- run_tests(bufnr, ns, state, {n.name})
-        run_tests_raw(bufnr, ns, {n.name})
-    end, { desc = 'Run test under cursor' })
-
-    -- TODO need to fix this one's args
-    vim.api.nvim_buf_create_user_command(bufnr, 'TestOnly', function(args)
-        print(args)
-    end, { desc = 'Run specified tests only' })
-
-    -- Get associated Test Output
-    vim.api.nvim_buf_create_user_command(bufnr, "TestOutput", function()
-        local line = 0
-
-        -- try fetching nearest test line num
-        local n = ts.get_func_method_node_at_pos(bufnr)
-        if n == nil then
-            line = vim.fn.line "." - 1
-        else
-            line = ts.get_test_line(bufnr, n.name)
-        end
-
-        -- TODO don't create split if no output
-        -- Create a split for the output
-        vim.cmd('botright vertical new')
-        local buf = vim.api.nvim_get_current_buf()
-        vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-        for _, test in pairs(state.tests) do
-            if test.line == line then
-                vim.api.nvim_buf_set_lines(buf, -1, -1, false, test.output)
-            end
-        end
-    end, { desc = 'Get output for test under cursor' })
 end
 
 -- Enable test commands
@@ -250,11 +87,19 @@ vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*.go',
     callback = function()
         vim.keymap.set('n', '<leader>rt', ':TestFunc<CR>', { desc = 'Run Test under cursor' })
-        vim.keymap.set('n', '<leader>to', ':TestOutput<CR>', { desc = 'Get stored test output' })
 
-        -- Allow state to persist between runs
         local bufnr = vim.api.nvim_get_current_buf()
 
-        attach_to_buffer(bufnr, ns)
+        -- Run only the test under the cursor
+        vim.api.nvim_buf_create_user_command(bufnr, 'TestFunc', function(_)
+            local n = ts.get_func_method_node_at_pos(bufnr)
+            if n == nil then
+                print('No test func found. Running all')
+                run_tests(bufnr, ns)
+                return
+            end
+
+            run_tests(bufnr, ns, { n.name })
+        end, { desc = 'Run test under cursor' })
     end
 })
