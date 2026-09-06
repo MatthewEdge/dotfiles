@@ -1,28 +1,14 @@
--- Setup lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
-
 -- Change leader to spacebar
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.cmd('colorscheme catppuccin')
+-- vim.cmd('colorscheme habamax')
+-- vim.cmd('colorscheme sorbet')
+
 -----------------------------------------------------------
 -- General keymaps
 -----------------------------------------------------------
-
---- "ZenMode" with screen folding for the larger monitors. Toggle by reversed keymap
-vim.keymap.set('n', '<leader>zm', ':setlocal foldcolumn=9 signcolumn=yes:9<CR>')
-vim.keymap.set('n', '<leader>mz', ':setlocal foldcolumn=1 signcolumn=yes:1<CR>')
 
 -- Prevent space from doing anything sans being the leader key
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -97,7 +83,8 @@ vim.o.guicursor = ''                    -- No need for guicursor manipulation
 vim.o.clipboard = 'unnamedplus'         -- Copy/paste to system clipboard
 -- TODO "+y mapped to <leader>y instead?
 
-vim.o.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
+vim.o.undofile = true
+-- vim.o.undodir = '~/.cache/nvim/undodir' -- Move undodir to .cache
 vim.o.swapfile = false                  -- Don't use swapfile
 vim.o.history = 100                     -- Remember N lines in history
 
@@ -121,28 +108,39 @@ vim.o.ignorecase = true                 -- Ignore case letters when searching
 vim.o.smartcase = true                  -- Ignore lowercase for the whole pattern
 vim.o.linebreak = true                  -- Wrap on word boundary
 vim.o.termguicolors = true              -- Enable 24-bit term colors
-vim.o.laststatus = 3                    -- Set global statusline
-vim.o.cmdheight = 2                     -- Add more space for bottom message
+vim.o.laststatus = 3                    -- Set global statusline across all splits
 
 vim.o.tabstop = 4                       -- 1 tab == 4 spaces
 vim.o.softtabstop = 4                   -- 1 tab == 4 spaces
 vim.o.expandtab = true                  -- Use spaces instead of tabs
 vim.o.shiftwidth = 4                    -- Shift 4 spaces when tab
 vim.o.smartindent = true                -- Autoindent new lines
-vim.o.winborder = "rounded"               -- More distinct floating windows
-
--- Netrw File Browser
-vim.g.netrw_banner = 1                    -- on Fedora, 0 makes the terminal freak out. See https://github.com/neovim/neovim/issues/23650
-vim.g.netrw_browse_split = 4
-vim.g.netrw_altv = 1
-vim.g.netrw_liststyle = 3
-vim.g.netrw_winsize = 75 -- with 25 for netrw split
--- vim.g.netrw_list_hide = 'netrw_vim.gitignore#Hide()'
-
--- NerdCommenter
-vim.g.NERDSpaceDelims = 1
-vim.g.NERDTrimTrailingWhitespace = 1
+vim.o.winborder = "rounded"             -- More distinct floating windows
 
 -- Require plugins last
+require('find')
+require('format')
 require('plugins')
+require('lsp')
 require('test-runner')
+require('benchmark-runner')
+
+-- Netrw File Browser
+vim.g.netrw_banner = 1        -- Hide banner now that we are on deb
+vim.g.netrw_browse_split = 0  -- open files in previous window
+vim.g.netrw_liststyle = 3     -- tree view
+vim.g.netrw_winsize = 25      -- 25% for netrw split
+vim.g.netrw_altv = 1          -- enable to right-split instead
+vim.g.netrw_altfile = 1       -- keep the alternate file correct
+
+vim.keymap.set("n", "<leader>pf", ":Lexplore<cr>", { silent = true })
+
+
+-- Native Diagnostics in quickfix list
+vim.keymap.set("n", "<leader>d", function()
+	vim.diagnostic.setqflist()
+	vim.cmd("copen")
+end, { silent = true })
+vim.keymap.set("n", "<leader>dd", function()
+	vim.cmd("cclose")
+end, { silent = true })

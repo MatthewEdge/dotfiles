@@ -16,16 +16,17 @@ fi
 
 if [ -d "$HOME/neovim" ]; then
     cd $HOME/neovim
-    git pull
+    git pull -f
 else
     git clone https://github.com/neovim/neovim.git $HOME/neovim
 fi
 cd $HOME/neovim
 
-# Current: release 0.11
-git checkout release-0.11
+# Current: release 0.12
+git checkout release-0.12
 
 rm -rf build/  # clear the CMake cache
+rm -rf .deps/  # ensure clean deps builds 
 make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim" CMAKE_BUILD_TYPE=Release
 make install
 
