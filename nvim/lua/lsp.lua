@@ -45,6 +45,10 @@ vim.api.nvim_create_autocmd('InsertCharPre', {
     end
 })
 
+-- Quick code commenting (preserving nerdcommenter keystrokes)
+vim.keymap.set('n', '<leader>c', 'gcc', { remap = true })
+vim.keymap.set('x', '<leader>c', 'gc', { remap = true })
+
 local home_dir = os.getenv('HOME')
 
 -- Register Mason for LSP install within nvim
