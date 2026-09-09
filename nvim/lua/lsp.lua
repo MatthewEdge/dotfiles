@@ -46,8 +46,8 @@ vim.api.nvim_create_autocmd('InsertCharPre', {
 })
 
 -- Quick code commenting (preserving nerdcommenter keystrokes)
-vim.keymap.set('n', '<leader>c', 'gcc', { remap = true })
-vim.keymap.set('x', '<leader>c', 'gc', { remap = true })
+vim.keymap.set('n', '<leader>cc', 'gcc', { remap = true })
+vim.keymap.set('x', '<leader>cc', 'gc', { remap = true })
 
 local home_dir = os.getenv('HOME')
 

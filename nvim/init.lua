@@ -4,7 +4,6 @@ vim.g.maplocalleader = ' '
 
 vim.cmd('colorscheme catppuccin')
 -- vim.cmd('colorscheme habamax')
--- vim.cmd('colorscheme sorbet')
 
 -----------------------------------------------------------
 -- General keymaps
