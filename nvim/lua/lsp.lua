@@ -1,6 +1,5 @@
 -- Enable built-in autocomplete
 vim.opt.completeopt = "menu,menuone,noselect,popup" -- ensure native popup menu
-vim.o.autocomplete = true
 
 -- Enable LSP keybinds on LspAttach only
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -32,6 +31,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         -- If, for some reason, autoformat is off
         nmap('<leader>fb', vim.lsp.buf.format, 'Manual format')
+    end
+})
+
+-- Enable in-buffer completion on typing for types in the buffer
+-- (ex: variables, structs, etc)
+vim.api.nvim_create_autocmd('InsertCharPre', {
+    group = vim.api.nvim_create_augroup('lsp_completion_autotrigger', { clear = true }),
+    callback = function()
+        if vim.v.char:match('[%w_]') then
+            vim.lsp.completion.get()
+        end
     end
 })
 
