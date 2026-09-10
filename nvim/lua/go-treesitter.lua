@@ -71,6 +71,25 @@ M.get_test_line = function(bufnr, name)
   return -1
 end
 
+local function get_receiver_type(decl, bufnr)
+  local recv = decl:field('receiver')[1]
+  if not recv then
+    return nil
+  end
+  for child in recv:iter_children() do
+    if child:type() == 'parameter_declaration' then
+      local t = child:field('type')[1]
+      if t and t:type() == 'pointer_type' then
+        t = t:named_child(0)
+      end
+      if t and t:type() == 'type_identifier' then
+        return vim.treesitter.get_node_text(t, bufnr)
+      end
+    end
+  end
+  return nil
+end
+
 M.get_func_method_node_at_pos = function(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local cur = node_at_cursor(bufnr)
@@ -89,10 +108,98 @@ M.get_func_method_node_at_pos = function(bufnr)
     return nil
   end
 
+  local receiver_type = nil
+  if decl:type() == 'method_declaration' then
+    receiver_type = get_receiver_type(decl, bufnr)
+  end
+
   return {
     name = vim.treesitter.get_node_text(name_node, bufnr),
     node = decl,
+    receiver_type = receiver_type,
   }
+end
+
+-- type_embeds reports whether type_name's struct has a field of type
+-- pkg.embedded_type (embedded or named), e.g. suite.Suite for testify suites.
+M.type_embeds = function(bufnr, type_name, pkg, embedded_type)
+  local root = get_root(bufnr)
+  if not root or not type_name then
+    return false
+  end
+
+  local formatted = string.format([[
+    (type_declaration
+      (type_spec
+        name: (type_identifier) @_name
+        type: (struct_type
+          (field_declaration_list
+            (field_declaration
+              type: (qualified_type
+                package: (package_identifier) @_pkg
+                name: (type_identifier) @_embed))))))
+    (#eq? @_name "%s")
+    (#eq? @_pkg "%s")
+    (#eq? @_embed "%s")
+  ]], type_name, pkg, embedded_type)
+
+  local ok, query = pcall(vim.treesitter.query.parse, 'go', formatted)
+  if not ok then
+    return false
+  end
+
+  for _ in query:iter_matches(root, bufnr, 0, -1) do
+    return true
+  end
+  return false
+end
+
+local function walk(node, fn)
+  fn(node)
+  for child in node:iter_children() do
+    walk(child, fn)
+  end
+end
+
+-- find_suite_run_test_name looks for a `suite.Run(t, ...)` call referencing
+-- receiver_type and returns the name of the enclosing TestXxx function, since
+-- that name can't reliably be derived from the suite struct's name alone.
+M.find_suite_run_test_name = function(bufnr, receiver_type)
+  local root = get_root(bufnr)
+  if not root or not receiver_type then
+    return nil
+  end
+
+  local found = nil
+  walk(root, function(node)
+    if found or node:type() ~= 'call_expression' then
+      return
+    end
+
+    local fn_field = node:field('function')[1]
+    if not fn_field or fn_field:type() ~= 'selector_expression' then
+      return
+    end
+
+    local field_node = fn_field:field('field')[1]
+    if not field_node or vim.treesitter.get_node_text(field_node, bufnr) ~= 'Run' then
+      return
+    end
+
+    local args = node:field('arguments')[1]
+    local args_text = args and vim.treesitter.get_node_text(args, bufnr) or ''
+    if not args_text:match('%f[%w]' .. receiver_type .. '%f[%W]') then
+      return
+    end
+
+    local outer = find_ancestor(node, { 'function_declaration' })
+    local name_node = outer and outer:field('name')[1]
+    if name_node then
+      found = vim.treesitter.get_node_text(name_node, bufnr)
+    end
+  end)
+
+  return found
 end
 
 local function get_type_decl_of_kind(bufnr, kind)

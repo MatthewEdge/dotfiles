@@ -132,7 +132,7 @@ vim.g.netrw_winsize = 25      -- 25% for netrw split
 vim.g.netrw_altv = 1          -- enable to right-split instead
 vim.g.netrw_altfile = 1       -- keep the alternate file correct
 
-vim.keymap.set("n", "<leader>pf", ":Lexplore<cr>", { silent = true })
+-- vim.keymap.set("n", "<leader>pf", ":Lexplore<cr>", { silent = true })
 
 
 -- Native Diagnostics in quickfix list

@@ -99,7 +99,13 @@ vim.api.nvim_create_autocmd('BufEnter', {
                 return
             end
 
-            run_tests(bufnr, ns, { n.name })
+            local test_name = n.name
+            if n.receiver_type and ts.type_embeds(bufnr, n.receiver_type, 'suite', 'Suite') then
+                local outer = ts.find_suite_run_test_name(bufnr, n.receiver_type)
+                test_name = (outer or '') .. '/' .. n.name
+            end
+
+            run_tests(bufnr, ns, { test_name })
         end, { desc = 'Run test under cursor' })
     end
 })
