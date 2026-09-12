@@ -7,16 +7,16 @@ vim.pack.add({
     {src = 'https://github.com/tpope/vim-fugitive'},
 
     -- Fuzzy Finder
-    -- {src = 'https://github.com/nvim-lua/plenary.nvim'},
-    -- {src = 'https://github.com/nvim-telescope/telescope.nvim', version = 'v0.2.1'},
-    -- {src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim'},
+    {src = 'https://github.com/nvim-lua/plenary.nvim'},
+    {src = 'https://github.com/nvim-telescope/telescope.nvim', version = 'v0.2.1'},
+    {src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim'},
     -- 
     -- OR
     -- {src = 'https://github.com//mini.pick'}
     -- {src = 'https://github.com//mini.extra'}
 
     -- Symbol explore in Telescope
-    -- {src = 'https://github.com/stevearc/aerial.nvim'},
+    {src = 'https://github.com/stevearc/aerial.nvim'},
 
     -- LSP server installations
     -- {src = 'https://github.com/mason-org/mason.nvim'},
