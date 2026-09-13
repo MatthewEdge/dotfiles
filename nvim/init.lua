@@ -123,6 +123,8 @@ require('plugins')
 require('lsp')
 require('test-runner')
 require('benchmark-runner')
+require('ai.chat')
+require('ai.edit')
 
 -- Netrw File Browser
 vim.g.netrw_banner = 1        -- Hide banner now that we are on deb
