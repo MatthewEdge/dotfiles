@@ -4,7 +4,7 @@ local util = require('ai.util')
 
 local M = {}
 
-local state = { buf = nil, chat_id = nil, busy = false, queue = {} }
+local state = { history_buf = nil, chat_id = nil, busy = false, queue = {} }
 
 local YOU_MARKER = '## you'
 local ASSISTANT_MARKER = '## model'
@@ -45,73 +45,70 @@ local function ensure_file()
     return path
 end
 
-local function set_buffer_keymaps(buf)
-    vim.keymap.set('n', '<leader>as', M.send, { buffer = buf, desc = 'Send chat message' })
-    vim.keymap.set('n', '<leader>ar', M.reset, { buffer = buf, desc = 'Reset chat history' })
-    vim.keymap.set('n', '<leader>af', M.refresh, { buffer = buf, desc = 'Refresh server chat state' })
+local function with_modifiable(buf, fn)
+    vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+    fn()
+    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
-local function open_split()
+-- ensure_window opens (or reuses) the readonly history split. It never steals
+-- focus if the split is already open elsewhere and visible; it only creates
+-- one (leaving focus on it) the first time, or when it's been hidden.
+local function ensure_window()
     local path = ensure_file()
 
-    if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
-        local win = vim.fn.win_findbuf(state.buf)[1]
-        if win then
-            vim.api.nvim_set_current_win(win)
-        else
-            vim.cmd('botright vertical sbuffer ' .. state.buf)
+    if state.history_buf and vim.api.nvim_buf_is_valid(state.history_buf) then
+        if not vim.fn.win_findbuf(state.history_buf)[1] then
+            vim.cmd('botright vertical sbuffer ' .. state.history_buf)
         end
-        return state.buf
+        return state.history_buf
     end
 
-    vim.cmd('botright vertical edit ' .. vim.fn.fnameescape(path))
-    state.buf = vim.api.nvim_get_current_buf()
-    set_buffer_keymaps(state.buf)
+    vim.cmd('botright vertical split ' .. vim.fn.fnameescape(path))
+    state.history_buf = vim.api.nvim_get_current_buf()
+    vim.api.nvim_buf_set_option(state.history_buf, 'modifiable', false)
 
-    return state.buf
+    return state.history_buf
 end
 
-local function last_user_message(lines)
-    for i = #lines, 1, -1 do
-        if lines[i] == YOU_MARKER then
-            local content = vim.trim(table.concat(vim.list_slice(lines, i + 1), '\n'))
-            if content == '' then
-                return nil
-            end
-            return content
-        elseif lines[i] == ASSISTANT_MARKER then
-            return nil
-        end
-    end
-    return nil
-end
-
-local function alternate_context()
-    local altbuf = vim.fn.bufnr('#')
+local function current_context()
+    local bufnr = vim.api.nvim_get_current_buf()
     local ctx = { cwd = util.project_root() }
+    local name = vim.api.nvim_buf_get_name(bufnr)
 
-    if altbuf == -1 or not vim.api.nvim_buf_is_valid(altbuf) then
-        return ctx
-    end
-
-    local name = vim.api.nvim_buf_get_name(altbuf)
     if name == '' then
         return ctx
     end
 
     ctx.file = util.to_relative(name)
-    ctx.content = table.concat(vim.api.nvim_buf_get_lines(altbuf, 0, -1, false), '\n')
+    ctx.content = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), '\n')
 
     return ctx
 end
 
 local function append_lines(buf, lines)
-    vim.api.nvim_buf_set_lines(buf, -1, -1, false, lines)
+    with_modifiable(buf, function()
+        vim.api.nvim_buf_set_lines(buf, -1, -1, false, lines)
+    end)
+end
+
+-- write_history saves the (nomodifiable) history buffer. Wrapped in
+-- with_modifiable because BufWritePre autocmds (e.g. trailing-whitespace
+-- trim for *.md) can try to edit the buffer as part of writing it, which
+-- otherwise fails with E21 since modifiable is off.
+local function write_history(buf)
+    with_modifiable(buf, function()
+        vim.api.nvim_buf_call(buf, function()
+            vim.cmd('silent write')
+        end)
+    end)
 end
 
 local function set_last_line(buf, text)
-    local last = vim.api.nvim_buf_line_count(buf)
-    vim.api.nvim_buf_set_lines(buf, last - 1, last, false, { text })
+    with_modifiable(buf, function()
+        local last = vim.api.nvim_buf_line_count(buf)
+        vim.api.nvim_buf_set_lines(buf, last - 1, last, false, { text })
+    end)
 end
 
 local function stream_delta(buf, streamer, text)
@@ -237,9 +234,7 @@ local function finalize_turn(buf, ctx_state)
     apply_edits(ctx_state.pending_edits)
     apply_deletes(ctx_state.pending_deletes)
     append_lines(buf, { '', YOU_MARKER, '' })
-    vim.api.nvim_buf_call(buf, function()
-        vim.cmd('silent write')
-    end)
+    write_history(buf)
     turn_finished()
 end
 
@@ -264,9 +259,7 @@ local function handle_context_request(buf, streamer, ctx_state)
     if ctx_state.count > MAX_CONTEXT_REQUESTS then
         append_lines(buf, summarize_fetched(ctx_state))
         append_lines(buf, { '', YOU_MARKER, '' })
-        vim.api.nvim_buf_call(buf, function()
-            vim.cmd('silent write')
-        end)
+        write_history(buf)
         turn_finished()
         return
     end
@@ -296,7 +289,7 @@ stream_turn = function(endpoint, body, buf, streamer, ctx_state)
     end)
 end
 
-local function send_message(buf, chat_id, req_type, message, context)
+local function send_message(buf, chat_id, req_type, message, req_context)
     append_lines(buf, { '', ASSISTANT_MARKER, '' })
 
     local streamer = { pending = '' }
@@ -306,7 +299,7 @@ local function send_message(buf, chat_id, req_type, message, context)
         type = req_type,
         chat_id = chat_id,
         message = message,
-        context = context,
+        context = req_context,
     }, buf, streamer, ctx_state)
 end
 
@@ -332,26 +325,88 @@ local function ensure_chat_id(buf, cb, on_error)
     end)
 end
 
-M.send = function()
-    local buf = open_split()
-    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-    local message = last_user_message(lines)
-
-    if not message then
-        return
-    end
-
-    local context = alternate_context()
+-- send_text runs one chat turn for `message`. It ensures the history split
+-- exists (opening it if needed) but never moves focus there — the caller's
+-- window/buffer is left as-is.
+local function send_text(message, req_context)
+    local buf = ensure_window()
+    local message_lines = vim.split(message, '\n', { plain = true })
 
     run_or_queue(function()
+        local lines = { '', YOU_MARKER }
+        vim.list_extend(lines, message_lines)
+        table.insert(lines, '')
+        append_lines(buf, lines)
         ensure_chat_id(buf, function(chat_id)
-            send_message(buf, chat_id, 'chat', message, context)
+            send_message(buf, chat_id, 'chat', message, req_context)
         end, turn_finished)
     end)
 end
 
+-- open_compose pops up a small floating scratch buffer over wherever the
+-- user currently is (no window switch needed to invoke it, and it never
+-- takes over a permanent split) so they can write/paste a multi-line
+-- message. <C-s> (works from insert mode, no need to leave it) submits;
+-- <Esc>/q in normal mode cancels. The float always closes back to the
+-- window the user invoked it from.
+local function open_compose()
+    local return_win = vim.api.nvim_get_current_win()
+    local ctx = current_context()
+
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+    vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+    vim.api.nvim_buf_set_option(buf, 'swapfile', false)
+    vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+
+    local width = math.min(90, math.floor(vim.o.columns * 0.6))
+    local height = 8
+    local win = vim.api.nvim_open_win(buf, true, {
+        relative = 'editor',
+        width = width,
+        height = height,
+        row = math.floor((vim.o.lines - height) / 2),
+        col = math.floor((vim.o.columns - width) / 2),
+        style = 'minimal',
+        border = 'rounded',
+        title = ' Ask AI  (<C-s> send, <Esc><Esc>/q cancel) ',
+        title_pos = 'center',
+    })
+
+    local function close()
+        if vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_win_close(win, true)
+        end
+        if vim.api.nvim_win_is_valid(return_win) then
+            vim.api.nvim_set_current_win(return_win)
+        end
+    end
+
+    local function submit()
+        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+        local message = vim.trim(table.concat(lines, '\n'))
+        -- <C-s> is bound in insert mode; leave it explicitly so the user
+        -- doesn't land back in their original buffer still in insert mode
+        -- once the float closes.
+        vim.cmd('stopinsert')
+        close()
+        if message == '' then
+            return
+        end
+        send_text(message, ctx)
+    end
+
+    vim.keymap.set({ 'n', 'i' }, '<C-s>', submit, { buffer = buf })
+    vim.keymap.set('n', '<Esc>', close, { buffer = buf })
+    vim.keymap.set('n', 'q', close, { buffer = buf })
+
+    vim.cmd('startinsert')
+end
+
+M.send = open_compose
+
 M.ask = function(instruction, ctx)
-    local buf = open_split()
+    local buf = ensure_window()
 
     run_or_queue(function()
         append_lines(buf, { '', YOU_MARKER, instruction, '' })
@@ -369,9 +424,11 @@ M.reset = function()
         write_fresh(path)
         state.chat_id = nil
 
-        if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
-            vim.api.nvim_buf_call(state.buf, function()
-                vim.cmd('edit!')
+        if state.history_buf and vim.api.nvim_buf_is_valid(state.history_buf) then
+            with_modifiable(state.history_buf, function()
+                vim.api.nvim_buf_call(state.history_buf, function()
+                    vim.cmd('edit!')
+                end)
             end)
         end
     end
@@ -390,7 +447,7 @@ M.reset = function()
 end
 
 M.refresh = function()
-    local buf = open_split()
+    local buf = ensure_window()
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
     local content = table.concat(lines, '\n')
 
@@ -412,17 +469,17 @@ M.refresh = function()
     end)
 end
 
-M.open = open_split
+M.open = ensure_window
 
 M.toggle = function()
-    if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
-        local win = vim.fn.win_findbuf(state.buf)[1]
+    if state.history_buf and vim.api.nvim_buf_is_valid(state.history_buf) then
+        local win = vim.fn.win_findbuf(state.history_buf)[1]
         if win then
-            vim.api.nvim_win_close(win, false)
+            pcall(vim.api.nvim_win_close, win, false)
             return
         end
     end
-    open_split()
+    ensure_window()
 end
 
 vim.api.nvim_create_user_command('AiChat', M.open, {})
@@ -430,6 +487,9 @@ vim.api.nvim_create_user_command('AiChatReset', M.reset, {})
 vim.api.nvim_create_user_command('AiChatRefresh', M.refresh, {})
 vim.api.nvim_create_user_command('AiChatToggle', M.toggle, {})
 
+vim.keymap.set('n', '<leader>as', M.send, { desc = 'Compose AI chat message' })
+vim.keymap.set('n', '<leader>ar', M.reset, { desc = 'Reset chat history' })
+vim.keymap.set('n', '<leader>af', M.refresh, { desc = 'Refresh server chat state' })
 vim.keymap.set('n', '<leader>at', M.toggle, { desc = 'Toggle AI chat window' })
 
 return M
