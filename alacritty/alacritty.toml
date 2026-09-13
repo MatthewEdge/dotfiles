@@ -7,7 +7,7 @@ padding.y = 5
 #decorations = "None"
 
 [font]
-size = 13
+size = 14
 
 [keyboard]
 bindings=[
