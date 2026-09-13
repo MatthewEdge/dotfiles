@@ -343,18 +343,25 @@ local function send_text(message, req_context)
     end)
 end
 
--- open_compose pops up a small floating scratch buffer over wherever the
--- user currently is (no window switch needed to invoke it, and it never
--- takes over a permanent split) so they can write/paste a multi-line
--- message. <C-s> (works from insert mode, no need to leave it) submits;
--- <Esc>/q in normal mode cancels. The float always closes back to the
--- window the user invoked it from.
+local compose_seq = 0
+
+-- open_compose pops up a small floating buffer over wherever the user
+-- currently is (no window switch needed to invoke it, and it never takes
+-- over a permanent split) so they can write/paste a multi-line message.
+-- `:w`/`:wq`/`ZZ`/`:x` send (standard write-a-buffer commands, via
+-- buftype=acwrite's BufWriteCmd — this is the same idiom fugitive uses for
+-- its commit-message buffer); `:q!`/`<Esc>`/`q` in normal mode cancel
+-- without sending. Since all of these require normal mode already (`:` and
+-- `ZZ` can't be typed from insert mode), there's no mode-switch dance
+-- needed here, unlike the old <C-s>-in-insert-mode binding.
 local function open_compose()
     local return_win = vim.api.nvim_get_current_win()
     local ctx = current_context()
 
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+    compose_seq = compose_seq + 1
+    local buf = vim.api.nvim_create_buf(false, false)
+    vim.api.nvim_buf_set_name(buf, 'aichat://compose/' .. compose_seq)
+    vim.api.nvim_buf_set_option(buf, 'buftype', 'acwrite')
     vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
     vim.api.nvim_buf_set_option(buf, 'swapfile', false)
     vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
@@ -369,36 +376,47 @@ local function open_compose()
         col = math.floor((vim.o.columns - width) / 2),
         style = 'minimal',
         border = 'rounded',
-        title = ' Ask AI  (<C-s> send, <Esc><Esc>/q cancel) ',
+        title = ' Ask AI  (:wq/ZZ send, :q! cancel) ',
         title_pos = 'center',
     })
 
-    local function close()
-        if vim.api.nvim_win_is_valid(win) then
-            vim.api.nvim_win_close(win, true)
-        end
-        if vim.api.nvim_win_is_valid(return_win) then
-            vim.api.nvim_set_current_win(return_win)
-        end
+    -- Restores focus to wherever the user invoked compose from, regardless
+    -- of *how* the float closed (:q!, :wq/ZZ's own quit step, forced <Esc>).
+    vim.api.nvim_create_autocmd('WinClosed', {
+        pattern = tostring(win),
+        once = true,
+        callback = function()
+            if vim.api.nvim_win_is_valid(return_win) then
+                vim.api.nvim_set_current_win(return_win)
+            end
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('BufWriteCmd', {
+        buffer = buf,
+        callback = function()
+            local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+            local message = vim.trim(table.concat(lines, '\n'))
+            -- Clear so a stray extra :w (e.g. before :q) can't resend the
+            -- same message. Must happen *before* clearing 'modified', since
+            -- nvim_buf_set_lines re-dirties the buffer — done in the wrong
+            -- order, :wq's implicit quit step sees it as modified again and
+            -- silently refuses to close.
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false, { '' })
+            vim.api.nvim_buf_set_option(buf, 'modified', false)
+            if message == '' then
+                return
+            end
+            send_text(message, ctx)
+        end,
+    })
+
+    local function cancel()
+        vim.api.nvim_win_close(win, true)
     end
 
-    local function submit()
-        local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-        local message = vim.trim(table.concat(lines, '\n'))
-        -- <C-s> is bound in insert mode; leave it explicitly so the user
-        -- doesn't land back in their original buffer still in insert mode
-        -- once the float closes.
-        vim.cmd('stopinsert')
-        close()
-        if message == '' then
-            return
-        end
-        send_text(message, ctx)
-    end
-
-    vim.keymap.set({ 'n', 'i' }, '<C-s>', submit, { buffer = buf })
-    vim.keymap.set('n', '<Esc>', close, { buffer = buf })
-    vim.keymap.set('n', 'q', close, { buffer = buf })
+    vim.keymap.set('n', '<Esc>', cancel, { buffer = buf })
+    vim.keymap.set('n', 'q', cancel, { buffer = buf })
 
     vim.cmd('startinsert')
 end
