@@ -19,7 +19,7 @@ vim.pack.add({
     {src = 'https://github.com/stevearc/aerial.nvim'},
 
     -- LSP server installations
-    -- {src = 'https://github.com/mason-org/mason.nvim'},
+    {src = 'https://github.com/mason-org/mason.nvim'},
 
     -- Debugger
     {src = 'https://github.com/mfussenegger/nvim-dap'},

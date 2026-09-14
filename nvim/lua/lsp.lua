@@ -52,7 +52,7 @@ vim.keymap.set('x', '<leader>cc', 'gc', { remap = true })
 local home_dir = os.getenv('HOME')
 
 -- Register Mason for LSP install within nvim
--- require('mason').setup()
+require('mason').setup()
 
 -- LSP Server config
 vim.lsp.config('gopls', {
@@ -146,14 +146,15 @@ vim.lsp.config('lua_ls', {
 })
 vim.lsp.enable('lua_ls')
 
-vim.lsp.config('zls', {
-    cmd = {home_dir .. '/zig-0.14.1/zls'},
-    settings = {
-        -- semantic_tokens = 'partial',
-        zig_exe_path = home_dir .. '/zig-0.14.1',
-    },
-})
-vim.lsp.enable('zls')
+-- vim.lsp.config('zls', {
+    -- filetypes = {'zig'},
+--     cmd = {home_dir .. '/zig-0.14.1/zls'},
+--     settings = {
+--         -- semantic_tokens = 'partial',
+--         zig_exe_path = home_dir .. '/zig-0.14.1',
+--     },
+-- })
+-- vim.lsp.enable('zls')
 
 vim.lsp.config('ols', {
     cmd = {home_dir .. '/odin/ols/ols'},
