@@ -4,7 +4,8 @@ M.base_url = 'http://127.0.0.1:8787'
 
 -- post_stream POSTs `body` as JSON and calls `on_event` for each SSE
 -- `data:` line the server sends, then `on_done` once the stream closes.
--- This is the only way the client talks to the server.
+-- This is the only way the client talks to the server. Returns the job id
+-- so a turn can be cancelled with jobstop.
 M.post_stream = function(path, body, on_event, on_done)
     local pending = ''
     local stderr = {}
@@ -64,11 +65,13 @@ M.post_stream = function(path, body, on_event, on_done)
             on_event({ type = 'error', message = 'failed to start curl' })
             on_done()
         end)
-        return
+        return nil
     end
 
     vim.fn.chansend(job, vim.json.encode(body))
     vim.fn.chanclose(job, 'stdin')
+
+    return job
 end
 
 return M

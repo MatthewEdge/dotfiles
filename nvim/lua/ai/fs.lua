@@ -105,6 +105,33 @@ ops.grep = function(req)
     return table.concat(matches, '\n')
 end
 
+local LIST_LIMIT = 500
+
+-- list gives the model a map of a project it cannot crawl, to grep and read
+-- against. Untracked-but-not-ignored files are included so work in progress
+-- shows up; an optional `path` scopes it to a subtree.
+ops.list = function(req)
+    local cmd = { 'git', 'ls-files', '--cached', '--others', '--exclude-standard' }
+    if req.path and req.path ~= '' then
+        vim.list_extend(cmd, { '--', M.relative(resolve(req.path)) })
+    end
+
+    local out = vim.system(cmd, { cwd = M.root(), text = true }):wait()
+    if out.code ~= 0 then
+        error('git ls-files failed: ' .. (out.stderr or ''), 0)
+    end
+
+    local files = vim.split(vim.trim(out.stdout or ''), '\n', { plain = true, trimempty = true })
+    if #files == 0 then
+        return 'no files' .. (req.path and (' under ' .. req.path) or '')
+    end
+    if #files > LIST_LIMIT then
+        files = vim.list_slice(files, 1, LIST_LIMIT)
+        table.insert(files, string.format('... truncated to %d files', LIST_LIMIT))
+    end
+    return table.concat(files, '\n')
+end
+
 -- run performs one request and returns the reply to POST back. Failures
 -- come back as `ok = false` text rather than raising: the model reads the
 -- error and corrects itself on the next request.
@@ -119,7 +146,7 @@ M.run = function(req)
 end
 
 M.summary = function(req)
-    return string.format('%s %s', req.op, req.path or req.query or '')
+    return vim.trim(string.format('%s %s', req.op, req.path or req.query or ''))
 end
 
 return M

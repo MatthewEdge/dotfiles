@@ -1,9 +1,13 @@
 -- An AI chat harness whose entire session state is a markdown file.
 --
 -- CHAT-HISTORY.md is the conversation. It is sent to the server on every
--- turn and the server keeps nothing between requests, so editing the file
+-- turn and the server keeps nothing between turns, so editing the file
 -- edits the conversation: delete an exchange the model got wrong, prune a
 -- pasted blob that is eating context, copy the file to branch the chat.
+--
+-- The file's first line names the model, which means the transcript is
+-- portable between them: change the line and the same history is replayed
+-- to a different model.
 local fs = require('ai.fs')
 local transport = require('ai.transport')
 
@@ -11,8 +15,9 @@ local M = {}
 
 local YOU = '## you'
 local MODEL = '## model'
+local DEFAULT_MODEL = 'local'
 
-local state = { buf = nil, busy = false }
+local state = { buf = nil, busy = false, job = nil, cancelled = false }
 
 local function history_path()
     return fs.root() .. '/CHAT-HISTORY.md'
@@ -32,12 +37,30 @@ local function save(buf)
     end)
 end
 
+local function fresh_lines(model)
+    return { 'model: ' .. (model or DEFAULT_MODEL), '', YOU, '' }
+end
+
+local function current_model(buf)
+    local first = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] or ''
+    return first:match('^model:%s*(%S+)%s*$') or DEFAULT_MODEL
+end
+
+local function set_model(buf, name)
+    local first = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] or ''
+    -- Replace the existing line, or insert one if the transcript predates
+    -- the convention / the user deleted it.
+    local replace_to = first:match('^model:') and 1 or 0
+    vim.api.nvim_buf_set_lines(buf, 0, replace_to, false, { 'model: ' .. name })
+    save(buf)
+end
+
 -- ensure_window opens (or reuses) the transcript split. It does not steal
 -- focus when the split is already visible somewhere.
 local function ensure_window()
     local path = history_path()
     if vim.fn.filereadable(path) == 0 then
-        vim.fn.writefile({ YOU, '' }, path)
+        vim.fn.writefile(fresh_lines(), path)
     end
 
     if state.buf and vim.api.nvim_buf_is_valid(state.buf) then
@@ -70,41 +93,62 @@ local function render(buf, start, reply)
     vim.api.nvim_buf_set_lines(buf, start, -1, false, vim.split(reply, '\n', { plain = true }))
 end
 
--- stream runs one leg of a turn. The server streams text until it needs
--- the filesystem; then it sends an `fs` event and ends the stream, and we
--- answer by opening the next leg with the result. A turn is however many
--- legs that takes -- the server decides when to stop asking.
+local function finish_turn(buf, start, acc, note)
+    if note then
+        acc.reply = acc.reply .. note
+        render(buf, start, acc.reply)
+    end
+
+    append(buf, { '', YOU, '' })
+    save(buf)
+    state.busy = false
+    state.cancelled = false
+    state.job = nil
+end
+
+-- stream runs one leg of a turn. The server streams reply text until it
+-- needs the filesystem; then it sends an `fs` event and ends the stream,
+-- and we answer by opening the next leg with the results. A turn is
+-- however many legs that takes -- the server decides when to stop asking.
 local function stream(buf, start, acc, path, body)
     local request
 
-    transport.post_stream(path, body, function(evt)
-        if evt.type == 'text_delta' then
+    state.job = transport.post_stream(path, body, function(evt)
+        if evt.type == 'reply' then
             acc.reply = acc.reply .. evt.text
             render(buf, start, acc.reply)
         elseif evt.type == 'fs' then
             request = evt
-        elseif evt.type == 'error' then
+        elseif evt.type == 'error' and not state.cancelled then
             acc.reply = acc.reply .. '\n\n**error:** ' .. evt.message .. '\n'
             render(buf, start, acc.reply)
         end
     end, function()
+        state.job = nil
+
+        if state.cancelled then
+            finish_turn(buf, start, acc, '\n\n_(cancelled)_\n')
+            return
+        end
         if not request then
-            append(buf, { '', YOU, '' })
-            save(buf)
-            state.busy = false
+            finish_turn(buf, start, acc)
             return
         end
 
         -- Filesystem traffic is deliberately kept out of the transcript:
         -- a file snapshot from five turns ago would only mislead the model
         -- later, and re-asking is cheap.
-        vim.notify('AI: ' .. fs.summary(request))
-        local result = fs.run(request)
+        local results, summaries = {}, {}
+        for _, op in ipairs(request.ops) do
+            table.insert(summaries, fs.summary(op))
+            table.insert(results, fs.run(op))
+        end
+        vim.notify('AI: ' .. table.concat(summaries, ', '))
+
         stream(buf, start, acc, '/fs', {
-            cwd = fs.root(),
+            root = fs.root(),
             id = request.id,
-            ok = result.ok,
-            content = result.content,
+            results = results,
         })
     end)
 end
@@ -121,12 +165,13 @@ local function send(message, ctx)
     vim.list_extend(lines, vim.split(message, '\n', { plain = true }))
     append(buf, lines)
 
-    -- The transcript's last `## you` section is the message, so there is
-    -- nothing to send twice. Snapshot it before adding the reply header.
-    local body = { cwd = fs.root(), transcript = text_of(buf), context = ctx }
+    -- The transcript carries the model and the message -- its last `## you`
+    -- section -- so neither is sent separately. Snapshot it before adding
+    -- the reply header.
+    local body = { root = fs.root(), transcript = text_of(buf), context = ctx }
 
     append(buf, { '', MODEL, '' })
-    stream(buf, vim.api.nvim_buf_line_count(buf) - 1, { reply = '' }, '/gen', body)
+    stream(buf, vim.api.nvim_buf_line_count(buf) - 1, { reply = '' }, '/ask', body)
 end
 
 local compose_seq = 0
@@ -212,10 +257,46 @@ M.ask_selection = function()
     })
 end
 
--- reset is purely local: the server holds no session to clear.
+-- pick_model asks the server what it can route to rather than hardcoding a
+-- list, so adding a model to the server needs no client change.
+M.pick_model = function()
+    local buf = ensure_window()
+    local models = {}
+
+    transport.post_stream('/models', {}, function(evt)
+        if evt.type == 'models' then
+            models = evt.models
+        end
+    end, function()
+        if #models == 0 then
+            vim.notify('AI: server listed no models', vim.log.levels.ERROR)
+            return
+        end
+
+        vim.ui.select(models, { prompt = 'Model (now: ' .. current_model(buf) .. '): ' }, function(choice)
+            if choice then
+                set_model(buf, choice)
+                vim.notify('AI: model set to ' .. choice)
+            end
+        end)
+    end)
+end
+
+-- stop cancels the turn in flight. Killing curl drops the connection, which
+-- is what tells the server to cancel the model request upstream.
+M.stop = function()
+    if not state.job then
+        return
+    end
+    state.cancelled = true
+    vim.fn.jobstop(state.job)
+end
+
+-- reset is purely local: the server holds no session to clear. The chosen
+-- model survives, since it is a preference rather than part of the history.
 M.reset = function()
     local buf = ensure_window()
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, { YOU, '' })
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, fresh_lines(current_model(buf)))
     save(buf)
 end
 
@@ -236,10 +317,14 @@ end
 vim.api.nvim_create_user_command('AiChat', M.open, {})
 vim.api.nvim_create_user_command('AiChatToggle', M.toggle, {})
 vim.api.nvim_create_user_command('AiChatReset', M.reset, {})
+vim.api.nvim_create_user_command('AiChatModel', M.pick_model, {})
+vim.api.nvim_create_user_command('AiChatStop', M.stop, {})
 
 vim.keymap.set('n', '<leader>as', M.send, { desc = 'Compose AI chat message' })
 vim.keymap.set('n', '<leader>at', M.toggle, { desc = 'Toggle AI chat window' })
 vim.keymap.set('n', '<leader>ar', M.reset, { desc = 'Reset chat history' })
+vim.keymap.set('n', '<leader>am', M.pick_model, { desc = 'Pick AI model' })
+vim.keymap.set('n', '<leader>ax', M.stop, { desc = 'Stop AI turn in flight' })
 vim.keymap.set('n', '<leader>ae', M.ask_file, { desc = 'Ask AI about file' })
 vim.keymap.set('v', '<leader>ae', M.ask_selection, { desc = 'Ask AI about selection' })
 
