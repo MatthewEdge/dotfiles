@@ -53,7 +53,6 @@ alias ll="ls -lahGtr"
 
 # VIM
 # Old alias rewrites to save my tired brain
-alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
 vimrc() {
@@ -75,28 +74,7 @@ forEachDir() {
     done
 }
 
-# Code folder
-CODE_DIR=$HOME/code
-mkdir -p $CODE_DIR
-
 # Git
-
-## Clone my repos
-medgeclone() {
-  REPO=$1
-
-  if [ -z "$REPO" ]; then
-    echo "usage: $0 REPO_NAME (without .git)"
-    exit 1
-  fi
-
-  git clone git@github.com:MatthewEdge/$REPO.git
-}
-
-alias cdlab="cd $HOME/code/labs"
-labclone() {
-    git clone git@github.com:medgelabs/$@
-}
 
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 alias gs='git status'
@@ -120,7 +98,6 @@ gsetb() {
 
 # Docker
 alias docker='podman'
-
 alias dkrit="docker run --rm -it -v ${PWD}:/usr/src/app -w /usr/src/app"
 alias dcs="docker compose stop"
 alias dcb="docker compose build --parallel"
@@ -143,21 +120,10 @@ dcre() {
   docker compose up -d ${CONTAINERS}
 }
 
-# REST Helpers
-alias postJson="curl -H \"Content-Type: application/json\""
-
-# NodeJS
-alias npmls="npm ls -g --parsable true --depth 1"
-
-nbin() {
-  ./node_modules/.bin/"$@"
-}
-
 # Golang
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/code/go
 export PATH=$PATH:$GOPATH/bin
-alias gotest="go test ./..."
 
 profile() {
     if [ -z "$1" ]; then
@@ -188,22 +154,8 @@ diffpprof() {
     go tool pprof -trim_path=/go/src -source_path=. -diff_base=$BASE $LATEST
 }
 
-alias tf="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light"
-alias tfd="docker run --rm -it -v $PWD:/src -w /src hashicorp/terraform:light destroy"
-
-# Python
-# alias ansible-playbook="/Users/medge/Library/Python/3.9/bin/ansible-playbook"
-
-# export PYENV_ROOT="$HOME/.pyenv"
-# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
 # If amdgpu is not installed: https://amdgpu-install.readthedocs.io/en/latest/install-installing.html
 #alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
-
-# Rust setup for HTMX
-#source "$HOME/.cargo/env"
 
 # Odin
 export PATH=$PATH:$HOME/code/odin-dev-2026-07a
@@ -216,49 +168,21 @@ export PATH=$PATH:$HOME/zig-0.14.1
 compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
 alias decompress="tar -xzf"
 
-# Transcode a video to a good-balance 1080p that's great for sharing online
+# Transcode a video to a good-balance 1080p
 transcode-video-1080p() {
   ffmpeg -i $1 -vf scale=1920:1080 -c:v libx264 -preset fast -crf 23 -c:a copy ${1%.*}-1080p.mp4
 }
 
-# Transcode a video to a good-balance 4K that's great for sharing online
+# Transcode a video to a good-balance 4K
 transcode-video-4K() {
   ffmpeg -i $1 -c:v libx265 -preset slow -crf 24 -c:a aac -b:a 192k ${1%.*}-optimized.mp4
 }
 
-# Transcode any image to JPG image that's great for shrinking wallpapers
-img2jpg() {
-  img="$1"
-  shift
-
-  magick "$img" $@ -quality 95 -strip ${img%.*}-optimized.jpg
-}
-
-# Transcode any image to JPG image that's great for sharing online without being too big
-img2jpg-small() {
-  img="$1"
-  shift
-
-  magick "$img" $@ -resize 1080x\> -quality 95 -strip ${img%.*}-optimized.jpg
-}
-
-# Transcode any image to compressed-but-lossless PNG
-img2png() {
-  img="$1"
-  shift
-
-  magick "$img" $@ -strip -define png:compression-filter=5 \
-    -define png:compression-level=9 \
-    -define png:compression-strategy=1 \
-    -define png:exclude-chunk=all \
-    "${img%.*}-optimized.png"
-}
-
 # inputrc
-set meta-flag on
-set input-meta on
-set output-meta on
-set convert-meta off
+bind 'set meta-flag on'
+bind 'set input-meta on'
+bind 'set output-meta on'
+bind 'set convert-meta off'
 
 # bind 'set convert-meta off'
 bind 'set completion-ignore-case on' # case-insensitive completion
@@ -270,7 +194,7 @@ bind 'set show-all-if-unmodified on'
 # set mark-symlinked-directories on
 
 # Do not autocomplete hidden files unless the pattern explicitly begins with a dot
-set match-hidden-files off
+bind 'set match-hidden-files off'
 
 # Show all autocomplete results at once
 # set page-completions off
@@ -279,7 +203,7 @@ set match-hidden-files off
 bind 'set completion-query-items 200'
 
 # Show extra file information when completing, like `ls -F` does
-set visible-stats on
+bind 'set visible-stats on'
 
 # Be more intelligent when autocompleting by also looking at the text after
 # the cursor. For example, when the current line is "cd ~/src/mozil", and
@@ -301,9 +225,6 @@ HISTFILESIZE="${HISTSIZE}"
 if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
   source /usr/share/bash-completion/bash_completion
 fi
-
-# Ensure command hashing is off for mise
-set +h
 
 cdcode() {
     cd $HOME/code/$1
