@@ -18,8 +18,8 @@ rm -rf $HOME/.config/nvim
 ln -s $(pwd)/nvim $HOME/.config/nvim
 
 # Sway WM
-rm -rf $HOME/.config/sway
-ln -s $(pwd)/sway $HOME/.config/sway
+#rm -rf $HOME/.config/sway
+#ln -s $(pwd)/sway $HOME/.config/sway
 
 # Hyperland
 #rm -rf $HOME/.config/hypr

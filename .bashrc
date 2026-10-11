@@ -158,7 +158,7 @@ diffpprof() {
 #alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
 
 # Odin
-export PATH=$PATH:$HOME/code/odin-dev-2026-07a
+export PATH=$PATH:$HOME/odin/odin-2026-09
 
 # Zig
 export PATH=$PATH:$HOME/zig-0.14.1
@@ -189,6 +189,12 @@ bind 'set completion-ignore-case on' # case-insensitive completion
 bind 'set completion-prefix-display-length 2'
 bind 'set show-all-if-ambiguous on'
 bind 'set show-all-if-unmodified on'
+
+# Arrow keys match what you've typed so far against your command history
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+# "\e[C": forward-char
+# "\e[D": backward-char
 
 # Immediately add a trailing slash when autocompleting symlinks to directories
 # set mark-symlinked-directories on
@@ -248,3 +254,4 @@ _cdcode_completions() {
 }
 # Register complete function to the command
 complete _cdcode_completions cdcode
+# source /home/medge/alacritty/extra/completions/alacritty.bash
