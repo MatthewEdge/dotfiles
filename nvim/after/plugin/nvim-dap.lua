@@ -50,6 +50,32 @@ require('dap-go').setup({
   }
 })
 
+dap.adapters.gdb = {
+    type = 'executable',
+    command = 'gdb',
+    args = { '--interpreter=dap', '--eval-command', 'set print pretty on' },
+}
+dap.adapters.lldb = {
+    type = 'executable',
+    command = 'lldb-dap',
+}
+local function c_config(name, adapter)
+    return {
+        name = name,
+        type = adapter,
+        request = 'launch',
+        program = function()
+            return vim.fn.input('Executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopAtBeginningOfMainSubprogram = false,
+    }
+end
+dap.configurations.c = {
+    c_config('Launch (gdb)', 'gdb'),
+    c_config('Launch (lldb)', 'lldb'),
+}
+
 -- Note: this expects a pyenv environment
 require('dap-python').setup('python')
 require('dap-python').test_runner = 'pytest'

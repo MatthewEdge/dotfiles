@@ -173,6 +173,18 @@ vim.lsp.config('ols', {
 })
 vim.lsp.enable('ols')
 
+vim.g.c_syntax_for_h = 1
+
+vim.lsp.config('clangd', {
+    cmd = {'clangd', '--background-index', '--clang-tidy', '--header-insertion=never'},
+    filetypes = {'c'},
+    root_markers = {'compile_commands.json', 'compile_flags.txt', '.clangd', '.git'},
+    init_options = {
+        fallbackFlags = {'-std=c23', '-Wall', '-Wextra', '-Wpedantic'},
+    },
+})
+vim.lsp.enable('clangd')
+
 -- Diagnostics window config
 -- TODO do we like virtual_text?
 vim.diagnostic.config({
