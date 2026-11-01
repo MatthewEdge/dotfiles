@@ -87,6 +87,7 @@ alias gd='git diff'
 alias gds='git diff --staged'
 alias gp='git fetch --prune && git pull'
 alias grbm='git fetch origin && git rebase origin/main'
+alias grbc='git rebase --continue'
 alias glog='git log -n'
 gpocb() {
   git push origin $(git branch --show-current)
@@ -158,11 +159,10 @@ diffpprof() {
 #alias amdupdate="amdgpu-install --usecase=graphics,opencl --vulkan=amdvlk --accept-eula"
 
 # Odin
-export PATH=$PATH:$HOME/odin/odin-2026-09
+export PATH=$PATH:$HOME/odin/odin-2026-10-06
 
 # Zig
-export PATH=$PATH:$HOME/zig-0.14.1
-# export PATH=$PATH:$HOME/zig-0.15.1
+export PATH=$PATH:$HOME/zig-0.15.2
 
 # Compression
 compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
