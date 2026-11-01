@@ -19,6 +19,10 @@ sudo $INSTALL \
     git \
     curl \
     unzip \
+    build-essential \
+    clang \
+    llvm \
+    gdb lldb \ # C debuggers
     exfalse # media meta editing
 
 ( export PACKMGR=$PACKMGR; export INSTALL=$INSTALL; export REMOVE=$REMOVE; \
